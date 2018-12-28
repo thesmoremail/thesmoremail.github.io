@@ -1,0 +1,8 @@
+step 1 host
+step 2 wire host to bypass domain name for file support graphics, css, html, json ect to save bandwith with site44.
+
+logo.gif  http://i.imgur.com/U71ffzY.gif
+logoalt.gif  http://i.imgur.com/TGzvqK1.gif
+1.jpg  http://i.imgur.com/FsHV2fl.jpg
+2.jpg  http://i.imgur.com/fGlMHPs.jpg  http://imgur.com/flUvRvw
+

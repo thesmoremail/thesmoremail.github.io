@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=device-width">    
+<!-- additional images. 
+<link rel="apple-touch-icon" href="_img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="114x114" href="_img/apple-touch-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="72x72" href="_img/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="144x144" href="_img/apple-touch-icon-144x144.png">    
+<link rel="image_src" href="http://csshor.us/_img/scr_image.png">
+-->
+<title>Run MailBait</title>
+<link rel="shortcut icon" type="image/png" href="https://themailbait.bitbucket.io/favicon.ico" />
+<link rel="icon" href="https://themailbait.bitbucket.io/favicon.ico" sizes="32x32"> 
+<meta name="referrer" content="no-referrer">
+<meta name="static_url" content="http://www.mailbait.info/" />
+<meta http-equiv="expires" content="0" />
+<meta http-equiv="cache-control" content="public" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="imagetoolbar" content="false" />
+<meta http-equiv="content-style-type" content="text/css" />
+<meta name="author" lang="en-US" content="MailBait.info" xml:lang="en-US" />
+<meta name="abstract" content="Use Mailbait.info to fill you inbox with email.">
+<meta name="publisher" content="MailBait.info" />
+<meta name="copyright" content="2010-2013 by mailbait.info MailBait" />
+<meta name="keywords"  content="free email, email spam, spam, spam email, spam filter, unsolicited email, email filter, filter mail, filter email, email, mail, bait, mailbait, mail bait, spam inbox, fill inbox, full inbox, mailbomb, mailbate, mail bate" xml:lang="en-US" />
+<meta name="language" content="English"> 
+<meta name="description" lang="en-US" content="Run MailBait.  Fill your INBOX." xml:lang="en-US" />
+<meta name="page-topic" lang="en-US" content="Service" xml:lang="en-US" />
+<meta name="Audience" lang="en-US" content="All" xml:lang="en-US" />
+<meta name="revisit-after" content="1 day" />
+<meta name="robots" content="index, follow" />
+<link rel="stylesheet" href="https://themailbait.bitbucket.io/_css/horus.css">
+<link rel="stylesheet" href="https://themailbait.bitbucket.io/_css/style.css">
+<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<script src="http://css3-mediaqueries-js.googlecode.com/files/css3-mediaqueries.js"></script>
+<![endif]-->
+
+<script type="text/javascript">
+
+
+//global vars so we can handle non-blocking IO
+totalpacks = 747; //CHANGE THIS when add more formpack, how many packs of jsonp files we have.
+packcount = 0; // global count of how many packs processed
+sends = 0; //global cound of how many forms sent
+pCount = 0; //how many forms in this pack
+rX= 0;  //which resposne we're on currently
+JSON = ''; //where we store this jsonp response to process
+i=0;  //where we are at in the pack, which form we're on
+var pack= getQuerystring("pack", Math.floor(Math.random()*(totalpacks)) ) - 1; //start between 0 and 122
+console.log(pack+1);
+//var prevent_bust = 0;  //frame busting variable  
+//win2 = window.open("", "Window2", "width=200,height=200,scrollbars=yes");
+//jsCount = 1;  //count down
+
+var n1 = "Michael Christopher Matthew Joshua Andrew Brandon Daniel Tyler James David Joseph Nicholas Ryan John Jacob Zachary Robert Justin Anthony William Jonathan Kyle Alexander Cody Kevin Ashley Jessica Amanda Brittany Sarah Samantha Emily Stephanie Elizabeth Megan Jennifer Lauren Kayla Nicole Chelsea Rachel Taylor Danielle Amber Rebecca Courtney Victoria Kelsey Melissa Michelle Charles Steven Gary Joseph Donald Ronald Kenneth Paul Larry Daniel Stephen Dennis Timothy Edward Jeffrey George Gregory Kevin Douglas Terry Anthony Jerry Bruce Randy Brian Frank Scott Roger Raymond Peter Patrick Keith Lawrence Wayne Danny Alan Gerald Ricky Carl Christopher Dale Walter Craig Willie Johnny Arthur Steve Joe Randall Jack Russell Henry Harold Mary Linda Patricia Susan Deborah Barbara Debra Karen Nancy Donna Cynthia Sandra Pamela Sharon Kathleen Carol Diane Brenda Cheryl Janet Elizabeth Kathy Margaret Janice Carolyn Denise Judy Rebecca Joyce Teresa Christine Catherine Shirley Judith Betty Beverly Lisa Laura Theresa Connie Ann Julie Gloria Gail Joan Paula Peggy Cindy Martha Bonnie Jane Cathy Robin Debbie Diana Marilyn Kathryn Dorothy Wanda Jean Vicki Sheila";
+var n2 = "Smith Johnson Williams Jones Brown Davis Miller Wilson Moore Taylor Anderson Thomas Jackson White Harris Martin Thompson Garcia Martinez Robinson Clark Rodriguez Lewis Lee Walker Hall Allen Young Hernandez King Wright Lopez Hill Scott Green Adams Baker Gonzalez Nelson Carter Mitchell Perez Roberts Turner Phillips Campbell Parker Evans Edwards Collins Stewart Sanchez Morris Rogers Reed Cook Morgan Bell Murphy Bailey Rivera Cooper Richardson Cox Howard Ward Torres Peterson Gray Ramirez James Watson Brooks Kelly Sanders Price Bennett Wood Barnes Ross Henderson Coleman Jenkins Perry Powell Long Patterson Hughes Flores Washington Butler Simmons Foster Gonzales Bryant Alexander Russell Griffin Diaz Hayes";
+var n3 = "! ? # $ ! . - +"
+var nn1 = n1.split(" ");
+var nn2 = n2.split(" ");
+var nn3 = n3.split(" ");
+fname = nn1[Math.round((Math.random()*(nn1.length-1)))];
+lname = nn2[Math.round((Math.random()*(nn2.length-1)))];
+name = fname + ' ' + lname;
+pword = nn3[Math.round((Math.random()*(nn3.length-1)))]+ nn1[Math.round((Math.random()*(nn1.length-1)))] + Math.round((Math.random()*9));
+console.log(name);
+console.log(pword);
+
+
+function getQuerystring(key, default_)
+{
+  if (default_==null) default_=""; 
+  key = key.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+  var regex = new RegExp("[\\?&]"+key+"=([^&#]*)");
+  var qs = regex.exec(window.location.href);
+  if(qs == null)
+    return default_;
+  else
+    return qs[1];
+}
+
+
+
+        function callTheJsonp()  //start the next pack, and reset to the beginning of that pack.
+  {
+    pack = pack+1; //always increment which jsonp pack we're loading
+    packcount = packcount +1; //always inreement how many packs we've processed
+    i = 0 //reset to the first form in the pack.
+                if (pack > totalpacks){pack=0;} 
+    if (pack < 0){pack=0;} 
+    
+    
+    document.getElementById('pack').innerHTML = '<br/>Bookmark <a href="run.html?pack='+pack+'">run.html?pack='+pack+'</a> to resume later.';
+    
+    //for test server
+    //if(String(document.location.href).substring(0,9)==='http://10'){ preurl='http://10.1.10.148/';}
+    
+    // the url of the script where we send the asynchronous call
+    //if (1==jsonp_script)
+    //{
+    //  var url = preurl + "jsonp.js?callback=parseRequest";
+    //}
+    //else 
+    //{
+    //  var url = preurl + "jsonp.js?callback=parseRequest";
+    //}
+    // create a new script element
+    //var url = "jsonp.js?callback=parseRequest";
+    //var url = "http://www.mailbait.info.nyud.net/jsonp/jsonp"+pack+".js?callback=parseRequest";
+    var url = "https://themailbait.bitbucket.io/jsonp/jsonp"+pack+".js?callback=parseRequest";
+
+
+    var script = document.createElement('script');
+    // set the src attribute to that url
+    script.setAttribute('src', url);
+    // insert the script in out page
+    document.getElementsByTagName('head')[0].appendChild(script); 
+    
+  }
+  
+  // this function should parse responses.. you can do anything you need.. 
+  // you can make it general so it would parse all the responses the page receives based on a response field
+  function parseRequest(response)
+  {
+    try // try to output this to the javascript console
+    {
+      
+      JSON = response;
+      pCount = response.items.length;
+      //alert(pCount);
+      testform(); //test
+      //console.log(response);
+      //console.log(response.id);
+      //for (x in response.items)
+      //{
+        //console.log(response.items[x]);
+        
+        //need .mbAction
+        //need .mbMethod
+        //rest goes to payload.
+        
+        
+        //if (x ==1 )
+       // {
+        //console.log(response.items[x]);
+        //console.log(response.items[x]['.mba']);
+        //console.log(response.items[x]['.mbm']);
+        //response.items[x]['.mba'] = '';
+        //response.items[x]['.mbm'] = '';
+        //for (y in response.items[x])
+        //{
+          
+        //  if ( response.items[x][y] != '')
+        //  {
+        //   console.log(y + ' : ' + response.items[x][y]);
+           
+           //setTimeout(function() { console.log(y + ' : ' + response.items[x][y]); }, 1000);
+           
+        //  }
+        
+        //}
+        
+        
+        //}
+        //pause(2000); //pause for 2 seconds
+        
+        //setTimeout("a=2",1500);
+        
+        //delay(1000);
+        
+      //}
+      
+    }
+    catch(an_exception) // alert for the users that don't have a javascript console
+    {
+      //alert(response.script);
+    }
+  }
+  
+
+
+  
+  function pause(millisconds) {  //pause  - blocking.   do not use.
+  millisconds += new Date().getTime();
+  while (new Date() < millisconds){ /* Do nothing */ }
+  } 
+  
+
+function removeChildrenRecursively(node){
+
+if (!node) return;
+while (node.hasChildNodes()) {
+removeChildrenRecursively(node.firstChild);
+node.removeChild(node.firstChild);
+}
+}//end magic of dynamic posts / gets
+
+function addField (form, fieldType, fieldName, fieldValue) { //begin magic of dynamic posts / gets   //allows us to call a function after the entire page has loaded - and NOW the html elements exist.  the on page load fires before the html elements exist.
+  if (document.getElementById) {
+    var input = document.createElement('INPUT');
+      if (document.all) { // what follows should work 
+                          // with NN6 but doesn't in M14
+        input.type = fieldType;
+        input.name = fieldName;
+        input.value = fieldValue;
+      }
+      else if (document.getElementById) { // so here is the
+                                          // NN6 workaround
+        input.setAttribute('type', fieldType);
+        input.setAttribute('name', fieldName);
+        input.setAttribute('value', fieldValue);
+      }
+    form.appendChild(input);
+  }
+}
+
+function reverse(s){
+    return s.split("").reverse().join("");
+}
+  
+  
+function testform(){
+
+if (document.getElementById('pause').checked==false){
+        sends = sends + 1; //increment counter of how many we've sent
+  document.getElementById('iframe1').src='';
+  removeChildrenRecursively(document.forms['f0']);  //clear the previous form[0]
+  
+  document.forms['f0'].target='iframe1';
+  if (JSON.items[i]['.mbm']=='P'){document.forms['f0'].method='POST';}
+  if (JSON.items[i]['.mbm']=='G'){document.forms['f0'].method='GET';}
+  
+        action = JSON.items[i]['.mba'];
+  switch  (action.charAt( 0 ) ){
+    case 'H' : action = 'http://www.' + action.slice( 1 ); break;
+    case 'S' : action = 'https://www.' + action.slice( 1 ); break;
+          case 'h' : action = 'http://' + action.slice( 1 ); break;
+          case 's' : action = 'https://' + action.slice( 1 ); break;
+        }
+    
+  
+  
+  
+  document.forms['f0'].action=action;
+  //JSON.items[i]['.mbm'] = '';
+  //JSON.items[i]['.mba'] = '';
+  
+  
+  for (y in JSON.items[i]) {
+    n1 = y;
+    //alert(n1);
+    if ((n1 != '.mba') && (n1 != '.mbs') && (n1 != '.mbu') && (n1 != '.mbm') && (n1 != '.mbid') && (n1 != '.mbadd') && (n1 != '.mbnewfield1') && (n1 != '.mbsave') && (n1 != '')) 
+    {  value1 =  reverse(JSON.items[i][y]);
+       if (value1 == '[e]') { value1 = document.getElementById('.mbe').value;} //set outgoing email field - can be expanded later for more client variable masks
+       if (value1 == '[name]') { value1 = name;}
+       if (value1 == '[pw]') { value1 = pword;}
+       if ( value1 != '') { addField(document.forms['f0'],'text', n1, value1);}  
+    }
+  }  //for
+
+  addField (document.forms['f0'],'submit', 'mbbsubmit', '')
+  
+  //var newwin = window.open('','Windows2');
+  
+  document.forms['f0'].target='Window2'; //post to popup -- comment out to not post to popup
+  
+  
+  //alert(document.getElementById('skiphttps').checked)
+  
+  
+if (document.getElementById('pause').checked == false){
+  var newwin = window.open('','Window2');
+  document.forms['f0'].mbbsubmit.click(); //this DOES work if we have element named 'submit'
+    if (document.getElementById('windowclose').checked == true){
+    newwin.close();
+  }
+};
+
+  //setTimeout("win2.close()",1000); //post to popup --comment out to not pop to popup
+  
+  //setTimeout("document.getElementById('iframe1').src='';",1000); 
+  
+  //document.getElementById('iframe1').onbeforeunload = function() { prevent_bust++ }  
+        //setInterval(function() {  if (prevent_bust > 0) {prevent_bust -= 2; document.getElementById('iframe1').top.location = ''; alert('frame'); } }, 1); //antiframebust
+        
+        per = (packcount/totalpacks)*100;  // draw progress of how far through all packs
+        per =  per + ".00001";
+        per = per.substring(0,4);
+        if (per > 100) per = 100;
+  totalsgraph = "<h2>" + sends + " forms processed.</h2>MailBait is now active. Consider checking your email to monitor the email pouring in.  Enable popups on this page to use MailBait.<br/><br/><h3>Overall Progress: " + (packcount) + " of "+totalpacks+" packs</h3><table width='100%' border='0' cellpadding='0' cellspacing='0' style='background-color: White; border : 0px solid Black;'><tr><td width='" + per + "%' align='right' bgcolor='black' style='color:white;'><b>" + per + "%</b></td><td width='" + (100 - per) + "%' >&nbsp;</td></tr></table><br/><br/>";
+        
+
+  per = (i/pCount)*100;  // draw progress of how far through this pack
+        per =  per + ".00001";
+        per = per.substring(0,4);
+        if (per > 100) per = 100;
+  document.getElementById('graph').innerHTML= totalsgraph + "<h3>Working in Pack "+pack+". Progress: "+(i+1)+ " of "+pCount+"</h3><table width='100%' border='0' cellpadding='0' cellspacing='0' style='background-color: White;  border : 0px solid Black;'><tr><td width='" + per + "%' align='right' bgcolor='#3366cc' style='color:white;'><b>" + per + "%</b></td><td width='" + (100 - per) + "%' >&nbsp;</td></tr></table>";
+  
+      
+      
+    
+  
+  i++;
+  } //if not paused
+  
+  //setTimeout("document.getElementById('iframe1').src='';", 50); 
+  if (i<pCount){ //go onto next form in pack
+    var windowclose = ""; //'by default, don't close the form
+   
+    if (document.getElementById('pause').checked == false ){
+    //usually yields MUCH better results, by working through broken https certificates
+    windowclose = "var newwin = window.open('','Window2');newwin.close();";
+    }
+  
+   
+  
+  setTimeout(windowclose+"testform();", document.getElementById('speed').value); //create window that already exists so we have a handle to close it (and clear https gotchyas - then wait an amount of time before hitting the next entry
+  }
+  else{ //end of pack, start a new pack
+    callTheJsonp();
+  }
+  
+} //function testform()
+
+
+
+</script>
+
+</head>
+
+<body id="run">
+<div class="wrapper">
+<section class="row">
+<div class="col9" style="margin-bottom:-20px;" >
+<h1 class="logo"><a href="index.html" title="MailBait"><img src="http://i.imgur.com/U71ffzY.gif" alt="MailBait" width="200" height="41" alt="MailBait" /></a></h1>
+</div>
+<div class="col7 margintop" style="margin-bottom:-20px;">
+<nav>
+<ul class="pagination " >
+<li><a href="index.html" title="Home" class="home">&nbsp;Home&nbsp;</a></li>
+<li><a href="run.html" title="Run MailBait" class="run">&nbsp;Run&nbsp;</a></li>
+<li><a href="add.html" title="Add Mail Source" class="add1">Add&nbsp;</a></li>
+<li class="last"><a href="faq.html" title="Help and Frequently Asked Questions " class="faq">FAQ</a></li>
+</ul>            
+</nav>
+</div>
+<hr>
+</section>  
+
+
+<section class="row" id="features">
+          
+<div class="col7">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-7432498983055520";
+/* home.html */
+google_ad_slot = "8883418430";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+
+<!-- show adds-->
+<div id='adbrite1'><script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script></div>
+<br/>
+</div>
+          
+
+<div class="col9">
+<h2>Fill your inbox with email.</h2>
+
+  <label for=".mbe">Email Address to Fill</label>
+  <input type="email" name=".mbe" id=".mbe" value="" /> 
+  <div style="display:block;" id="runt">
+  <input type="submit" value="Run MailBait" onclick="document.getElementById('settings').style.display='block';document.getElementById('runt').style.display='none';document.getElementById('stats').style.display='block';callTheJsonp();" />
+  <br/> By clicking "Run MailBait" you agree to the <a href="terms.html">Terms of Use</a>.<br/>
+</div>
+
+  
+<div style="display:none;" id="settings">
+  <em>Allow popups on mailbait.info to run this service.</em>
+<label for="selector" id="speedlabel">Speed</label>
+<select name="speed" id="speed">
+  <option selected="selected" value="5000">12 per minute</option>
+  <option value="3000">20 per minute</option>
+  <option value="2000">30 per minute</option>
+  <option value="1500">45 per minute</option>
+  <option value="1000">60 per minute</option>
+ 
+</select>
+
+<label for="windowclose">Popups</label>
+<input type="checkbox" id="windowclose" checked="checked" value="YES" /> post forms in background<br/>
+
+
+<label for="pause" id="pauselbl">Stop (MailBait is currrently running)</label>
+<div style="display:none;"> <input type="checkbox" name="pause" id="pause" value="true" /> Pause progress <br/> </div>
+<input id="pausebtn" type="submit" value="Pause MailBait" onclick="if(document.getElementById('pause').checked==false){document.getElementById('pause').checked=true;document.getElementById('pausebtn').value='Run MailBait';document.getElementById('pauselbl').innerHTML='Resume <em>(MailBait is currently PAUSED)</em>';}else{document.getElementById('pause').checked=false;document.getElementById('pausebtn').value='Pause MailBait';document.getElementById('pauselbl').innerHTML='Stop (MailBait is currently running)';};" />
+
+</div>
+</div>
+</section> 
+
+<div style="display:none;" id="stats">
+<section class="row" id="run1">   
+<hr class="marginbottom">           
+<div class="col16">
+  <div id="graph" name="graph"></div>
+  <div id="pack" name="pack"></div>
+  <div style="display:none;">
+    <iframe name="iframe1" id="iframe1" width="100%" height="0" src="about:none" frameborder="1" scrolling="yes"></iframe>
+    <form name="f0" id="f0"></form>
+  </div>  
+
+</div>  
+</section> 
+</div>
+        
+
+<footer>
+<hr class="marginbottom">
+<div class="col1_3"><h6><span id="footer-copyright"></span></h6><br/> </div>
+<div class="col1_3"><h6><a href="https://twitter.com/share" class="twitter-share-button" data-url="MailBait.info" data-text="Fill your inbox. MailBait.info">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="http://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></h6> <br/></div>
+<div class="col1_3"><h6><a href="terms.html">Terms Of Use</a> - <a href="sitemap.html">Site Map</a> - <a href="login.html">Login</a></h6><br/></div>
+</footer>
+</div>
+
+<script type="text/javascript">
+var d = new Date();
+var n = d.getFullYear();
+document.getElementById('footer-copyright').innerHTML = '&copy; MailBait ' + n;
+
+</script>
+    
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-23915961-2']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+
+
+//detect adblock
+adblock_present = document.getElementById('adbrite1').innerHTML.length;
+if (adblock_present < 115){
+  //alert('adblock present' + adblock_present);
+  document.getElementById("speedlabel").innerHTML = "Speed (disable Adblock for more speed)";
+  document.getElementById("speed").innerHTML = "<option selected=\"selected\" value=\"5000\">12 per minute</option>";
+  _gaq.push(['_trackEvent', 'run', 'adblock detected']);
+} //end detect adblock
+
+</script>
+
+</body>
+</html>
+
+<!-- block injected ads-->
+<style type="text/css">/* <![CDATA[

@@ -1,0 +1,103 @@
+/*---------------------------------------------------
+* CSS Horus V1.0.2
+* http://csshor.us
+* 25/03/2013
+*
+* Copyright 2012, João Firmino
+* @firminoweb
+---------------------------------------------------*/
+
+h1.title {
+	font-family:"HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color:#00295E;
+	margin-bottom:5px
+}
+
+hr { 
+   border-width:1px 0 0; 
+   border-style:dotted; 
+   border-color:#002d5e 
+}
+
+.logo {
+	float:left;
+	margin:20px 0
+}
+
+header nav {
+	float:right;
+	margin-top:66px
+}
+
+.social {
+	float:left;
+	margin:20px 0 0
+}
+
+.fb_iframe_widget span {
+	margin-bottom:3px
+}
+
+nav .pagination a {
+	color:#fff;
+	background-color:#f6f6f6;
+	background:linear-gradient(to bottom, #5987b9, #87aed8);
+	background:-webkit-linear-gradient(top, #5987b9, #87aed8);
+	background:-moz-linear-gradient(center 1px, #5987b9, #87aed8);
+	background:-ms-linear-gradient(top, #5987b9, #87aed8);
+	background:-o-linear-gradient(top, #5987b9, #87aed8); 
+	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#5987b9', endColorstr='#87aed8)');
+	border:1px #5987b9 solid;
+	text-shadow:1px 1px 0 #3c77c4;
+}
+
+nav .pagination a:hover,
+#home nav .pagination a.home,
+#faq nav .pagination a.faq,
+#run nav .pagination a.run,
+#add1 nav .pagination a.add1,
+#basics nav .pagination a.basics,
+#form nav .pagination a.form,
+#tables nav .pagination a.tables,
+#post nav .pagination a.post,
+#grid nav .pagination a.grid {
+	background:0;
+	background-color:#fff;
+	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#ffffff', endColorstr='#ffffff)');
+	border:1px solid #ccc;
+	text-shadow:none;
+	color:#00295E
+}
+
+/* Test styles */
+#grid div > div {
+	background:#eee;
+	overflow:hidden;
+}
+
+#grid span {
+	font-size:11px;
+}
+
+@media only screen and (max-width:767px) {
+	
+  header nav {
+	  margin-top:0
+  }
+  
+}
+
+::selection {
+	color:#fff;
+	background:#00295e;
+}
+
+::-webkit-selection {
+	color:#fff;
+	background:#00295e;
+}
+
+::-moz-selection {
+	color:#fff;
+	background:#00295e;
+}
