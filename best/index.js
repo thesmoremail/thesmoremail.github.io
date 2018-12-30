@@ -15,22 +15,29 @@ var article = [
 
 var div = document.getElementById('tableindex');
 if (div){ 
-for (var i = 0, len = article.length; i < len; i++) {
-  //console.log(article[i]);
-div.innerHTML += '<tr><td class="lpage mod'+ div.rows.length % 2 +'"><a href="/best/'+article[i][2]+'/" title="'+article[i][3]+'">'+article[i][3]+' - '+article[i][4]+'</a></td></tr>';
-
-}
-document.getElementById('lcount').innerHTML = "Total Page Count: " + div.rows.length;
+  for (var i = 0, len = article.length; i < len; i++) {
+    //console.log(article[i]);
+    div.innerHTML += '<tr><td class="lpage mod'+ div.rows.length % 2 +'"><a href="/best/'+article[i][2]+'/" title="'+article[i][3]+'">'+article[i][3]+' - '+article[i][4]+'</a></td></tr>';
+  }
+  document.getElementById('lcount').innerHTML = "Total Page Count: " + div.rows.length;
 } //tableindex
+
 
 var div = document.getElementById('headindex');
 if (div){ 
-div.innerHTML += "<ul>";
-for (var i = 0, len = article.length; i < len; i++) {
-  //console.log(article[i]);
-
-div.innerHTML += '<li class="himod'+ i % 2 +'"><a href="/best/'+article[i][2]+'/" title="'+article[i][3]+'">'+article[i][3]+' - '+article[i][4]+'</a></li>';
-
-}
-div.innerHTML += "</ul>";
+  div.innerHTML += "<ul>";
+  for (var i = 0, len = article.length; i < len; i++) {
+    //console.log(article[i]);
+    div.innerHTML += '<li class="himod'+ i % 2 +'"><a href="/best/'+article[i][2]+'/" title="'+article[i][3]+'">'+article[i][3]+' - '+article[i][4]+'</a></li>';
+  }
+  div.innerHTML += "</ul>";
 }// headindex
+
+
+var div = document.getElementById('featuredindex');
+if (div){ 
+  var i = Math.floor((Math.random() * 10) + 1);
+  //console.log(article[i]);
+  div.innerHTML += '<a href="/best/'+article[i][2]+'/" title="'+article[i][3]+'">'+article[i][3]+' - '+article[i][4]+'</a>';
+} //featuredindex
+
