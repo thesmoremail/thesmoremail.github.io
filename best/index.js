@@ -9,7 +9,7 @@ var article = [
 ,[0,'2018-12-27','attorney','Attorneys',"Can't live with them, can't live with them",'']
 ,[0,'2018-12-27','lawyer','Lawyers',"The origional ambulance chasers.",'']
 ,[0,'2018-12-27','loans','Loans','Payday Predators and compound interest; neither working in your favor','']
-,[0,'2018-12-27','donate','Donate','It''s not your money if you give it away','']
+,[0,'2018-12-27','donate','Donate',"It's not your money if you give it away",'']
 
 ];
 
