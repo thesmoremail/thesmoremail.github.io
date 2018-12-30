@@ -36,8 +36,8 @@ if (div){
 
 var div = document.getElementById('featuredindex');
 if (div){ 
-  var i = Math.floor((Math.random() * 10) + 1);
-  console.log(article[i]);
+  var i = Math.floor((Math.random() * article.length) + 0);
+  //console.log(article[i]);
   div.innerHTML += '<a href="/best/'+article[i][2]+'/" title="'+article[i][3]+'">'+article[i][3]+' - '+article[i][4]+'</a>';
 } //featuredindex
 
