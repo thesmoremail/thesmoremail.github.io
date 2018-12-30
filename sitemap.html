@@ -89,6 +89,12 @@ padding:0px;
 .lpage {
 font:normal 12px verdana;
 }
+.mod0 {
+background-color:#f0f0f0;
+}
+.mod1 {
+background-color:#fff;
+}
 .lcount {
 background-color:#00AEEF;
 color:#fff;
@@ -106,8 +112,8 @@ font-weight:bold;
 <body>
 <div id="cont">
 <h1>sMoreMail Site Map</h1>
-<h3><a href="index.html">Homepage</a>
-Last updated: 2019, May 1
+<h3><a href="/">HOMEPAGE</a>
+<span id='lupdate'>Last updated: 2019, May 2 </span>
 </h3>
 
 
@@ -117,7 +123,7 @@ Last updated: 2019, May 1
 <td class="lpart" colspan="100"><div class="lhead">/
 <span class="lcount">7 pages</span></div>
 
-<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<table cellpadding="0" cellspacing="0" border="0" width="100%" id="tableindex">
 
 <tr><td class="lpage"><a href="/index.html" title="sMoreMail | Toast Your INBOX">sMoreMail - Toast Your INBOX</a></td></tr>
 <tr><td class="lpage"><a href="/run.html" title="Run sMoreMail">Run sMoreMail</a></td></tr>
@@ -130,13 +136,10 @@ Last updated: 2019, May 1
 <tr><td class="lpage"><a href="/feature/insurance/index.html" title="Feature insurance">Feature insurance</a></td></tr>
 <tr><td class="lpage"><a href="/feature/utility/index.html" title="Feature utility">Feature utility</a></td></tr>
 <tr><td class="lpage"><a href="/feature/mortgage/index.html" title="Feature mortgage">Feature mortgage</a></td></tr>
-<tr><td class="lpage"><a href="/feature/attorney/index.html" title="Feature attorney">Feature mortgage</a></td></tr>
-
-<div id="tableindex">
-
-</div>
+<tr><td class="lpage"><a href="/feature/attorney/index.html" title="Feature attorney">Feature attorney</a></td></tr>
 
 </table>
+
 </td>
 </tr>
 
@@ -149,19 +152,31 @@ sMoreMail | Copyright &copy; 2011
 <script>
 var d = new Date();
 var n = d.getFullYear();
+var utc = new Date().toJSON().slice(0,10).replace(/-/g,'/');
+
 document.getElementById('footer').innerHTML = 'sMoreMail | Copyright &copy; ' + n;
+document.getElementById('lupdate').innerHTML = 'Last Update: ' + utc;
 </script>
 
 <script>
 //featured, date, folder, title, description,thumbnail
 var article = [
  [0,'2018-12-26','mesothelioma','Mesothelioma','Bringing Lawyers and Plantifs together since 1972.','']
-,[0,'2018-12-26','insurance','Insurance','What ails ya, coasts ya.'.'']
+,[0,'2018-12-26','insurance','Insurance','What ails ya, coasts ya.','']
 ,[0,'2018-12-26','utility','Utility','Gas and Electric - heat and light since 1892.','']
 ,[0,'2018-12-26','mortgage','Mortgage','Mortgage - Death, Taxes and Mortgages - in that order','']
 ,[0,'2018-12-27','attorney','attorney','Attorney - Cant live with them, cant live with them','']
 
-];I DID SO MANY BACKSPACES OOPS my caps was. Can we go out side and sled or
+];
+
+var div = document.getElementById('tableindex');
+if (div){ 
+div.innerHTML += '<tr><td class="lpage mod'+ div.rows.length % 2 +'">new content here ' + div.rows.length % 2 + '</td></tr>';
+div.innerHTML += '<tr><td class="lpage mod'+ div.rows.length % 2 +'">new content here'  + div.rows.length % 2 + '</td></tr>';
+div.innerHTML += '<tr><td class="lpage mod'+ div.rows.length % 2 +'">new content here'  + div.rows.length % 2 + '</td></tr>';
+div.innerHTML += '<tr><td class="lpage mod'+ div.rows.length % 2 +'">new content here'  + div.rows.length % 2 + '</td></tr>';
+}
+
 </script>
 
 
