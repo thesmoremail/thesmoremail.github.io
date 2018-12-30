@@ -110,16 +110,16 @@
 
 <section class="row" id="robotreviews">          
 <div class="col4">
-<p><img id="robot1" src="" style="float:left" /><em>I was told 97% of cats are very satisfied with sMoreMail. Only 42% of those cats are unable to find their litter box.  What was the question?</em><cite>Larissa</cite></p>
+<p><img id="cat1" src="" style="float:left" /><em>I was told 97% of cats are very satisfied with sMoreMail. Only 42% of those cats are unable to find their litter box.  What was the question?</em><cite>Larissa</cite></p>
 </div> 
 <div class="col4">
-<p><img id="robot2" src="" style="float:left" /><em>I sure am glad I have 18 years of purring so I'm allowed to use sMoreMail according to the terms of use.</em><cite>Patricia</cite></p> 
+<p><img id="cat2" src="" style="float:left" /><em>I sure am glad I have 18 years of purring so I'm allowed to use sMoreMail according to the terms of use.</em><cite>Patricia</cite></p> 
 </div> 
 <div class="col4">
-<p><img id="robot3" src="" style="float:left" /><em>sMoreMail was the solution to my empty inbox. Used it for 5 hours 2 years ago, and I still get 100 email a day past my spam filter.</em><cite>Fickles</cite></p>        
+<p><img id="cat3" src="" style="float:left" /><em>sMoreMail was the solution to my empty inbox. Used it for 5 hours 2 years ago, and I still get 100 email a day past my spam filter.</em><cite>Fickles</cite></p>        
 </div>  
 <div class="col4">
-<p><img id="robot4" src="" style="float:left" /><em>Good thing I created an email address just for sMoreMail.  It sure did fill up quick!  Now pet me human!</em><cite>Anna Labelle tubs</cite></p>
+<p><img id="cat4" src="" style="float:left" /><em><span id="cat4s">Good thing I created an email address just for sMoreMail.  It sure did fill up quick!  Now pet me human!</em></span><cite><span id="cat4n">Anna Labelle tubs</span></cite></p>
 </div>  
 </section>    
 
@@ -149,15 +149,23 @@ document.getElementById('footer-copyright').innerHTML = '&copy; sMoreMail ' + n;
 <script type="text/javascript">
 var max1=102;  //n+1 images
 var cats = [
- ['name','quote']
-,['name','quote']
-
+ ['Larissa',"I was told 97% of cats are very satisfied with sMoreMail. Only 42% of those cats are unable to find their litter box. What was the question?"]
+,['Patricia',"I sure am glad I have 18 years of purring so I'm allowed to use sMoreMail according to the terms of use."]
+,['Fickles',"sMoreMail was the solution to my empty inbox. Used it for 5 hours 2 years ago, and I still get 100 email a day past my spam filter."]
+,['Anna Labelle tubs',"Good thing I created an email address just for sMoreMail.  It sure did fill up quick!  Now pet me human!"]
+//,['name',"quote"]
 ];
-document.getElementById('robot1').src="/img/cats/"+ Math.floor(Math.random()*max1) + ".png";
-document.getElementById('robot2').src="/img/cats/"+ Math.floor(Math.random()*max1) + ".png";
-document.getElementById('robot3').src="/img/cats/"+ Math.floor(Math.random()*max1) + ".png";
-document.getElementById('robot4').src="/img/cats/"+ Math.floor(Math.random()*max1) + ".png";
+document.getElementById('cat1').src="/img/cats/"+ Math.floor(Math.random()*max1) + ".png";
+document.getElementById('cat2').src="/img/cats/"+ Math.floor(Math.random()*max1) + ".png";
+document.getElementById('cat3').src="/img/cats/"+ Math.floor(Math.random()*max1) + ".png";
+document.getElementById('cat4').src="/img/cats/"+ Math.floor(Math.random()*max1) + ".png";
 //document["robot2"].src="http://robohash.org/"+ Math.floor(Math.random()*100) + "?size=100x100&set=set4";
+
+max1 = cats.length + 1
+r = Math.floor(Math.random()*max1) 
+document.getElementById('cat4s').innerHTML = cats[r][1];
+document.getElementById('cat4n').innerHTML = cats[r][0];
+
 </script>
 
 
