@@ -6,7 +6,8 @@ var article = [
 ,[0,'2018-12-26','utility','Utility','Gas and Electric - heat and light since 1892.','']
 ,[0,'2018-12-26','mortgage','Mortgage','Death, Taxes and Mortgages - in that order','']
 ,[0,'2018-12-27','book-dracula','Dracula Book','A classic tail of being out for blood.','']
-,[0,'2018-12-27','attorney','Attorneys and Lawyers',"Can't live with them, can't live with them",'']
+,[0,'2018-12-27','attorney','Attorneys',"Can't live with them, can't live with them",'']
+,[0,'2018-12-27','lawyer','Lawyers',"The origional ambulance chasers.",'']
 ,[0,'2018-12-27','loans','Loans','Payday Predators and compound interest; neither working in your favor','']
 ,[0,'2018-12-27','donate','Donate','It''s not your money if you give it away','']
 
