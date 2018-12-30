@@ -121,7 +121,7 @@ font-weight:bold;
 
 <tr valign="top">
 <td class="lpart" colspan="100"><div class="lhead">/
-<span class="lcount">7 pages</span></div>
+<span class="lcount" id="lcount">7 pages</span></div>
 
 <table cellpadding="0" cellspacing="0" border="0" width="100%" id="tableindex">
 
@@ -132,12 +132,6 @@ font-weight:bold;
 <tr><td class="lpage"><a href="/terms.html" title="Terms and Use for sMoreMail">Terms of Use for sMoreMail</a></td></tr>
 <tr><td class="lpage"><a href="/login.html" title="Login to sMoreMail">Login to sMoreMail</a></td></tr>
 <tr><td class="lpage"><a href="/sitemap.html" title="sMoreMail Site Map">sMoreMail Site Map</a></td></tr>
-<tr><td class="lpage"><a href="/best/mesothelioma/index.html" title="Feature mesothelioma">Feature mesothelioma</a></td></tr>
-<tr><td class="lpage"><a href="/best/insurance/index.html" title="Feature insurance">Feature insurance</a></td></tr>
-<tr><td class="lpage"><a href="/best/utility/index.html" title="Feature utility">Feature utility</a></td></tr>
-<tr><td class="lpage"><a href="/best/mortgage/index.html" title="Feature mortgage">Feature mortgage</a></td></tr>
-<tr><td class="lpage"><a href="/best/attorney/index.html" title="Feature attorney">Feature attorney</a></td></tr>
-
 </table>
 
 </td>
@@ -158,27 +152,7 @@ document.getElementById('footer').innerHTML = 'sMoreMail | Copyright &copy; ' + 
 document.getElementById('lupdate').innerHTML = 'Last Update: ' + utc;
 </script>
 
-<script>
-//featured, date, folder, title, description,thumbnail
-var article = [
- [0,'2018-12-26','mesothelioma','Mesothelioma','Bringing Lawyers and Plantifs together since 1972.','']
-,[0,'2018-12-26','insurance','Insurance','What ails ya, coasts ya.','']
-,[0,'2018-12-26','utility','Utility','Gas and Electric - heat and light since 1892.','']
-,[0,'2018-12-26','mortgage','Mortgage','Mortgage - Death, Taxes and Mortgages - in that order','']
-,[0,'2018-12-27','attorney','attorney','Attorney - Cant live with them, cant live with them','']
-
-];
-
-var div = document.getElementById('tableindex');
-if (div){ 
-div.innerHTML += '<tr><td class="lpage mod'+ div.rows.length % 2 +'">new content here ' + div.rows.length % 2 + '</td></tr>';
-div.innerHTML += '<tr><td class="lpage mod'+ div.rows.length % 2 +'">new content here'  + div.rows.length % 2 + '</td></tr>';
-div.innerHTML += '<tr><td class="lpage mod'+ div.rows.length % 2 +'">new content here'  + div.rows.length % 2 + '</td></tr>';
-div.innerHTML += '<tr><td class="lpage mod'+ div.rows.length % 2 +'">new content here'  + div.rows.length % 2 + '</td></tr>';
-}
-
-</script>
-
+<script  async src="/best/index.js"></script>
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-131447374-1"></script>
