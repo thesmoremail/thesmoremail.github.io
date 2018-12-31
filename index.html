@@ -110,16 +110,16 @@
 
 <section class="row" id="robotreviews">          
 <div class="col4">
-<p><img id="cat1" src="" style="float:left" /><em><span id="cat1s">I was told 97% of cats are very satisfied with sMoreMail. Only 42% of those cats are unable to find their litter box.  What was the question?</span></em><cite><span id="cat1n">Larissa</span></cite></p>
+<p><img id="cat1" src="" style="float:left;padding-right:10px;" /><em><span id="cat1s">I was told 97% of cats are very satisfied with sMoreMail. Only 42% of those cats are unable to find their litter box.  What was the question?</span></em><cite><span id="cat1n" style="padding-right:30px;color:brown;">Larissa</span></cite></p>
 </div> 
 <div class="col4">
-<p><img id="cat2" src="" style="float:left" /><em><span id="cat2s">I sure am glad I have 18 years of purring so I'm allowed to use sMoreMail according to the terms of use.</span></em><cite><span id="cat2n">Patricia</span></cite></p> 
+<p><img id="cat2" src="" style="float:left;padding-right:10px;" /><em><span id="cat2s">I sure am glad I have 18 years of purring so I'm allowed to use sMoreMail according to the terms of use.</span></em><cite><span id="cat2n" style="padding-right:30px;color:brown;">Patricia</span></cite></p> 
 </div> 
 <div class="col4">
-<p><img id="cat3" src="" style="float:left" /><em><span id="cat3s">sMoreMail was the solution to my empty inbox. Used it for 5 hours 2 years ago, and I still get 100 email a day past my spam filter.</span></em><cite><span id="cat3n">Fickles</span></cite></p>        
+<p><img id="cat3" src="" style="float:left;padding-right:10px;" /><em><span id="cat3s">sMoreMail was the solution to my empty inbox. Used it for 5 hours 2 years ago, and I still get 100 email a day past my spam filter.</span></em><cite><span id="cat3n" style="padding-right:30px;color:brown;">Fickles</span></cite></p>        
 </div>  
 <div class="col4">
-<p><img id="cat4" src="" style="float:left" /><em><span id="cat4s">Good thing I created an email address just for sMoreMail.  It sure did fill up quick!  Now pet me human!</em></span><cite><span id="cat4n">Anna Labelle tubs</span></cite></p>
+<p><img id="cat4" src="" style="float:left;padding-right:10px;" /><em><span id="cat4s">Good thing I created an email address just for sMoreMail.  It sure did fill up quick!  Now pet me human!</em></span><cite><span id="cat4n" style="padding-right:30px;color:brown;">Anna Labelle tubs</span></cite></p>
 </div>  
 </section>    
 
@@ -290,16 +290,14 @@ var cats = [
 max1 = cats.length;
 ctlist = ''; //list of cats so we don't double hit
 for (var y = 1, len = 4; y <= len; y++) {
+  do { r = Math.floor(Math.random()*max1); }while (ctlist.indexOf(","+r) > -1); //only get new numbers
+  ctlist += "," + r;
+  console.log("cat#" + r + " of " + cats.length + 'ctlist = ' + ctlist);
 
-r = Math.floor(Math.random()*max1);
-console.log("cat#" + r + "of " + cats.length);
-ctlist += "," + r;
-
-document.getElementById('cat' + y).src="/img/cats/"+ r + ".png";
-document.getElementById('cat'+y+'s').innerHTML = cats[r][1];
-document.getElementById('cat'+y+'n').innerHTML = cats[r][0];
-}
-
+  document.getElementById('cat' + y).src="/img/cats/"+ r + ".png";
+  document.getElementById('cat'+y+'s').innerHTML = cats[r][1];
+  document.getElementById('cat'+y+'n').innerHTML = cats[r][0];
+}//each cat
 </script>
 
 
