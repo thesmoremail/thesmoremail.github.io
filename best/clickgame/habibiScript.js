@@ -42,6 +42,7 @@ showEmoticonRandomPosition = function() { // showing the emoticon box randomly
   emoticonDiv.style.display = "block"; // show
   var x = getOffset( document.getElementById('main-container') ).top; 
   var y = getOffset( document.getElementById('main-container') ).left; 
+y=0;
   emoticonDiv.style.top = generateRandomNumb(x,x+400) + 'px'; // random top position
   emoticonDiv.style.left = generateRandomNumb(y,y+400) + 'px'; // random left position
 }
