@@ -262,7 +262,7 @@ var cats = [
 ,['?',"My owners have yet to name me.  Please mail thesmoremail@gmail.com with name suggestions. - reference, 'the cute one'."]
 ,['Bubulgum',"Look.  My owner is 9.  it's a good name."]
 ,['Sad Luna',"Do I have a saddle?  No.  I'm a cat.  not a horse."]
-,['Fluffy Luna',"Once Anime get ahold of me, i look like this."]
+,['Fluffy Luna',"Once Anime got ahold of me, i look like this."]
 ,['Black Stripe Swirly',"Some pay for beauty, some are born with beaty. I known which one I am."]
 ,['Peppermint',"Not for licks."]
 ,['Brown Sugar Snow',"When you mix in a little cream with snow and grown sugar- you get me."]
@@ -274,9 +274,10 @@ var cats = [
 ,['Red Moonlight',"Tattered Ear, Tattered tale.  But my inbox is full. Thanks, sMoreMail!"]
 ,['Ocean',"I like the tastey fishes. But not the pinchy crabs. those are best in cakes."]
 ,['Rusty',"I once ran a fruit stand."]
-,['Sunny',"As far celestial themes go, I'm the warmest."]
+,['Sunny',"As far as celestial themes go, I'm the warmest."]
 ,['YourLove',"Want to hold my Rabbit?"]
-,['-unnamed',"The early cave drawings reflected a strong bond between the early warriors and their 4 legged managers."]
+,['-unnamed',"The cave drawings reflected a strong bond between the early warriors and their 4 legged managers."]
+,['Ultra Rare, GHOSTY',"<a href='/best/cat'>Click Here</a> to submit your colored cat to thesmoremail@gmail.com. No featured cat has ever received $100. Maybe you're next!"]
 //,['name',"quote"]
 ];
 
@@ -287,9 +288,12 @@ var cats = [
 //document["robot2"].src="http://robohash.org/"+ Math.floor(Math.random()*100) + "?size=100x100&set=set4";
 
 max1 = cats.length;
+ctlist = ''; //list of cats so we don't double hit
 for (var y = 1, len = 4; y <= len; y++) {
+
 r = Math.floor(Math.random()*max1);
 console.log("cat#" + r + "of " + cats.length);
+ctlist += "," + r;
 
 document.getElementById('cat' + y).src="/img/cats/"+ r + ".png";
 document.getElementById('cat'+y+'s').innerHTML = cats[r][1];
