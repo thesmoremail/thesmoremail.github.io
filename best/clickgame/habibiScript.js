@@ -13,6 +13,8 @@ generateRandomNumb = function(minNumb, maxNumb) { // generate random number in r
   return Math.floor(Math.random() * (maxNumb - minNumb + 1)) + minNumb;
 }
 
+
+
 // Create emoji and append it to the container div
 var emoticonDiv = document.createElement('div');
 emoticonDiv.setAttribute('id', 'red-box');
@@ -23,10 +25,25 @@ randomEmoticon = function() { // generate random emoticon from the array
   return generateRandomNumb(0 , emoticons.length - 1);
 }
 
+//get position
+function getOffset( el ) {
+    var _x = 0;
+    var _y = 0;
+    while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
+        _x += el.offsetLeft - el.scrollLeft;
+        _y += el.offsetTop - el.scrollTop;
+        el = el.offsetParent;
+    }
+    return { top: _y, left: _x };
+}
+
+
 showEmoticonRandomPosition = function() { // showing the emoticon box randomly
   emoticonDiv.style.display = "block"; // show
-  emoticonDiv.style.top = generateRandomNumb(0,400) + 'px'; // random top position
-  emoticonDiv.style.left = generateRandomNumb(0,400) + 'px'; // random left position
+  var x = getOffset( document.getElementById('main-container') ).top; 
+  var y = getOffset( document.getElementById('main-container') ).left; 
+  emoticonDiv.style.top = generateRandomNumb(x,x+400) + 'px'; // random top position
+  emoticonDiv.style.left = generateRandomNumb(y,y+400) + 'px'; // random left position
 }
 
 generateNewEmoticon = function() { // generate random emoticon in a random position
