@@ -147,7 +147,7 @@ document.getElementById('footer-copyright').innerHTML = '&copy; sMoreMail ' + n;
 
 <!--random robots -->    	
 <script type="text/javascript">
-var max1=102;  //n+1 images
+//var max1=102;  //n+1 images
 var cats = [
  ['Larissa',"I was told 97% of cats are very satisfied with sMoreMail. Only 42% of those cats are unable to find their litter box. What was the question?"]
 ,['Patricia',"I sure am glad I have 18 years of purring so I'm allowed to use sMoreMail according to the terms of use."]
@@ -233,6 +233,8 @@ var cats = [
 max1 = cats.length;
 for (var y = 1, len = 4; y <= len; y++) {
 r = Math.floor(Math.random()*max1);
+console.log("cat#" + r + "of " + cats.length);
+
 document.getElementById('cat' + y).src="/img/cats/"+ r + ".png";
 document.getElementById('cat'+y+'s').innerHTML = cats[r][1];
 document.getElementById('cat'+y+'n').innerHTML = cats[r][0];
