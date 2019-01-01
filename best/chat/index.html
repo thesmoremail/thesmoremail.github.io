@@ -38,6 +38,22 @@
 	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <script src="http://css3-mediaqueries-js.googlecode.com/files/css3-mediaqueries.js"></script>
 <![endif]-->
+<style>
+#overlay {
+     position:relative; /* Sit on top of the page content */
+     display: block; /* Hidden by default is none */
+     width: 25%; /* Full width (cover the whole page) */
+     height: 100px; /* Full height (cover the whole page) */
+     float:right; 
+     top: -113px;
+     left: -12px;
+     right: 0;
+     bottom: 0;
+     background-color: rgba(0,0,0,1); /* Black background with opacity */
+     z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+     //cursor: pointer; /* Add a pointer on hover */
+   }
+</style>
 </head>
 
 <body id="home">
@@ -87,8 +103,12 @@
 </div>          
 
 <div class="col1_3">
+          
 <h2>The Industries</h2>
+<div>
 <iframe src="https://xat.com/embed/chat.php#id=473877924&gn=smoremail" width="100%" height="400" frameborder="0" scrolling="no"></iframe>
+<div id="overlay"> asdf</div>
+</div>
 <!-- smoremail -->
 <ins class="adsbygoogle"
      style="display:block"
