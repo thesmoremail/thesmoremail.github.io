@@ -13,6 +13,7 @@ var article = [
 ,[0,'2018-12-28','conferencecall','Conference Call',"Say Wat?! - It's like a game of telephone only more nerdy.",'']
 ,[0,'2018-12-30','degree','Degrees',"Edumication - it's not just for Nerd's anymore",'']
 ,[0,'2018-12-30','clickgame','ClickGame',"get your mouse or trackball.  this one moves pretty fast.",'']
+,[0,'2018-12-31','chat','Chat',"When you need to ask for help on how to toast your sMoreMail, ask these bots.",'']
 
 ];
 
