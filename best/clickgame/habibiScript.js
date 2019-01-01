@@ -58,7 +58,7 @@ generateNewEmoticon();
 // START SOUNDS
 
 // Create Audio Player and add it to page
-//var audioPlayer = document.createElement('audio');
+var audioPlayer = document.createElement('audio');
 var waveSource = document.createElement('source');
 audioPlayer.setAttribute('controls','');
 audioPlayer.appendChild(waveSource);
