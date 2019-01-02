@@ -101,7 +101,7 @@
 <div class="col1_3">
 <!-- smoremail -->
 <div class="circle" id="headindex">
-<h4>Best of sMoreMail User Submitted Articles:</h4>
+<h4>Best of sMoreMail <a href="best/addarticle/">User Submitted Articles</a>:</h4>
 </div>
 </div>
 
@@ -114,14 +114,16 @@
 
 
 <script>
-function changeClass(){
-    var NAME = document.getElementById("c1");
-    var currentClass = NAME.className;
-    if (currentClass == "selected") { // Check the current class name
+function changeClass(id){
+    var element1 = document.getElementById(id);
+    //var currentClass = NAME.className;
+    if (element1.classList.contains("selected") { // Check the current class name
+element1.classList.add("unselected");
+element1.classList.remove("selected");
 console.log("unselected");
-        NAME.className = "unselected";   // Set other class name
     } else {
-        NAME.className = "selected";  // Otherwise, use `second_name`
+element1.classList.add("selected");
+element1.classList.remove("unselected");
 console.log("selected");
     }
 
@@ -129,7 +131,7 @@ console.log("selected");
 </script>
 
 <section class="row" id="robotreviews">          
-<div class="col4" id="c1" onclick="changeClass();">
+<div class="col4" id="c1" onclick="var x=changeClass('c1');">
 <p><img id="cat1" src="" style="float:left;padding-right:10px;" /><em><span id="cat1s">I was told 97% of cats are very satisfied with sMoreMail. Only 42% of those cats are unable to find their litter box.  What was the question?</span></em><cite><span id="cat1n" style="padding-right:30px;color:brown;">Larissa</span></cite></p>
 </div> 
 <div class="col4">
