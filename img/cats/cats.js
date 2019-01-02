@@ -202,6 +202,9 @@ var cats = [
 ,['200.png','One-Eye Jack',"The sparrow was about this high.  The taller ones are more lucky."]
 ,['201.png','Sad Rosie',"Like sadness from the movie.  Always sad."]
 ,['202.png','Capt. Stabby',"The First of the warrior class has joined the arena. lifetime undefeated - the cat to have in your corner when you enter THE ARENA."]
+,['203.png','Srike',"Tricolor, for her pleasure."]
+,['204.png','Zappy',"Twin swords, and a shocking tail - sMoreMail makes them whail."]
+,['205.png','Striken',"As the twin of Strike, I also have the power to shock you."]
 //muskox
 //tangerine spelean
 //claws slomo - Me and chewster  made the slessly run in 8.3 parsnips.
