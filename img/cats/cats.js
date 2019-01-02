@@ -207,10 +207,17 @@ var cats = [
 ,['205.png','Striken',"As the twin of Strike, I also have the power to shock you."]
 ,['206.png','Tuskcat',"Eye wear the blood of my fallen enemys on my tusks.  these are not socks."]
 ,['207.png','Tangerine Spleen',"You know those DJ's on GTA5?  yeah, well, I work with them. At over 50 years old, I still rock the arena.  sMoreMail.com is my favorite sponsor."]
+,['208.png','Claws Slomo',"Me and Chewster made the slessle run in 8.3 parsnips and maximum email. Back off, fluffball!"]
+,['209.png','Chub Chub',"Emblazened in the local cathedral's stained-glass window, Specim A felt imortalized."]
+,['210.png','Muskox',"Elon was surpised that sMoreMail required so little lunar power from secondary battry bank."]
+,['211.png','Jazz Hands',"If you squint, I come into - focus."]
+,['212.png','Fester',"Warm, Snuggly, and lint-pill free, i'm the origional cuddle monster."]
+,['213.png','Predator III',"As The origional silent killer, us cats have been worshiped by the egyptions as they deserved."]
+,['214.png','Saidy',"That mexican-hairless in the 2nd house down is no longer my friend. I'll send her an email to remind her."]
+,['215.png','Rugburn',"Bites, and never lets go.  Lost the scars in the last round to prove it."]
+,['216.png','Schredder',"Just hanging around, reading some email.  Oh, and you might want to replace that screen."]
 //muskox
-//claws slomo - Me and chewster  made the slessly run in 8.3 parsnips.
 //tj, toe jam
-//chubchub
 //fat fatty
 
 //,['0.png','name',"quote"]
