@@ -205,10 +205,13 @@ var cats = [
 ,['203.png','Srike',"Tricolor, for her pleasure."]
 ,['204.png','Zappy',"Twin swords, and a shocking tail - sMoreMail makes them whail."]
 ,['205.png','Striken',"As the twin of Strike, I also have the power to shock you."]
+,['206.png','Tuskcat',"Eye wear the blood of my fallen enemys on my tusks.  these are not socks."]
 //muskox
 //tangerine spelean
 //claws slomo - Me and chewster  made the slessly run in 8.3 parsnips.
 //tj, toe jam
+//chubchub
+//fat fatty
 
 //,['0.png','name',"quote"]
 ];
