@@ -112,8 +112,24 @@
             
 <h3>If cats or their prey reviewed sMoreMail, they might meow:</h3>
 
+
+<script>
+function changeClass(){
+    var NAME = document.getElementById("c1");
+    var currentClass = NAME.className;
+    if (currentClass == "selected") { // Check the current class name
+console.log("unselected");
+        NAME.className = "unselected";   // Set other class name
+    } else {
+        NAME.className = "selected";  // Otherwise, use `second_name`
+console.log("selected");
+    }
+
+}   
+</script>
+
 <section class="row" id="robotreviews">          
-<div class="col4">
+<div class="col4" id="c1" onclick="changeClass();">
 <p><img id="cat1" src="" style="float:left;padding-right:10px;" /><em><span id="cat1s">I was told 97% of cats are very satisfied with sMoreMail. Only 42% of those cats are unable to find their litter box.  What was the question?</span></em><cite><span id="cat1n" style="padding-right:30px;color:brown;">Larissa</span></cite></p>
 </div> 
 <div class="col4">
