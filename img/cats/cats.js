@@ -206,8 +206,8 @@ var cats = [
 ,['204.png','Zappy',"Twin swords, and a shocking tail - sMoreMail makes them whail."]
 ,['205.png','Striken',"As the twin of Strike, I also have the power to shock you."]
 ,['206.png','Tuskcat',"Eye wear the blood of my fallen enemys on my tusks.  these are not socks."]
+,['207.png','Tangerine Spleen',"You know those DJ's on GTA5?  yeah, well, I work with them. At over 50 years old, I still rock the arena.  sMoreMail.com is my favorite sponsor."]
 //muskox
-//tangerine spelean
 //claws slomo - Me and chewster  made the slessly run in 8.3 parsnips.
 //tj, toe jam
 //chubchub
