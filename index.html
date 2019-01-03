@@ -86,7 +86,7 @@ background-color:grey;
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 
-<nav><ul class="pagination"><li><a onClick="window.location.reload()" title="more cats" class="run" style="width: 75%;font-size: 1.10em;font-weight:bold;height:10px;padding-bottom:14px;"> more cats</a></li>
+<nav><ul class="pagination"><li><a onClick="drawcats();" title="more cats" class="run" style="width: 75%;font-size: 1.10em;font-weight:bold;height:10px;padding-bottom:14px;"> more cats</a></li>
 <li><a onClick="fight();" title="cat fight" class="run" style="width: 50%;font-size: 1.10em;font-weight:bold;height:10px;margin-left:26px;padding-bottom:14px;">cat fight</a></li></<ul>
 </nav>
 </div>          
@@ -149,17 +149,19 @@ console.log("selected");
 function getselected(){
 var sel1 = '';
 if (document.getElementById('c1').classList.contains("selected")){
-sel1+='&c1='+document.getElementById('cat' + 1).src.replace(/^.*[\\\/]/, '');}
+sel1+='&warrior='+document.getElementById('cat' + 1).src.replace(/^.*[\\\/]/, '');}
 if (document.getElementById('c2').classList.contains("selected")){
-sel1+='&c2='+document.getElementById('cat' + 2).src.replace(/^.*[\\\/]/, '');}
+sel1+='&combatant='+document.getElementById('cat' + 2).src.replace(/^.*[\\\/]/, '');}
 if (document.getElementById('c3').classList.contains("selected")){
-sel1+='&c3='+document.getElementById('cat' + 3).src.replace(/^.*[\\\/]/, '');}
+sel1+='&champion='+document.getElementById('cat' + 3).src.replace(/^.*[\\\/]/, '');}
 if (document.getElementById('c4').classList.contains("selected")){
-sel1+='&c4='+document.getElementById('cat' + 4).src.replace(/^.*[\\\/]/, '');}
+sel1+='&hero='+document.getElementById('cat' + 4).src.replace(/^.*[\\\/]/, '');}
 
-//remove .jpg
-//remove .png
-//remove .gif
+
+sel1 = sel1.replace(/.png|.gif|.jpg/gi, function (x) {
+    return '';
+  });
+
 return sel1;
 }
 
@@ -226,17 +228,29 @@ document.getElementById('footer-copyright').innerHTML = '&copy; sMoreMail ' + n;
 //document.getElementById('cat4').src="/img/cats/"+ Math.floor(Math.random()*max1) + ".png";
 //document["robot2"].src="http://robohash.org/"+ Math.floor(Math.random()*100) + "?size=100x100&set=set4";
 
+function drawcats(){
 max1 = cats.length;
-ctlist = ''; //list of cats so we don't double hit
+ctlist = getselected(); //''; //list of cats so we don't double hit, and excludde antyhihng we have selected
+
 for (var y = 1, len = 4; y <= len; y++) {
   do { r = Math.floor(Math.random()*max1); }while (ctlist.indexOf(","+r) > -1); //only get new numbers
+  
+
+if (!document.getElementById('c' + y).classList.contains("selected")){
   ctlist += "," + r;
-  console.log("cat#" + r + " of " + cats.length + 'ctlist = ' + ctlist);
+  console.log("not selected, adding: cat#" + r + " of " + cats.length + 'ctlist = ' + ctlist);
 
   document.getElementById('cat' + y).src="img/cats/"+ cats[r][0];
   document.getElementById('cat'+y+'n').innerHTML = cats[r][1];
   document.getElementById('cat'+y+'s').innerHTML = cats[r][2];
+}else{
+   console.log("SELECTED cat#" + r + " of " + cats.length + 'ctlist = ' + ctlist);
+}
 }//each cat
+}//drawcats
+
+drawcats();
+
 </script>
 
 
