@@ -166,15 +166,14 @@ return sel1;
 }
 
 function fight(){
-
-if (document.querySelectorAll('.selected').length > 1){
-  alert('fight ready  ?FIGHT!' + getselected());
-} else{
-alert('Select 2 cats to fight. Click on 2 creatures to continue.  ');
-}
-
-window.location.reload();
-}
+  if (document.querySelectorAll('.selected').length > 1){
+   url = getselected();
+   window.location = "best/catfight/index.html?" + url;
+   alert('fight ready  ?FIGHT!' + url);
+  } else{
+    alert('Select 2 cats to fight. Click on 2 creatures to continue.  ');
+  } //2 selected?
+} //fight
 </script>
 
 <section class="row" id="robotreviews">          
