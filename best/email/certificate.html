@@ -43,6 +43,53 @@
 	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <script src="http://css3-mediaqueries-js.googlecode.com/files/css3-mediaqueries.js"></script>
 <![endif]-->
+
+<style>
+/* Container holding the image and the text */
+.container {
+  position: relative;
+  text-align: center;
+  color: green;
+
+}
+/* Bottom left text */
+.bottom-left {
+  position: absolute;
+  bottom: 8px;
+  left: 16px;
+}
+
+/* Top left text */
+.top-left {
+  position: absolute;
+  top: 8px;
+  left: 16px;
+}
+
+/* Top right text */
+.top-right {
+  position: absolute;
+  top: 8px;
+  right: 16px;
+}
+
+/* Bottom right text */
+.bottom-right {
+  position: absolute;
+  bottom: 8px;
+  right: 16px;
+}
+
+/* Centered text */
+.centered {
+  position: absolute;
+  top: 52%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+font-size:200%;
+width:75%;
+}
+</style>
 </head>
 
 <body id="home">
@@ -123,7 +170,14 @@
 <h3>Email Quiz 14</h3>
 You Have completed the <a href=/best/email>training material </a>and have completed the quiz! Congradulations!<br><br>
 
-<img src="cert.png" width=100%> <br>
+
+
+<div class="container" style=" ">
+  <img src="cert.png" alt="cert" style="width:100%;">
+  <div class="centered" style="" contenteditable="true">Captain Awesome (click to edit)</div>
+</div>
+
+
 thanks www.postermywall.com for help in making this spectacular cert
 
 
