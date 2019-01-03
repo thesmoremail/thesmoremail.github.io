@@ -74,7 +74,33 @@
  <section> <div></div>        
 <img src="../../img/arenacolorsmall.svg" width=100%>
 
+<div id="catd1"><img id="cati1"/></div>
+<div id="catd2"><img id="cati2"/></div>
 </section>  
+
+<script  src="/img/cats/cats.js"></script>
+<script>
+var url = new URL(window.location.href);
+var c1=""; //cat1
+var c2=""; //cat2
+var cat=""; //potential cat from URL
+var a = ["warrior", "combatant", "champion", "hero"]; //loop over each possible URL option, and assign in this order to two cats
+a.forEach(function(entry) {
+    cat = url.searchParams.get(entry); //look in URL
+    if(cat){if(c1==""){c1=cat;}else{c2=cat;}} //cat found, assign to cat 1 or cat 2?
+}); //end for each -- try each combination, get cats 1 and 2
+
+console.log(c1 + ' is cat 1. cat 2 is ' + c2);
+
+document.getElementById('cati1').src="img/cats/"+ cats[cat1][0];
+document.getElementById('cati2').src="img/cats/"+ cats[cat2][0];
+
+//  document.getElementById('cat'+y+'n').innerHTML = cats[r][1];
+//  document.getElementById('cat'+y+'s').innerHTML = cats[r][2];
+
+
+</script>
+
 <section><br>
 <em>Instructions: </em>
 <BR>You have just sent 2 opponents to the arena.  The arena is proudly sponsored, where the sponsor makes the match possible.  No kittens are harmed - but all prey animals stand the chance of being destroyed forever, so be careful on how many prey animals you send against the top feline warriors.  
