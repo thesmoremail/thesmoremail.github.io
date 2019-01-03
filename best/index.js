@@ -15,7 +15,8 @@ var article = [
 ,[0,'2018-12-30','clickgame','🏓 ClickGame',"get your mouse or trackball.  this one moves pretty fast.",'']
 ,[0,'2018-12-31','chat','🎭 Chat',"When you need to ask for help on how to toast your sMoreMail, ask these bots.",'']
 ,[0,'2018-12-31','email','📩 Email',"<img src='/img/sm-xsm.png' style='height:22px;'/> Shenanigan Protection;  Methods, Tests, and Techniques for email phishing, farming, and spoofing identification and sanitization.",'']
-,[0,'2018-12-31','⚠ asbestos','asbestos',"Asbetos - the myth, the legend, the lawsuit",'']
+,[0,'2019-01-03','asbestos','⚠ asbestos',"The Lawsuits engulfing the other white meat.",'']
+,[0,'2019-01-031','carinsurance','🚓 Car Insurance',"You hit it, they pay",'']
 
 ];
 
