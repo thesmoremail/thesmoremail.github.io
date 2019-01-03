@@ -87,7 +87,7 @@ background-color:grey;
 </script>
 
 <nav><ul class="pagination"><li><a onClick="window.location.reload()" title="more cats" class="run" style="width: 75%;font-size: 1.10em;font-weight:bold;height:10px;padding-bottom:14px;"> more cats</a></li>
-<li><a onClick="window.location.reload()" title="cat fight" class="run" style="width: 50%;font-size: 1.10em;font-weight:bold;height:10px;margin-left:26px;padding-bottom:14px;">cat fight</a></li></<ul>
+<li><a onClick="fight();" title="cat fight" class="run" style="width: 50%;font-size: 1.10em;font-weight:bold;height:10px;margin-left:26px;padding-bottom:14px;">cat fight</a></li></<ul>
 </nav>
 </div>          
 
@@ -101,7 +101,7 @@ background-color:grey;
 <h2>sMoreMail is for you.</h2>
 <ul class="circle"><li>Web Based. Nothing to install.</li><li>sMoreMail is free. No sign up or login required.</li></ul> 
 <p><a href="http://eepurl.com/gcDkcL">Join the mailing list</a> for notification of new features.</p>
-<a href="run.html"><img src="/img/fullinbox.png" alt="full email inbox" title="Run sMoreMail" class="scale marginbottom" style="width:60%;padding-left:12%;" ></a>
+<a href="run.html"><img src="img/fullinbox.png" alt="full email inbox" title="Run sMoreMail" class="scale marginbottom" style="width:60%;padding-left:12%;" ></a>
 </div>
 
 <div class="col1_3">
@@ -145,6 +145,34 @@ console.log("selected");
     }
 
 }   
+
+function getselected(){
+var sel1 = '';
+if (document.getElementById('c1').classList.contains("selected")){
+sel1+='&c1='+document.getElementById('cat' + 1).src.replace(/^.*[\\\/]/, '');}
+if (document.getElementById('c2').classList.contains("selected")){
+sel1+='&c2='+document.getElementById('cat' + 2).src.replace(/^.*[\\\/]/, '');}
+if (document.getElementById('c3').classList.contains("selected")){
+sel1+='&c3='+document.getElementById('cat' + 3).src.replace(/^.*[\\\/]/, '');}
+if (document.getElementById('c4').classList.contains("selected")){
+sel1+='&c4='+document.getElementById('cat' + 4).src.replace(/^.*[\\\/]/, '');}
+
+//remove .jpg
+//remove .png
+//remove .gif
+return sel1;
+}
+
+function fight(){
+
+if (document.querySelectorAll('.selected').length > 1){
+  alert('fight ready  ?FIGHT!' + getselected());
+} else{
+alert('Select 2 cats to fight. Click on 2 creatures to continue.  ');
+}
+
+window.location.reload();
+}
 </script>
 
 <section class="row" id="robotreviews">          
