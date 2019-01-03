@@ -1,20 +1,21 @@
 
 //featured, date, folder, title, description,thumbnail
 var article = [
- [0,'2018-12-26','mesothelioma','Mesothelioma','Bringing Lawyers and Plantifs together since 1972.','']
-,[0,'2018-12-26','insurance','Insurance','What ails ya, costs ya.','']
-,[0,'2018-12-26','utility','Utility','Gas and Electric - heat and light since 1892.','']
-,[0,'2018-12-26','mortgage','Mortgage','Death, Taxes and Mortgages - in that order','']
-,[0,'2018-12-27','book-dracula','Dracula Book','A classic tail of being out for blood.','']
-,[0,'2018-12-27','attorney','Attorneys',"Can't live with them, can't live with them",'']
-,[0,'2018-12-27','lawyer','Lawyers',"The origional ambulance chasers.",'']
-,[0,'2018-12-27','loans','Loans','Payday Predators and compound interest; neither working in your favor','']
-,[0,'2018-12-27','donate','Donate',"It's not your money if you give it away",'']
-,[0,'2018-12-28','conferencecall','Conference Call',"Say Wat?! - It's like a game of telephone only more nerdy.",'']
-,[0,'2018-12-30','degree','Degrees',"Edumication - it's not just for Nerd's anymore",'']
-,[0,'2018-12-30','clickgame','ClickGame',"get your mouse or trackball.  this one moves pretty fast.",'']
-,[0,'2018-12-31','chat','Chat',"When you need to ask for help on how to toast your sMoreMail, ask these bots.",'']
-,[0,'2018-12-31','email','Email',"<img src='/img/sm-xsm.png' style='height:22px;'/> Shenanigan Protection;  Methods, Tests, and Techniques for email phishing, farming, and spoofing identification and sanitization.",'']
+ [0,'2018-12-26','mesothelioma','🚭 Mesothelioma 🚬','Bringing Lawyers and Plantifs together since 1972.','']
+,[0,'2018-12-26','insurance','💡 Insurance','What ails ya, costs ya.','']
+,[0,'2018-12-26','utility','🔌 Utility ⚡','Gas and Electric - heat and light since 1892.','']
+,[0,'2018-12-26','mortgage','🏩 Mortgage','Death, Taxes and Mortgages - in that order','']
+,[0,'2018-12-27','book-dracula','📓 Dracula Book','A classic tail of being out for blood.','']
+,[0,'2018-12-27','attorney','⚖ Attorneys',"Can't live with them, can't live with them",'']
+,[0,'2018-12-27','lawyer','🔨 Lawyers',"The origional ambulance chasers.",'']
+,[0,'2018-12-27','loans','🏠 Loans','Payday Predators and compound interest; neither working in your favor','']
+,[0,'2018-12-27','donate','🤝 Donate',"It's not your money if you give it away",'']
+,[0,'2018-12-28','conferencecall','📞 Conference Call',"Say Wat?! - It's like a game of telephone only more nerdy.",'']
+,[0,'2018-12-30','degree','🏫 Degrees',"Edumication - it's not just for Nerd's anymore",'']
+,[0,'2018-12-30','clickgame','🏓 ClickGame',"get your mouse or trackball.  this one moves pretty fast.",'']
+,[0,'2018-12-31','chat','🎭 Chat',"When you need to ask for help on how to toast your sMoreMail, ask these bots.",'']
+,[0,'2018-12-31','email','📩 Email',"<img src='/img/sm-xsm.png' style='height:22px;'/> Shenanigan Protection;  Methods, Tests, and Techniques for email phishing, farming, and spoofing identification and sanitization.",'']
+,[0,'2018-12-31','⚠ asbestos','asbestos',"Asbetos - the myth, the legend, the lawsuit",'']
 
 ];
 
