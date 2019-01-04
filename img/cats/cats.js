@@ -217,7 +217,7 @@ var cats = [
 ,['215.png','Rugburn',"Bites, and never lets go.  Lost the scars in the last round to prove it."]
 ,['216.png','Schredder',"Just hanging around, reading some email.  Oh, and you might want to replace that screen."]
 ,['217.png','Fluffly',"I am a ferret. Not a marmot without a ferret."]
-,['218.png','Rachael',"Febbee sings toast and hampster. I like break and snail."]
+,['218.png','Rachael',"Febbee sings toast and hampster. I like bread and snail."]
 ,['219.png','Anna',"Presenting gifts to sMoreMail by adding additional sources or articles will be well received."]
 ,['220.png','Foxy Loxy',"I've got my eye on you.  It was THIS big."]
 ,['221.png','lil Smo',"I've got my stuffy to beat you with.  Back off."]
