@@ -216,6 +216,7 @@ var cats = [
 ,['214.png','Saidy',"That mexican-hairless in the 2nd house down is no longer my friend. I'll send her an email to remind her."]
 ,['215.png','Rugburn',"Bites, and never lets go.  Lost the scars in the last round to prove it."]
 ,['216.png','Schredder',"Just hanging around, reading some email.  Oh, and you might want to replace that screen."]
+,['211.png','Fluffly',"I am a marmot. Not marmot without a ferret."]
 //muskox
 //tj, toe jam
 //fat fatty
