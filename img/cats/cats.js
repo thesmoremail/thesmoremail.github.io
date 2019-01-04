@@ -157,7 +157,7 @@ var cats = [
 ,['155.png','Whiskers',"When you have a starfish birthmark on your face, you have to jazz it up."]
 ,['156.png','Rainbow Luna',"I like to shoot rainbows out in the sky. Wahooo! I'm flying up in the sky rainbows."]
 ,['157.png','Chocolate Chip',"I call myself a choclate chip brownie, and chocolate chip browning is my name.  I want me to be my own little coyote.  I wash I were that."]
-,['158.png','Cherry',"I wish I were an apple, but turned mself into a cherry snarry."]
+,['158.png','Cherry',"I wish I were an apple, but turned myself into a cherry snarry."]
 ,['159.png','Lemonade Sparkle',"My nickname is sparkle sparkle sparkle sparkle spark."]
 ,['160.png','Pink Bery',"I love icecream. I love yogurt."]
 ,['161.png','Lightening',"Zeus and Sir Lightening Bolt forced me to give up Hera."]
