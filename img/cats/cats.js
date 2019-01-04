@@ -168,7 +168,7 @@ var cats = [
 ,['166.png','BlueBerry',"I love the smell of the blue berrys from the patch.  They are so delicious because everyone calls me blueberry"]
 ,['167.png','E.D.',"I only take blue pill. cough them up.  spit them out.  In a super limp way."]
 ,['168.png','Pasa', "Horns aren't just for Rams."]
-,['169.png','Big Wing Luna',"Victory's Secret got nothig on me.  I have the eyes of an angle."]
+,['169.png','Big Wing Luna',"Victory's Secret got nothing on me.  I have the eyes of an angle."]
 ,['170.png','Wing Luna',"Anime eyes, cell-shaded ears, and rip-saw wings are the genetics of the future."]
 ,['171.png','Mulka',"Watching for voles on the tundra, my stomach is growling."]
 ,['172.png','Mocha',"The lunar surface is no contest for stacks of mail."]
