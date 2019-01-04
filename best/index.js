@@ -19,6 +19,7 @@ var article = [
 ,[0,'2019-01-03','carinsurance','🚓 Car Insurance',"You hit it, they pay",'']
 ,[0,'2019-01-03','asbestos_trusts','☠ Asbestos Trusts',"You breathe it, they pay",'']
 ,[0,'2019-01-03','dev','△ Development',"A better system at half the cost and twice the cheese.  or is it?",'']
+,[0,'2019-01-03','asbestos_map','🌎 Asbestos Map',"If You don't find it, you can't breath the stuff!",'']
 
 ];
 

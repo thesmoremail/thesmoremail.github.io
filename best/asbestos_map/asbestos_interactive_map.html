@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>GPS data</title>
+		<base target="_top"></base>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=yes">
+		<meta name="geo.position" content="24.4945; -39.23835" />
+		<meta name="ICBM" content="24.4945, -39.23835" />
+	</head>
+	<body style="margin:0px;">
+		<script type="text/javascript">
+			google_api_key = ''; // Your project's Google Maps API key goes here (https://code.google.com/apis/console)
+			language_code = '';
+			document.writeln('<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3&amp;libraries=geometry&amp;language='+(self.language_code?self.language_code:'')+'&amp;key='+(self.google_api_key?self.google_api_key:'')+'"><'+'/script>');
+			
+			thunderforest_api_key = ''; // To display OpenStreetMap tiles from ThunderForest, you need a key (http://www.thunderforest.com/docs/apikeys/)
+		</script>
+		
+		<!--
+			If you want to transplant this map into another Web page, by far the best method is to
+			simply include it in a IFRAME tag (see http://www.gpsvisualizer.com/faq.html#google_html).
+			But, if you must paste the code into another page, be sure to include all of these parts:
+			   1. The "div" tags that contain the map and its widgets, below
+			   2. Three sections of JavaScript code:
+			      a. The Google code (maps.google.com or googleapis.com) code, above
+			      b. "gv_options" and the code that calls a .js file on maps.gpsvisualizer.com
+			      c. The "GV_Map" function, which contains all the geographic info for the map
+		-->
+		<div style="margin-left:0px; margin-right:0px; margin-top:0px; margin-bottom:0px;">
+			<div id="gmap_div" style="width:1920px; height:1200px; margin:0px; margin-right:12px; background-color:#f0f0f0; float:left; overflow:hidden;">
+				<p style="text-align:center; font:10px Arial;">This map was created using <a target="_blank" href="http://www.gpsvisualizer.com/">GPS Visualizer</a>'s do-it-yourself geographic utilities.<br /><br />Please wait while the map data loads...</p>
+			</div>
+				
+			<div id="gv_infobox" class="gv_infobox" style="font:11px Arial; border:solid #666666 1px; background-color:#ffffff; padding:4px; overflow:auto; display:none; max-width:1620px;">
+				<!-- Although GPS Visualizer didn't create an legend/info box with your map, you can use this space for something else if you'd like; enable it by setting gv_options.infobox_options.enabled to true -->
+			</div>
+
+
+
+			<div id="gv_marker_list" class="gv_marker_list" style="background-color:#ffffff; overflow:auto; display:none;"><!-- --></div>
+
+			<div id="gv_clear_margins" style="height:0px; clear:both;"><!-- clear the "float" --></div>
+		</div>
+
+		
+		<!-- begin GPS Visualizer setup script (must come after maps.google.com code) -->
+		<script type="text/javascript">
+			/* Global variables used by the GPS Visualizer functions (20190103202857): */
+			gv_options = {};
+			
+			// basic map parameters:
+			gv_options.center = [24.4945,-39.23835];  // [latitude,longitude] - be sure to keep the square brackets
+			gv_options.zoom = 3;  // higher number means closer view; can also be 'auto' for automatic zoom/center based on map elements
+			gv_options.map_type = 'NATIONALGEOGRAPHIC';  // popular map_type choices are 'GV_STREET', 'GV_SATELLITE', 'GV_HYBRID', 'GV_TERRAIN', 'GV_OSM', 'GV_TOPO_US', 'GV_TOPO_WORLD' (http://www.gpsvisualizer.com/misc/google_map_types.html)
+			gv_options.map_opacity = 0.50;  // number from 0 to 1
+			gv_options.full_screen = true;  // true|false: should the map fill the entire page (or frame)?
+			gv_options.width = 600;  // width of the map, in pixels
+			gv_options.height = 400;  // height of the map, in pixels
+			
+			gv_options.map_div = 'gmap_div';  // the name of the HTML "div" tag containing the map itself; usually 'gmap_div'
+			gv_options.doubleclick_zoom = true;  // true|false: zoom in when mouse is double-clicked?
+			gv_options.doubleclick_center = true;  // true|false: re-center the map on the point that was double-clicked?
+			gv_options.scroll_zoom = true; // true|false; or 'reverse' for down=in and up=out
+			gv_options.page_scrolling = true; // true|false; does the map relenquish control of the scroll wheel when embedded in scrollable pages?
+			gv_options.autozoom_adjustment = 0;
+			gv_options.centering_options = { 'open_info_window':true, 'partial_match':true, 'center_key':'center', 'default_zoom':null } // URL-based centering (e.g., ?center=name_of_marker&zoom=14)
+			gv_options.street_view = false; // true|false: allow Google Street View on the map
+			gv_options.tilt = false; // true|false: allow Google to show 45-degree tilted aerial imagery?
+			gv_options.animated_zoom = false; // true|false: may or may not work properly
+			gv_options.disable_google_pois = false;  // true|false: if you disable clickable POIs, you also lose the labels on parks, airports, etc.
+			
+			// widgets on the map:
+			gv_options.zoom_control = 'large'; // 'large'|'small'|'none'
+			gv_options.recenter_button = true; // true|false: is there a 'click to recenter' option in the zoom control?
+			gv_options.scale_control = true; // true|false
+			gv_options.map_opacity_control = 'utilities';  // 'map'|'utilities'|'both'|false: where does the opacity control appear?
+			gv_options.map_type_control = {};  // widget to change the background map
+			  gv_options.map_type_control.placement = 'both'; // 'map'|'utilities'|'both'|false: where does the map type control appear?
+			  gv_options.map_type_control.filter = false;  // true|false: when map loads, are irrelevant maps ignored?
+			  gv_options.map_type_control.excluded = [];  // comma-separated list of quoted map IDs that will never show in the list ('included' also works)
+			gv_options.center_coordinates = true;  // true|false: show a "center coordinates" box and crosshair?
+			gv_options.measurement_tools = true;  // true|false: does it appear on the map itself?
+			gv_options.measurement_options = { visible:false, distance_color:'', area_color:'' };
+			gv_options.crosshair_hidden = true;  // true|false: hide the crosshair initially?
+			gv_options.mouse_coordinates = false;  // true|false: show a "mouse coordinates" box?
+			gv_options.utilities_menu = { 'maptype':true, 'opacity':true, 'measure':true, 'export':true };
+			gv_options.allow_export = false;  // true|false
+			
+			gv_options.infobox_options = {}; // options for a floating info box (id="gv_infobox"), which can contain anything
+			  gv_options.infobox_options.enabled = true;  // true|false: enable or disable the info box altogether
+			  gv_options.infobox_options.position = ['LEFT_TOP',52,6];  // [Google anchor name, relative x, relative y]
+			  gv_options.infobox_options.draggable = true;  // true|false: can it be moved around the screen?
+			  gv_options.infobox_options.collapsible = true;  // true|false: can it be collapsed by double-clicking its top bar?
+
+			// marker-related options:
+			gv_options.default_marker = { color:'red',icon:'blankcircle',scale:1,opacity:0.7 }; // icon can be a URL, but be sure to also include size:[w,h] and optionally anchor:[x,y]
+			gv_options.vector_markers = false; // are the icons on the map in embedded SVG format?
+			gv_options.marker_tooltips = true; // do the names of the markers show up when you mouse-over them?
+			gv_options.marker_shadows = true; // true|false: do the standard markers have "shadows" behind them?
+			gv_options.marker_link_target = '_blank'; // the name of the window or frame into which markers' URLs will load
+			gv_options.info_window_width = 300;  // in pixels, the width of the markers' pop-up info "bubbles" (can be overridden by 'window_width' in individual markers)
+			gv_options.thumbnail_width = 0;  // in pixels, the width of the markers' thumbnails (can be overridden by 'thumbnail_width' in individual markers)
+			gv_options.photo_size = [0,0];  // in pixels, the size of the photos in info windows (can be overridden by 'photo_width' or 'photo_size' in individual markers)
+			gv_options.hide_labels = false;  // true|false: hide labels when map first loads?
+			gv_options.labels_behind_markers = false; // true|false: are the labels behind other markers (true) or in front of them (false)?
+			gv_options.label_offset = [0,0];  // [x,y]: shift all markers' labels (positive numbers are right and down)
+			gv_options.label_centered = false;  // true|false: center labels with respect to their markers?  (label_left is also a valid option.)
+			gv_options.driving_directions = false;  // put a small "driving directions" form in each marker's pop-up window? (override with dd:true or dd:false in a marker's options)
+			gv_options.garmin_icon_set = 'gpsmap'; // 'gpsmap' are the small 16x16 icons; change it to '24x24' for larger icons
+			gv_options.marker_list_options = {};  // options for a dynamically-created list of markers
+			  gv_options.marker_list_options.enabled = false;  // true|false: enable or disable the marker list altogether
+			  gv_options.marker_list_options.floating = true;  // is the list a floating box inside the map itself?
+			  gv_options.marker_list_options.position = ['RIGHT_BOTTOM',6,38];  // floating list only: position within map
+			  gv_options.marker_list_options.min_width = 160; // minimum width, in pixels, of the floating list
+			  gv_options.marker_list_options.max_width = 160;  // maximum width
+			  gv_options.marker_list_options.min_height = 0;  // minimum height, in pixels, of the floating list
+			  gv_options.marker_list_options.max_height = 560;  // maximum height
+			  gv_options.marker_list_options.draggable = true;  // true|false, floating list only: can it be moved around the screen?
+			  gv_options.marker_list_options.collapsible = true;  // true|false, floating list only: can it be collapsed by double-clicking its top bar?
+			  gv_options.marker_list_options.include_tickmarks = false;  // true|false: are distance/time tickmarks included in the list?
+			  gv_options.marker_list_options.include_trackpoints = false;  // true|false: are "trackpoint" markers included in the list?
+			  gv_options.marker_list_options.dividers = false;  // true|false: will a thin line be drawn between each item in the list?
+			  gv_options.marker_list_options.desc = false;  // true|false: will the markers' descriptions be shown below their names in the list?
+			  gv_options.marker_list_options.icons = true;  // true|false: should the markers' icons appear to the left of their names in the list?
+			  gv_options.marker_list_options.thumbnails = false;  // true|false: should markers' thumbnails be shown in the list?
+			  gv_options.marker_list_options.folders_collapsed = false;  // true|false: do folders in the list start out in a collapsed state?
+			  gv_options.marker_list_options.folders_hidden = false;  // true|false: do folders in the list start out in a hidden state?
+			  gv_options.marker_list_options.collapsed_folders = []; // an array of folder names
+			  gv_options.marker_list_options.hidden_folders = []; // an array of folder names
+			  gv_options.marker_list_options.count_folder_items = false;  // true|false: list the number of items in each folder?
+			  gv_options.marker_list_options.wrap_names = true;  // true|false: should marker's names be allowed to wrap onto more than one line?
+			  gv_options.marker_list_options.unnamed = '[unnamed]';  // what 'name' should be assigned to  unnamed markers in the list?
+			  gv_options.marker_list_options.colors = false;  // true|false: should the names/descs of the points in the list be colorized the same as their markers?
+			  gv_options.marker_list_options.default_color = '';  // default HTML color code for the names/descs in the list
+			  gv_options.marker_list_options.limit = 0;  // how many markers to show in the list; 0 for no limit
+			  gv_options.marker_list_options.center = false;  // true|false: does the map center upon a marker when you click its name in the list?
+			  gv_options.marker_list_options.zoom = false;  // true|false: does the map zoom to a certain level when you click on a marker's name in the list?
+			  gv_options.marker_list_options.zoom_level = 11;  // if 'zoom' is true, what level should the map zoom to?
+			  gv_options.marker_list_options.info_window = true;  // true|false: do info windows pop up when the markers' names are clicked in the list?
+			  gv_options.marker_list_options.url_links = false;  // true|false: do the names in the list become instant links to the markers' URLs?
+			  gv_options.marker_list_options.toggle = false;  // true|false: does a marker disappear if you click on its name in the list?
+			  gv_options.marker_list_options.help_tooltips = false;  // true|false: do "tooltips" appear on marker names that tell you what happens when you click?
+			  gv_options.marker_list_options.id = 'gv_marker_list';  // id of a DIV tag that holds the list
+			  gv_options.marker_list_options.header = ''; // HTML code; be sure to put backslashes in front of any single quotes, and don't include any line breaks
+			  gv_options.marker_list_options.footer = ''; // HTML code
+			gv_options.marker_filter_options = {};  // options for removing waypoints that are out of the current view
+			  gv_options.marker_filter_options.enabled = false;  // true|false: should out-of-range markers be removed?
+			  gv_options.marker_filter_options.movement_threshold = 8;  // in pixels, how far the map has to move to trigger filtering
+			  gv_options.marker_filter_options.limit = 0;  // maximum number of markers to display on the map; 0 for no limit
+			  gv_options.marker_filter_options.update_list = true;  // true|false: should the marker list be updated with only the filtered markers?
+			  gv_options.marker_filter_options.sort_list_by_distance = false;  // true|false: should the marker list be sorted by distance from the center of the map?
+			  gv_options.marker_filter_options.min_zoom = 0;  // below this zoom level, don't show any markers at all
+			  gv_options.marker_filter_options.zoom_message = '';  // message to put in the marker list if the map is below the min_zoom threshold
+			gv_options.synthesize_fields = {}; // for example: {label:'{name}'} would cause all markers' names to become visible labels
+				
+
+			
+			// Load GPS Visualizer's Google Maps functions (this must be loaded AFTER gv_options are set):
+			if (window.location.toString().indexOf('https://') == 0) { // secure pages require secure scripts
+				document.writeln('<script src="https://gpsvisualizer.com/google_maps/functions3.js" type="text/javascript"><'+'/script>');
+			} else {
+				document.writeln('<script src="http://maps.gpsvisualizer.com/google_maps/functions3.js" type="text/javascript"><'+'/script>');
+			}
+			
+		</script>
+		<style type="text/css">
+			/* Put any custom style definitions here (e.g., .gv_marker_info_window, .gv_marker_info_window_name, .gv_marker_list_item, .gv_tooltip, .gv_label, etc.) */
+			#gmap_div .gv_marker_info_window {
+				font-size:11px !important;
+			}
+			#gmap_div .gv_label {
+				opacity:0.90; filter:alpha(opacity=90);
+				color:white; background-color:#333333; border:1px solid black; padding:1px;
+				font:9px Verdana !important;
+				font-weight:normal !important;
+			}
+			
+		</style>
+		
+		<!-- end GPSV setup script and styles; begin map-drawing script (they must be separate) -->
+		<script type="text/javascript">
+			function GV_Map() {
+			  
+				GV_Setup_Map();
+				
+				
+				
+				GV_Draw_Marker({lat:44.5273000,lon:-117.7938000,name:'McClellan Creek occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.5581000,lon:-117.9093000,name:'Asbestos 2" occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.5598000,lon:-117.9100000,name:'Asbestos 1" occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.5598000,lon:-117.9181000,name:'Upper Pine Creek occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.5610000,lon:-117.9172000,name:'Pine Creek asbestos deposits',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.6547000,lon:-117.5783000,name:'Freeway talc occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.6690000,lon:-117.6130000,name:'Alder Creek asbestos occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:42.7537000,lon:-123.0385000,name:'Upper Applegate 2 talc occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.2040000,lon:-118.9580000,name:'Bear Valley occurrences',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.3695000,lon:-118.9136000,name:'Spare Time claims',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.3820000,lon:-118.8958000,name:'Ward chromite mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.6060000,lon:-118.6540000,name:'Big Butte Creek asbestos (Stithem prospect)',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:42.0138000,lon:-123.0191000,name:'Elliott Creek Ridge area',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:42.7444000,lon:-123.1169000,name:'Liberty Asbestos',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:42.2188000,lon:-123.7124000,name:'Foster Asbestos (Bear placer)',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:42.2600000,lon:-123.3180000,name:'Powell Creek soapstone',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.3660000,lon:-117.4970000,name:'Towell claims',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:47.4000000,lon:-120.6700000,name:'Peshastin Creek',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:47.5400000,lon:-120.6300000,name:'Mill Creek',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:47.5530000,lon:-120.6690000,name:'Icicle Creek',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:47.5600000,lon:-120.9000000,name:'Trout Lake',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:47.5700000,lon:-120.3900000,name:'Burch Mountain',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:47.6010000,lon:-120.8930000,name:'Trout Creek',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:47.6400000,lon:-120.4500000,name:'Chumstick Mountain',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:47.7900000,lon:-120.7400000,name:'Nason Ridge',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:47.8200000,lon:-120.6400000,name:'Deep Creek',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:47.8400000,lon:-120.6450000,name:'Goose Creek',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:47.9200000,lon:-120.8100000,name:'Williams (Raging) Creek deposit',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:48.3670000,lon:-120.7310000,name:'Stehekin River',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:48.6025000,lon:-118.5818000,name:'California mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:48.8040000,lon:-118.8180000,name:'Hardscrabble Mountain',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:48.2400000,lon:-120.2600000,name:'Twisp deposit',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:48.8748000,lon:-119.5739000,name:'Ivanhoe prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:48.7980000,lon:-117.5000000,name:'Coffin prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:48.5800000,lon:-122.1490000,name:'Scott',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:48.6160000,lon:-122.4380000,name:'Oyster Creek',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:47.9700000,lon:-121.5000000,name:'Florence Rae prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:47.9870000,lon:-121.4350000,name:'Mackinaw nickel prospect',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:48.0470000,lon:-121.3490000,name:'Bedal Creek (Phoenix asbestos prospect)',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:48.1150000,lon:-121.6420000,name:'Clear Creek',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:48.9890000,lon:-118.1720000,name:'Laurier',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:48.6500000,lon:-121.9720000,name:'Twin Sisters',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:48.7560000,lon:-122.0620000,name:'Bowman Mountain',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:48.9108000,lon:-122.2498000,name:'Sumas Mountain landslide',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.3320000,lon:-120.7540000,name:'George Thomas prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.3647000,lon:-120.8926000,name:'Mace Ranch prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.5000000,lon:-121.3800000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.6300000,lon:-121.5100000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.6900000,lon:-121.5700000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.6900000,lon:-121.3500000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.7000000,lon:-121.4000000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.9560000,lon:-120.5540000,name:'Liberty (McFall) chromite mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.0258000,lon:-120.6386000,name:'Turner and Lloyd deposit (Skipper claims?)',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.1378000,lon:-120.5019000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.2100000,lon:-120.6800000,name:'Nuland and Nuner prospects',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.2300000,lon:-120.5040000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.2410000,lon:-120.8010000,name:'Neugebauer chromite mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.4796000,lon:-120.2517000,name:'Garnet Hill occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.0830000,lon:-122.4430000,name:'Spring east of Alice mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.0864000,lon:-122.4608000,name:'Deadshot Spring',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.3509000,lon:-122.6704000,name:'Fouts Red Eye Spring',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.8818000,lon:-121.8851000,name:'Prospect in Sycamore Canyon',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.8878000,lon:-121.8778000,name:'Prospect in Perkins Canyon',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.8899000,lon:-121.9717000,name:'Prospects near Arroyo del Cerro',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.9112000,lon:-121.8991000,name:'Prospects east of Russellman Park',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.9340000,lon:-122.3140000,name:'Berkeley Hills serpentine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.5310000,lon:-123.6570000,name:'occurrences in the Rock Creek Butte area',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.5956000,lon:-121.0016000,name:'roadcut near El Dorado Hills',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.6785000,lon:-121.0733000,name:'Oak Ridge occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.6802000,lon:-121.0749000,name:'Woedee Drive occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.6827000,lon:-121.0737000,name:'Harvard Way occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.6951000,lon:-121.0769000,name:'New York Creek trail',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.7027000,lon:-121.0760000,name:'Fairchild Park occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.9376000,lon:-120.9217000,name:'French Hill claim',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.2080000,lon:-120.0830000,name:'Arroyo Pasajero alluvial fan',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.2640000,lon:-120.5750000,name:'Ross-Garcia claims',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3120000,lon:-120.5468000,name:'Butler Estate chromite mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3731000,lon:-120.4141000,name:'Asbestos Corporation prospects',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.7100000,lon:-119.4700000,name:'H.H. Miner claims',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3450000,lon:-120.5650000,name:'Occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3560000,lon:-120.5930000,name:'Occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3500000,lon:-120.5800000,name:'Occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3310000,lon:-120.5450000,name:'Occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3300000,lon:-120.5600000,name:'Occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3500000,lon:-120.5900000,name:'Occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3300000,lon:-120.5800000,name:'Occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3300000,lon:-120.5900000,name:'Occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3200000,lon:-120.5800000,name:'Occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3200000,lon:-120.5600000,name:'Occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3200000,lon:-120.5500000,name:'Occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3000000,lon:-120.5600000,name:'Occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3000000,lon:-120.5800000,name:'Occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3000000,lon:-120.5900000,name:'Occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3100000,lon:-120.6100000,name:'Occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3100000,lon:-120.5500000,name:'Occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3600000,lon:-120.4200000,name:'Occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3800000,lon:-120.4200000,name:'Occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3900000,lon:-120.4400000,name:'Occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3600000,lon:-120.4000000,name:'Occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:0.0000000,lon:39.4302000,name:'Salt Spring',desc:'Salt Valley',color:'',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:0.0000000,lon:39.4337000,name:'Sulfur Spring',desc:'Salt Valley',color:'',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.7976000,lon:-116.0187000,name:'Coyote Mountains nickel (Copper Contact Lode) prospect',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.2793000,lon:-117.5925000,name:'Darwin mines',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.6150000,lon:-117.5230000,name:'Indian Camp (Goldbelt Springs) prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.8200000,lon:-119.1500000,name:'San Emigdio asbestos deposit',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.3400000,lon:-118.1500000,name:'Sunshine claims (Jawbone Canyon)',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.8820000,lon:-120.2460000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.8990000,lon:-120.2650000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.9110000,lon:-120.2840000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.7750000,lon:-122.7160000,name:'McKinley steam field',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.8351000,lon:-122.6310000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.8488000,lon:-122.6635000,name:'Copsey and Jones prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.9256000,lon:-122.5051000,name:'Marylyne prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.1598000,lon:-122.6635000,name:'Allen Springs',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.1702000,lon:-122.5121000,name:'Complexion Spring',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.1724000,lon:-122.8347000,name:'asbestos prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.1740000,lon:-122.8356000,name:'asbestos prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.1760000,lon:-122.8372000,name:'asbestos prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.1774000,lon:-122.8381000,name:'asbestos prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.1797000,lon:-122.7036000,name:'Bartlett Springs',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.1835000,lon:-122.8431000,name:'asbestos prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.1846000,lon:-122.8446000,name:'asbestos prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.4079000,lon:-118.4183000,name:'Occurrences on Santa Catalina Island',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.5301000,lon:-118.2586000,name:'Katz soapstone deposit',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.5600000,lon:-118.2700000,name:'RR #4',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.5950000,lon:-118.1990000,name:'Amargosa #1',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.6460000,lon:-118.6250000,name:'Burro Canyon #1',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.3100000,lon:-119.7400000,name:'Baker gold mine',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.3197000,lon:-119.7550000,name:'Savannah gold mine',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.3208000,lon:-119.7577000,name:'Deep Canyon claim',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.8600000,lon:-122.4378000,name:'Angel Island',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.8656000,lon:-122.4628000,name:'Belvedere Island',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.0770000,lon:-122.7460000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.1769000,lon:-122.6800000,name:'Massa Hill nephrite locality',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.8330000,lon:-122.4810000,name:'near Fort Baker',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.9240000,lon:-122.5990000,name:'west peak of Mt. Tamalpais',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.6504000,lon:-120.1529000,name:'Asbestos prospect and nearby occurrences along Highway 49',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.9181000,lon:-123.0867000,name:'Leech Lake Mountain area',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.9500000,lon:-123.3400000,name:'jade occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.1745000,lon:-119.3379000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.1817000,lon:-119.3436000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.8689000,lon:-121.2896000,name:'Burro Mountain prospects',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.8940000,lon:-121.4603000,name:'Willow Creek prospects',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.9030000,lon:-120.3050000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.9044000,lon:-120.2848000,name:'Table Mountain prospects',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.9050000,lon:-120.2750000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.1200000,lon:-120.9800000,name:'Rolph Ranch (chromite)',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.9800000,lon:-120.9200000,name:'unnamed occurrence (in Gas Canyon)',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.0100000,lon:-120.8000000,name:'unnamed occurrence (near Forest Hill)',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.0300000,lon:-120.7700000,name:'unnamed occurrence (in Lady\'s Canyon)',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.1035000,lon:-120.8547000,name:'California Morning Star mine and vicinity (Washington Consolidated mine?)',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.1050000,lon:-120.9330000,name:'unnamed prospect (Burnt Flat area)',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.0990000,lon:-120.9320000,name:'unnamed prospect (Burnt Flat area)',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.1210000,lon:-120.8470000,name:'Roach Hill occurrence (Blue Wing claim?)',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.2300000,lon:-120.8000000,name:'Dan Sullivan prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.2900000,lon:-120.5900000,name:'Monumental Hill',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.8800000,lon:-120.7790000,name:'Spring Garden Tunnel',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.9900000,lon:-121.3670000,name:'Garnet Ridge prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.5240000,lon:-116.3990000,name:'unnamed occurrence near Toro Peak',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.6050000,lon:-116.4330000,name:'Serpentine Hill prospects',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.6101000,lon:-116.4824000,name:'Dunn asbestos deposit',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.0235000,lon:-117.3846000,name:'Crestmore quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.6970000,lon:-117.0260000,name:'Hemet magnesite mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.5800000,lon:-116.5300000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3820000,lon:-120.7160000,name:'Occurrences in canyon of Clear Creek',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3580000,lon:-120.7420000,name:'Victor claim',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.1290000,lon:-115.9950000,name:'Cronese deposits',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.4781000,lon:-115.5299000,name:'Mountain Pass rare earth elements deposit',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.6812000,lon:-116.1636000,name:'Circle Group vermiculite group',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.7277000,lon:-122.3703000,name:'Hunters Point area',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.7566000,lon:-122.3983000,name:'Potrero Hill area',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.7695000,lon:-122.4257000,name:'U.S. Mint area',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.8102000,lon:-122.4757000,name:'Fort Point-Presidio area',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.1790000,lon:-121.8401000,name:'New Almaden mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.4100000,lon:-121.4700000,name:'Red Mountain magnesite deposit',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.0580000,lon:-122.3870000,name:'Circle (S) property (Shotgun Creek chromite mine)',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.0850000,lon:-122.5010000,name:'unnamed occurrence (Asbestos Empress prospect?)',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.1000000,lon:-122.3700000,name:'Anaconda prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.1050000,lon:-122.4010000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.1100000,lon:-122.3900000,name:'D.E. Miles prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.4605000,lon:-120.8576000,name:'Oriental gold mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.4651000,lon:-120.8426000,name:'Sixteen to One gold-quartz-vein',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.4835000,lon:-120.8190000,name:'Mammoth Springs mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.5530000,lon:-120.6330000,name:'Green and Farr prospects and Lloyd and Milward prospects',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.5540000,lon:-120.8810000,name:'W.W. Casserly prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.2206000,lon:-122.8969000,name:'Cecilville Summit County Road/FH93',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.2243000,lon:-122.8973000,name:'Carter Meadow rock pit',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.2700000,lon:-122.8730000,name:'Keystone asbestos claims',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.2790000,lon:-122.4230000,name:'Calethia Group',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.2790000,lon:-122.8742000,name:'Camp Eden rock pit',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.3000000,lon:-122.8810000,name:'High CCC rock pit',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.3020000,lon:-122.4950000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.3285000,lon:-122.8633000,name:'Sugar Creek rock pit',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.4060000,lon:-122.4450000,name:'unnamed prospect (Lucky Cowboy Claims?)',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.3600000,lon:-122.4900000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.3600000,lon:-122.5500000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.3700000,lon:-122.4900000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.3610000,lon:-122.5310000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.3800000,lon:-122.4390000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.3825000,lon:-122.4675000,name:'Mount Eddy deposit (Rattaro prospect)',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.4000000,lon:-122.5100000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.4000000,lon:-122.4900000,name:'unnamed occurrences',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.4030000,lon:-122.5090000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.4200000,lon:-122.5300000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.4300000,lon:-122.4900000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.4300000,lon:-122.5000000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.4174000,lon:-122.5459000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.4300000,lon:-122.5200000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.4300000,lon:-122.5400000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.4834000,lon:-122.5467000,name:'Chamberlain (Burns Ranch) prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.6094000,lon:-123.1686000,name:'South Kelsey Creek rock pit',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.7351000,lon:-122.7293000,name:'C.C. Cady prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.7817000,lon:-123.2054000,name:'Straw Rock pit',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.8312000,lon:-123.2291000,name:'Seiad rock pit',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.8750000,lon:-123.3332000,name:'Thompson Creek rock pit',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.8985000,lon:-123.0411000,name:'Middle Creek rock pit',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.9030000,lon:-123.1372000,name:'Salt Gulch source (J.J. Murray claims?)',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.9122000,lon:-122.8020000,name:'Upper Buckhorn Gulch rock pit',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.9635000,lon:-122.7945000,name:'Hungry Creek rock source',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.7400000,lon:-122.7600000,name:'Crocidolite from Pine Flat (California Division of Mines and Geology specimen 19626)',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.0620000,lon:-123.2190000,name:'Red Mountain deposit (Virginia Bruce mining claims)',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.8460000,lon:-122.8890000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.9770000,lon:-122.8460000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.0860000,lon:-122.5150000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:0.0000000,lon:41.1000000,name:'Shasta Lily No. 6',desc:'7',color:'',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.0970000,lon:-122.5222000,name:'Asbestos King No. 9 claim',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.1051000,lon:-122.4584000,name:'Trinity asbestos claims',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.1100000,lon:-122.5400000,name:'Shasta Lily 1 to 5 claims',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.1130000,lon:-122.6520000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.1160000,lon:-122.5600000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.1300000,lon:-122.5400000,name:'Prospects near Altoona and Quicksilver mine',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.1418000,lon:-122.4938000,name:'White Cloud prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.1200000,lon:-122.5600000,name:'Katzer',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.1860000,lon:-122.5440000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:7.0000000,lon:0.0000000,name:'Dan Rice Asbestos Nos. 1',desc:'4',color:'',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.2700000,lon:-122.6130000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.2710000,lon:-122.5820000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.2727000,lon:-122.6021000,name:'Trinity River prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.2781000,lon:-122.6230000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.2960000,lon:-122.6120000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.3100000,lon:-122.6000000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3655000,lon:-119.1434000,name:'Hanggi Ranch deposit',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.7958000,lon:-120.2746000,name:'Ashley property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.9545000,lon:-120.4439000,name:'Premier mine',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.9650000,lon:-120.4570000,name:'Rawhide claims',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.8661000,lon:-122.3717000,name:'California mine (Reed mercury mine)',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.4600000,lon:-121.2100000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.4700000,lon:-121.0500000,name:'Galena Hill claim',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.5190000,lon:-121.2180000,name:'Mount Hope gold mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.5200000,lon:-121.2100000,name:'Butte County Pine and Hardwood Company property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.5500000,lon:-121.1400000,name:'Kingbird drift mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.5600000,lon:-121.1100000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.0235000,lon:-114.3798000,name:'Big Jim vein',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.0073000,lon:-110.8514000,name:'Wolf Springs prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.0058000,lon:-110.8421000,name:'No. 7 prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.9770000,lon:-110.9299000,name:'Bore Tree Saddle Asbestos Co. property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.9400000,lon:-110.7543000,name:'Double Buttes prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.9400000,lon:-111.1553000,name:'Independent group',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.9391000,lon:-110.7694000,name:'White Hill properties',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.9337000,lon:-110.8057000,name:'Montezuma No. 3 prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.8604000,lon:-110.9017000,name:'Metate No. 1 prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.8510000,lon:-110.5720000,name:'Apache Extension group',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.8240000,lon:-110.5570000,name:'Punto Negro group',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.8190000,lon:-110.4640000,name:'Cibecue Mining Co. (Old Prochnow) property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.8130000,lon:-114.3540000,name:'occurrences in the northern Dome Rock Mountains',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.8123000,lon:-110.6013000,name:'Cliffbestos group',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.8119000,lon:-110.5629000,name:'River group (Crosthwaite-Steward group)',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.8080000,lon:-110.5360000,name:'Oso claim',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.7980000,lon:-110.4713000,name:'Wonder and Silk claims',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.7858000,lon:-110.5147000,name:'Golden Fiber Asbestos Claims 1 & 2 (Old Falls group)',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.7855000,lon:-110.4794000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.7840000,lon:-110.6020000,name:'Wonder group',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.7800000,lon:-110.5160000,name:'Falls group',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.7680000,lon:-110.5760000,name:'Alamo prospects',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.7620000,lon:-110.4930000,name:'asbestos prospects northeast of Seneca',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.7580000,lon:-110.4840000,name:'Sulphur Springs claims',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.7565000,lon:-110.9328000,name:'Loafer claim (Old Knighton property)',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.7409000,lon:-110.5837000,name:'Little Favor group',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.5530000,lon:-110.3250000,name:'unnamed prospect along Bear Creek',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.5469000,lon:-110.3285000,name:'unnamed prospect along Bear Creek',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.5436000,lon:-110.3281000,name:'unnamed prospect along Bear Creek',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.5430000,lon:-110.8920000,name:'G and H No. 1 prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.5420000,lon:-110.3370000,name:'unnamed prospect along Bear Creek',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.5200000,lon:-110.2850000,name:'prospect west of Blue River',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.4850000,lon:-110.3980000,name:'Black Mesa (Cassadore) deposit',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.4760000,lon:-110.9100000,name:'Chuckwalla claims',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.4640000,lon:-110.9070000,name:'unnamed prospects',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.4600000,lon:-111.0670000,name:'North American Asbestos Co. claims',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.4547000,lon:-111.0212000,name:'occurrences near Pinto Creek',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.4502000,lon:-110.7037000,name:'G and H No. 2 prospects',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.4500000,lon:-110.7032000,name:'Chromo Butte prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.4415000,lon:-111.0573000,name:'Independence group',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.4313000,lon:-111.0640000,name:'Last Time group',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.4284000,lon:-111.0819000,name:'Mountain of Mystery group',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.4262000,lon:-111.0651000,name:'K and S group',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.4220000,lon:-110.4170000,name:'asbestos occurrence on Oak Creek',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.3853000,lon:-113.4895000,name:'prospects on Cemetery Ridge',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.3220000,lon:-111.2300000,name:'Lucky Lager claims',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.2890000,lon:-110.7360000,name:'Lone Pine prospects',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.2876000,lon:-110.7322000,name:'Indian Springs deposit',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.2630000,lon:-110.6330000,name:'Chiricahua group',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.2620000,lon:-110.6470000,name:'Mystery prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.2440000,lon:-110.6340000,name:'prospect north of Red Whiskers Spring',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.1980000,lon:-110.8040000,name:'unnamed prospects',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.1910000,lon:-110.8050000,name:'Mescal Mountain deposit',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.1778000,lon:-110.9475000,name:'Ray-Kelvin silver-lead mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.8378000,lon:-110.7310000,name:'Putnam Wash deposits',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.0222000,lon:-110.0598000,name:'occurrence near the Empire No. 2 shaft',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:31.9083000,lon:-109.9920000,name:'Abril zinc mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.0420000,lon:-118.1460000,name:'Segerstrom-Heizer mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.9288000,lon:-115.1609000,name:'Windous magnesite deposit',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.0700000,lon:-117.2300000,name:'Tonopah district',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.3038000,lon:-112.8216000,name:'Big Pass group',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.4516000,lon:-113.2778000,name:'King David mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.9800000,lon:-110.8600000,name:'unnamed occurrences in Avintaquin Canyon',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.5170000,lon:-112.1570000,name:'Bingham stock',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.0410000,lon:-111.8590000,name:'occurrences in Bair Canyon',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.1994000,lon:-113.3375000,name:'Pack Rat tremolite prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.8670000,lon:-85.6180000,name:'Camp Hill Road properties',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.8870000,lon:-85.7570000,name:'Perry Wise-Sanders property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.8990000,lon:-85.7360000,name:'W.B. Railey property',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.9120000,lon:-85.6970000,name:'Sorrell Estate property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.9200000,lon:-85.6860000,name:'Fargarson property',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:0.0000000,lon:32.9220000,name:'Clem Vines property',desc:'south area',color:'',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.9220000,lon:-85.6040000,name:'Clarence Ware property',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.9230000,lon:-85.6220000,name:'Garfield Heard property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.9240000,lon:-85.6180000,name:'George Sims property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.9250000,lon:-85.6000000,name:'Pettus Harris property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.9260000,lon:-85.6490000,name:'Prather property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.9260000,lon:-85.6430000,name:'Clema Smith property',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:0.0000000,lon:32.9280000,name:'Clem Vines property',desc:'north area',color:'',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.9290000,lon:-85.6680000,name:'Knight property',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.9330000,lon:-85.6590000,name:'Walker property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.9360000,lon:-85.5790000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.9380000,lon:-85.6340000,name:'Estes property',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.9400000,lon:-85.6230000,name:'Coosa River News Print property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.9400000,lon:-85.6020000,name:'Jennings-Satterwhite properties',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.7950000,lon:-75.6250000,name:'Mount Cuba serpentine body',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.8800000,lon:-84.9200000,name:'G.I. Bryan property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.9000000,lon:-85.1600000,name:'Mrs. W.M. Higginbothem property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.0800000,lon:-84.9160000,name:'Mrs. Leila Beasley property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.1500000,lon:-84.7400000,name:'Primrose Siding',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.2100000,lon:-84.7400000,name:'Mrs. Mildred Camp property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.2500000,lon:-84.7600000,name:'J.A.R. Camp property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.3000000,lon:-84.8500000,name:'P.H. Hawk property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.3300000,lon:-83.0800000,name:'Moses W. Harris property',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.6200000,lon:-84.5200000,name:'T.D. Longino property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.6530000,lon:-84.3370000,name:'Soapstone Ridge occurrences',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.7010000,lon:-84.3890000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.7230000,lon:-84.9330000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.7350000,lon:-84.9170000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.8500000,lon:-84.5300000,name:'J.H. Cantrell\'s property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.2900000,lon:-83.8600000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.4460000,lon:-83.9620000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.6500000,lon:-83.6600000,name:'J.J. Holcomb property',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.6600000,lon:-83.7150000,name:'Calhoun Mining Company property',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.7070000,lon:-83.6240000,name:'G.L. Lyons property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.7490000,lon:-83.6310000,name:'John Martin prospects',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.7510000,lon:-83.6360000,name:'Mack Mountain (Wykle) prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.7517000,lon:-83.6464000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.7593000,lon:-83.5907000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.7693000,lon:-83.5881000,name:'unnamed prospects',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.7750000,lon:-84.7130000,name:'W.Z. Latch property',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.8030000,lon:-83.3470000,name:'R.V. Taylor prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.8220000,lon:-83.4960000,name:'George Lowell prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.9300000,lon:-83.1700000,name:'Pig Pen Mountain locality',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.9500000,lon:-83.2500000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.9520000,lon:-83.7980000,name:'Thomas Edwards property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.9590000,lon:-83.3110000,name:'A.A. Darnell property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.9790000,lon:-83.4230000,name:'Mrs. Margaret Beavett property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.9800000,lon:-83.7340000,name:'Bell Creek mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.9900000,lon:-83.4400000,name:'R.H. Lamb property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.9900000,lon:-83.3180000,name:'Frank Kelly prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:42.5050000,lon:-72.3050000,name:'New Salem serpentinite body',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:42.5272000,lon:-73.1667000,name:'North Mountain dunite',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.0806000,lon:-77.2239000,name:'Hunting Hill quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.0880000,lon:-77.2750000,name:'Muddy Branch talc prospect',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.2500000,lon:-76.7640000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.2895000,lon:-76.6678000,name:'Gwynn Falls gneiss quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.2900000,lon:-76.7900000,name:'National Park Service quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.3200000,lon:-76.7300000,name:'unnamed prospect at Powhatan',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.3850000,lon:-76.6630000,name:'Bare Hills serpentine quarries and Bare Hills chrome mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.3900000,lon:-76.9700000,name:'Springfield iron-copper mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.4400000,lon:-76.9300000,name:'Mineral Hill mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.4400000,lon:-76.8289000,name:'Delight quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.6120000,lon:-76.4560000,name:'Reed chrome mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.6390000,lon:-76.3600000,name:'unnamed occurrences near Mine Fields',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.6510000,lon:-76.2850000,name:'Dublin talc quarries',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.6600000,lon:-76.4500000,name:'unnamed occurrences near Clermont Mills',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.6990000,lon:-76.2070000,name:'Bald Friar quarries',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.7090000,lon:-76.1870000,name:'Conowingo Marble and Mineral Company serpentine quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.7100000,lon:-76.1910000,name:'Weiant (Wiant) serpentine quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.7200000,lon:-76.3400000,name:'Cardiff serpentine quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.2590000,lon:-68.6360000,name:'Deer Isle serpentine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.2854000,lon:-68.7026000,name:'Traprock quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.2930000,lon:-68.7060000,name:'Little Deer Isle serpentine body',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.2232000,lon:-70.7397000,name:'serpentine body',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.2275000,lon:-70.6606000,name:'Alder Stream area serpentine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.2300000,lon:-70.5303000,name:'Tea Pond area serpentine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.2302000,lon:-70.8121000,name:'serpentinite outcrop',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.2317000,lon:-70.7909000,name:'serpentinite outcrop',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:0.0000000,lon:45.2357000,name:'serpentinite outcrop at top of 2',desc:'720-foot knob',color:'#707677',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.2385000,lon:-70.8313000,name:'serpentinite outcrop',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.2393000,lon:-70.5399000,name:'Little Tea Pond area serpentine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.2393000,lon:-70.5308000,name:'Greenbush Mountain area serpentine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.3256000,lon:-70.2590000,name:'Little Spencer Stream serpentine',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.3276000,lon:-70.1844000,name:'Stony Brook Mountain serpentine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.3350000,lon:-70.9930000,name:'serpentine body',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.3450000,lon:-70.2200000,name:'Eagle Pond serpentine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.3560000,lon:-70.1280000,name:'Lower Enchanted Pond serpentine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.3678000,lon:-70.7874000,name:'serpentinite body',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.3764000,lon:-70.7904000,name:'serpentinite body',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.3904000,lon:-70.7944000,name:'serpentinite body',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.4027000,lon:-70.7843000,name:'serpentinite body',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:46.4435000,lon:-67.9960000,name:'Porcupine Hill serpentinite',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.0860000,lon:-82.9880000,name:'L.E. Cash property',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.1000000,lon:-83.0180000,name:'Bad Creek prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.1000000,lon:-83.0140000,name:'Socrates corundum mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.1190000,lon:-83.0050000,name:'Hogback Creek mine',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.1260000,lon:-83.0050000,name:'Rattlesnake corundum mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.1310000,lon:-83.2870000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.1550000,lon:-83.2990000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.1900000,lon:-83.2800000,name:'Deposit Number Nine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.2120000,lon:-82.9780000,name:'Harris prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.3750000,lon:-83.1490000,name:'Chesnut Gap chromite prospect',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.3992000,lon:-83.1593000,name:'Addie chromite prospect',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.4300000,lon:-83.0870000,name:'Balsam Gap olivine deposit',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.8960000,lon:-82.0650000,name:'unnamed occurrences',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.9700000,lon:-82.2890000,name:'Day Book dunite deposit',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.9840000,lon:-82.1940000,name:'Cas Thomas prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.0025000,lon:-82.1467000,name:'J.H. Pannell prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.0250000,lon:-82.0600000,name:'Soapstone Branch prospect',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.0440000,lon:-81.9390000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.0500000,lon:-81.9700000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.1900000,lon:-81.1700000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.2300000,lon:-81.7300000,name:'unnamed occurrences',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.3400000,lon:-81.5900000,name:'unnamed occurrences',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.3510000,lon:-74.9430000,name:'Barber and Ireland\'s trap rock quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.3780000,lon:-74.7770000,name:'Cope\'s quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.6420000,lon:-74.8660000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.6500000,lon:-75.0260000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.6670000,lon:-74.8960000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.7226000,lon:-75.1843000,name:'Green Marble quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.7350000,lon:-74.0670000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.7420000,lon:-74.0330000,name:'occurrence in Stevens Park',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.7450000,lon:-74.0240000,name:'Castle Point occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.7460000,lon:-74.5330000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.7580000,lon:-74.0860000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.7850000,lon:-74.6200000,name:'unnamed occurrences',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.7837000,lon:-74.5623000,name:'Sander\'s marble quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.8110000,lon:-74.4820000,name:'unnamed occurrences',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.8195000,lon:-75.0190000,name:'Edison quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.8240000,lon:-75.0240000,name:'Oxford quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.8530000,lon:-73.9610000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.8910000,lon:-74.6890000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.9070000,lon:-74.1820000,name:'unnamed occurrences',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.9210000,lon:-74.8940000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.9298000,lon:-74.8912000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.9270000,lon:-74.6990000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.9335000,lon:-74.4833000,name:'Beach iron mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.9270000,lon:-74.8920000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.9298000,lon:-74.3853000,name:'unnamed marble quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.9422000,lon:-74.1770000,name:'Prospect Park quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.9910000,lon:-74.6980000,name:'Roseville iron mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.9763000,lon:-74.4380000,name:'Split Rock Pond iron mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.0060000,lon:-74.7350000,name:'Andover and Sulfur Hill iron mines',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.0233000,lon:-74.3055000,name:'Debow\'s marble quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.0380000,lon:-74.3223000,name:'Green Swamp Dam site',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.0357000,lon:-74.2842000,name:'Kanouse mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.0542000,lon:-74.6817000,name:'Limecrest (Sparta) quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.0583000,lon:-74.3187000,name:'Old Blue mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.0820000,lon:-74.6100000,name:'Sterling Hill mines',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.0917000,lon:-74.5985000,name:'Franklin marble quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.1147000,lon:-74.5879000,name:'Franklin zinc mines',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.2240000,lon:-74.4860000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.5722000,lon:-74.1514000,name:'Staten Island occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.5790000,lon:-74.1360000,name:'Staten Island occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.5811000,lon:-74.1131000,name:'Staten Island occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.5873000,lon:-74.1042000,name:'Staten Island occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.5902000,lon:-74.1015000,name:'Staten Island occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.5962000,lon:-74.0956000,name:'Staten Island occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.6010000,lon:-74.1000000,name:'Staten Island occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.6089000,lon:-74.1214000,name:'Staten Island occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.6099000,lon:-74.0920000,name:'Staten Island occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.6090000,lon:-74.1230000,name:'U.S. Route 278 roadcut',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.6159000,lon:-74.1127000,name:'Staten Island occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.6168000,lon:-74.0874000,name:'Staten Island occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.6198000,lon:-74.1120000,name:'Clove Lake occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.6214000,lon:-74.0862000,name:'Staten Island occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.6236000,lon:-74.0858000,name:'Staten Island occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.6265000,lon:-74.0969000,name:'Silver Lake Reservior occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.6360000,lon:-74.0800000,name:'Tompkinsville area',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.9040000,lon:-73.7680000,name:'New Rochelle serpentinite',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.4125000,lon:-73.6425000,name:'Tilly Foster iron mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.4400000,lon:-73.9200000,name:'unnamed occurrences',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.2682000,lon:-75.3847000,name:'Arnold talc mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.7220000,lon:-76.1720000,name:'Line Pit (Lowe\'s) chromium mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.7230000,lon:-76.1610000,name:'Red Pit mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.7251000,lon:-76.0538000,name:'Keystone quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.7270000,lon:-76.1120000,name:'Hillside chromite mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.7280000,lon:-76.0440000,name:'Dunlap (Rhodewalt) serpentine quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.7280000,lon:-75.9310000,name:'White Barrens serpentine quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.7285000,lon:-76.1364000,name:'Cedar Hill (Geiger) serpentine quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.7300000,lon:-76.0500000,name:'Kirk mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.7310000,lon:-76.1000000,name:'Carter (Texas) mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.7311000,lon:-76.1068000,name:'Wood\'s chromite mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.7370000,lon:-76.0160000,name:'Moro Phillips\' chrome mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.7410000,lon:-76.1850000,name:'Gray\'s quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.7460000,lon:-76.1860000,name:'Boyce (Spence) mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.7881000,lon:-77.4300000,name:'Russel prospect',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.8007000,lon:-77.2126000,name:'Teeter quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.8240000,lon:-76.0910000,name:'White Rock serpentine quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.8380000,lon:-76.0700000,name:'Burkholder (Stillwell\'s) serpentine quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.8940000,lon:-75.4430000,name:'Lenni occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.9050000,lon:-75.4180000,name:'occurrence near Elwyn',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.9100000,lon:-75.7160000,name:'Corundum Hill serpentine quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.9152000,lon:-75.5966000,name:'Brinton\'s quarries',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.9500000,lon:-75.4100000,name:'Blue Hill occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.9690000,lon:-75.3920000,name:'Moro Phillips\' chromite mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.9740000,lon:-75.6140000,name:'Taylor\'s quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.9760000,lon:-75.4380000,name:'Castle Rock occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.9810000,lon:-75.6030000,name:'General McCall\'s quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.0100000,lon:-75.5260000,name:'Edward\'s (Gorman\'s) quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.0470000,lon:-75.3680000,name:'John Stacker\'s quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.0550000,lon:-75.2590000,name:'Prince\'s soapstone quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.0590000,lon:-75.2760000,name:'Rose\'s quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.1170000,lon:-74.9080000,name:'unnamed occurrence near Flushing',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.1843000,lon:-75.7288000,name:'French Creek and Jones mines',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.2250000,lon:-75.0800000,name:'Wissahickon Valley occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.2660000,lon:-75.8546000,name:'Dyer quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.2665000,lon:-76.4100000,name:'Cornwall magnetite mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.6995000,lon:-75.2321000,name:'Quarry L',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.7133000,lon:-75.1962000,name:'C.K. Williams quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.9950000,lon:-71.4510000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.2100000,lon:-81.8600000,name:'Abbeville-York zone (Survey No. 5430)',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.6500000,lon:-81.9100000,name:'Abbeville-York zone (Survey No. 5667)',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.7700000,lon:-82.8700000,name:'Saluda zone (Survey No. 1522)',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.8800000,lon:-82.8100000,name:'Saluda zone (Survey No. 1570)',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.9000000,lon:-82.7100000,name:'Saluda zone (Survey No. 1610)',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.9000000,lon:-81.8900000,name:'Anderson-Spartanburg zone (Survey No. 5890)',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:35.0900000,lon:-81.5900000,name:'Black No. 2 mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.5749000,lon:-80.9319000,name:'Crabill prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.6000000,lon:-79.8500000,name:'F.W. Garrett deposit',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.6000000,lon:-79.8300000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.6500000,lon:-79.6900000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.8800000,lon:-80.2300000,name:'Barton mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:36.8900000,lon:-80.2500000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.4780000,lon:-78.4650000,name:'unnamed mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.4960000,lon:-79.0270000,name:'Turner Town prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.6610000,lon:-77.8170000,name:'unnamed prospects',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.6630000,lon:-77.8120000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.6700000,lon:-78.8500000,name:'Albemarle and Nelson Counties soapstone belt',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.9210000,lon:-78.1690000,name:'Holland prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.3990000,lon:-78.5440000,name:'L.B. Lam occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.4820000,lon:-78.2510000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.5300000,lon:-78.4160000,name:'Dark Hollow copper property',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.5970000,lon:-78.3710000,name:'Stony Man copper mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.6030000,lon:-78.4260000,name:'Ida copper mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.7900000,lon:-78.2910000,name:'Empire vein copper prospects',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.8260000,lon:-77.4902000,name:'Centreville (Fairfax) quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.8380000,lon:-77.3990000,name:'Sissler\'s quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.8600000,lon:-78.1300000,name:'unnamed occurrences',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.8600000,lon:-77.3300000,name:'Piney Branch Complex',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.8700000,lon:-78.1200000,name:'Manassas Gap copper mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.9360000,lon:-77.3040000,name:'Hise prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.9830000,lon:-77.3250000,name:'Jenkins Farm prospects',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.0691000,lon:-77.5165000,name:'Arlington quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:42.9600000,lon:-72.7650000,name:'Dover area ultramafic body',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:43.2720000,lon:-72.6336000,name:'Carleton quarry (Chester talc mine)',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:43.3870000,lon:-72.6520000,name:'Ludlow area ultramafic body',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:43.5270000,lon:-72.6780000,name:'Five Corners occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:43.6100000,lon:-72.7180000,name:'Bridgewater Hill occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:43.7950000,lon:-72.7710000,name:'Greeley talc mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:43.8601000,lon:-72.7583000,name:'Rochester (Williams) talc mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.2371000,lon:-72.7974000,name:'Mad River mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.3155000,lon:-72.7294000,name:'Waterbury mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.4005000,lon:-72.6923000,name:'Barnes Hill locality',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.7500000,lon:-72.5530000,name:'Scofield Ledges area ultramafic body',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.7584000,lon:-72.5247000,name:'Cortez Pond area ultramafic body',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.8062000,lon:-72.4561000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.8150000,lon:-72.4241000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.8160000,lon:-72.4251000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.8337000,lon:-72.4464000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.8736000,lon:-72.4053000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.9340000,lon:-72.3810000,name:'Troy asbestos deposit (East Hill prospect)',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.9644000,lon:-72.4304000,name:'unnamed prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.2669000,lon:-105.5449000,name:'Gem Park complex',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.4057000,lon:-105.4768000,name:'Pinon Peak breccia pipes',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:38.5892000,lon:-106.0203000,name:'Sedalia mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.0429000,lon:-105.5939000,name:'Camp Albion mining district',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.8426000,lon:-105.4562000,name:'Sloan pipe',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:40.9836000,lon:-106.3320000,name:'Salt Creek vermiculite deposits',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.2130000,lon:-116.3520000,name:'unnamed occurrences',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.9220000,lon:-115.9640000,name:'Blacktail asbestos prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:46.4880000,lon:-116.0270000,name:'Orofino Creek anthophyllite deposits',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:46.5360000,lon:-116.3150000,name:'Olson asbestos',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:46.5470000,lon:-116.3540000,name:'Teakean asbestos deposits',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:47.5385000,lon:-115.8575000,name:'Tamarack-Custer mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.7559000,lon:-111.4252000,name:'Little Mile Creek (Cliff Lake) asbestos deposit',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.7841000,lon:-112.9526000,name:'Anderson deposit',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.9589000,lon:-112.5167000,name:'Jake Creek ultramafic body',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.0386000,lon:-109.4497000,name:'Red Lodge chromite district',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.0750000,lon:-112.4270000,name:'Wolf Creek ultramafic pluton',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.1867000,lon:-112.4167000,name:'unnamed occurrences',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.1928000,lon:-112.4425000,name:'unnamed occurrences',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.2550000,lon:-109.5540000,name:'Rosebud asbestos claim',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.2876000,lon:-110.5833000,name:'Copper Queen claim',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.3190000,lon:-111.2780000,name:'Moon Lake asbestos',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.3317000,lon:-111.2523000,name:'Table Mountain prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.4830000,lon:-111.1460000,name:'Wilson Creek asbestos',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.5668000,lon:-110.9696000,name:'unnamed asbestos prospect',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.6940000,lon:-112.3105000,name:'Hudson Group',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:48.4348000,lon:-115.4081000,name:'Rainy Creek complex',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:48.7730000,lon:-115.6960000,name:'Larue-Cripe asbestos',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:48.8350000,lon:-115.7150000,name:'Esther May asbestos claims',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:31.8211000,lon:-108.4519000,name:'Gold Hill mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.4575000,lon:-106.5575000,name:'Hilltop mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.7475000,lon:-108.7128000,name:'Ricolite district',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:32.8186000,lon:-108.0747000,name:'Fierro-Hanover mining district',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:33.8681000,lon:-106.1785000,name:'Jones Camp mining district',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:41.8780000,lon:-105.3970000,name:'Halleck Canyon area',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:42.2050000,lon:-107.0040000,name:'Sunday Morning Creek area (Seminoe Mountains)',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:42.5586000,lon:-108.3499000,name:'Beaver Creek (Abernathy) deposit',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:42.6409000,lon:-106.1522000,name:'Green Hill deposit',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:42.6550000,lon:-106.0510000,name:'Koch deposit (Deer Creek area)',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:42.7290000,lon:-105.8680000,name:'Smith vermiculite deposit and serpentinite bodies near the head of Dry Creek (Stardust claims)',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:43.6200000,lon:-109.3830000,name:'Western Owl Creek Mountains',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.0300000,lon:-110.8100000,name:'Berry Creek (Brown Bear) deposit',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.0940000,lon:-107.1400000,name:'Canyon Creek (Grey Goose) claim',desc:'past prospect',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.0336000,lon:-93.6756000,name:'Prairie Creek lamproite',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:34.9373000,lon:-93.7603000,name:'unnamed peridotite dikes',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.7475000,lon:-95.7867000,name:'Silver City (Hills Pond) dome',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.3058000,lon:-96.9156000,name:'Bala intrusion',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:39.3420000,lon:-96.7239000,name:'Stockdale pipe',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:46.0032000,lon:-87.7746000,name:'Metronite quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:46.4927000,lon:-87.8805000,name:'Washington iron mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:46.5252000,lon:-87.7246000,name:'Verde Antique quarry and Ropes gold mine property',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:46.5904000,lon:-87.3772000,name:'Presque Isle',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:46.6637000,lon:-88.4416000,name:'Taylor mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:47.5513000,lon:-92.1917000,name:'occurrence in the Aurora sill',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.7006000,lon:-90.6406000,name:'Iron Mountain mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:43.8520000,lon:-103.4300000,name:'occurrence near Iron Mountain',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:44.3562000,lon:-103.7643000,name:'Homestake gold mine',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:31.1185000,lon:-105.0308000,name:'T & P Number 1 quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:31.1542000,lon:-105.1106000,name:'Buck quarry',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:31.0561000,lon:-104.9125000,name:'Neal Mann prospect',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:30.4779000,lon:-98.5752000,name:'Coal Creek area',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:30.6258000,lon:-98.7096000,name:'Oxford area',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:30.5084000,lon:-98.7777000,name:'Keener Branch area',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:45.7530000,lon:-87.8920000,name:'occurrence along the Sturgeon Falls sill',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.9460000,lon:-120.5310000,name:'New Melones Lake spillway',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				GV_Draw_Marker({lat:37.8900000,lon:-122.4500000,name:'unnamed occurrence',desc:'occurrence',color:'#ff0000',icon:'',scale:0.25});
+				
+				GV_Finish_Map();
+					
+			  
+			}
+			GV_Map(); // execute the above code
+			// http://www.gpsvisualizer.com/map_input?bg_map=us: National Atlas&form=data&height=1200&special=data&units=us&width=1920
+		</script>
+		
+		
+		
+	</body>
+
+</html>
