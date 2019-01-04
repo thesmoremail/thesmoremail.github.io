@@ -18,7 +18,7 @@ var article = [
 ,[0,'2019-01-03','asbestos','⚠ asbestos',"The Lawsuits engulfing the other white meat.",'']
 ,[0,'2019-01-03','carinsurance','🚓 Car Insurance',"You hit it, they pay",'']
 ,[0,'2019-01-03','asbestos_trusts','☠ Asbestos Trusts',"You breathe it, they pay",'']
-,[0,'2019-01-03','dev','△ Development',"They pyramid of power for best development cycles",'']
+,[0,'2019-01-03','dev','△ Development',"The pyramid of power for the best development cycles",'']
 ,[0,'2019-01-03','asbestos_map','🌎 Asbestos Map',"If You don't find it, you can't breath the stuff!",'']
 
 ];
