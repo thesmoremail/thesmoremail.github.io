@@ -208,7 +208,7 @@ You Have completed the <a href=/best/email>training material </a>and have achiev
 <a class="run" onclick="document.getElementById('c21').innerHTML=document.getElementById('c20').innerHTML;document.getElementById('c11').innerHTML=document.getElementById('c10').innerHTML;window.print();" href="" title="Print Certificate"  style="font-size:larger;width:100%;">&nbsp;Print Certificate&nbsp;</a>
 </li>
 </ul>
-* A printed cert auto bumps your trainer level in <a href='/best/catfight/'>cat fight</a>
+* A printed certifiCat auto bumps your trainer level in <a href='/best/catfight/'>cat fight</a>
 </div>
 
 
@@ -226,6 +226,27 @@ oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 var v1 = oneWeekAgo.toLocaleDateString("en-US"); 
 document.getElementById('tb2').value = v1;
 document.getElementById('c20').innerHTML = "Totally completed on " + v1;
+
+
+//write to local storage, dump all local storage, remove from local storage
+
+
+var test1 = 'test' + Date();
+//localStorage.removeItem("test");
+localStorage.setItem("test", test1);
+
+
+//var set = localStorage.setItem(test+1, test);
+//  localStorage.removeItem(test);
+//var set = localStorage.setItem('key', 'value');
+console.log(localStorage.getItem('test'));
+
+//if have array of values under one key
+//for ( var i = 0, len = localStorage.length; i < len; ++i ) {
+//  console.log( localStorage.getItem(localStorage.key( i ) ) );
+//}
+
+localStorage.clear();
 
 </script>
 
