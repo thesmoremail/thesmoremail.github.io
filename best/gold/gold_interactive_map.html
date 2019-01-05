@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>GPS data</title>
+		<base target="_top"></base>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=yes">
+		<meta name="geo.position" content="24.4945; -39.23835" />
+		<meta name="ICBM" content="24.4945, -39.23835" />
+	</head>
+	<body style="margin:0px;">
+		<script type="text/javascript">
+			google_api_key = ''; // Your project's Google Maps API key goes here (https://code.google.com/apis/console)
+			language_code = '';
+			document.writeln('<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3&amp;libraries=geometry&amp;language='+(self.language_code?self.language_code:'')+'&amp;key='+(self.google_api_key?self.google_api_key:'')+'"><'+'/script>');
+			
+			thunderforest_api_key = ''; // To display OpenStreetMap tiles from ThunderForest, you need a key (http://www.thunderforest.com/docs/apikeys/)
+		</script>
+		
+		<!--
+			If you want to transplant this map into another Web page, by far the best method is to
+			simply include it in a IFRAME tag (see http://www.gpsvisualizer.com/faq.html#google_html).
+			But, if you must paste the code into another page, be sure to include all of these parts:
+			   1. The "div" tags that contain the map and its widgets, below
+			   2. Three sections of JavaScript code:
+			      a. The Google code (maps.google.com or googleapis.com) code, above
+			      b. "gv_options" and the code that calls a .js file on maps.gpsvisualizer.com
+			      c. The "GV_Map" function, which contains all the geographic info for the map
+		-->
+		<div style="margin-left:0px; margin-right:0px; margin-top:0px; margin-bottom:0px;">
+			<div id="gmap_div" style="width:1920px; height:1200px; margin:0px; margin-right:12px; background-color:#f0f0f0; float:left; overflow:hidden;">
+				<p style="text-align:center; font:10px Arial;">This map was created using <a target="_blank" href="http://www.gpsvisualizer.com/">GPS Visualizer</a>'s do-it-yourself geographic utilities.<br /><br />Please wait while the map data loads...</p>
+			</div>
+				
+			<div id="gv_infobox" class="gv_infobox" style="font:11px Arial; border:solid #666666 1px; background-color:#ffffff; padding:4px; overflow:auto; display:none; max-width:1620px;">
+				<!-- Although GPS Visualizer didn't create an legend/info box with your map, you can use this space for something else if you'd like; enable it by setting gv_options.infobox_options.enabled to true -->
+			</div>
+
+
+
+			<div id="gv_marker_list" class="gv_marker_list" style="background-color:#ffffff; overflow:auto; display:none;"><!-- --></div>
+
+			<div id="gv_clear_margins" style="height:0px; clear:both;"><!-- clear the "float" --></div>
+		</div>
+
+		
+		<!-- begin GPS Visualizer setup script (must come after maps.google.com code) -->
+		<script type="text/javascript">
+			/* Global variables used by the GPS Visualizer functions (20190103202857): */
+			gv_options = {};
+			
+			// basic map parameters:
+			gv_options.center = [37,-101];  // [latitude,longitude] - be sure to keep the square brackets
+			gv_options.zoom = 'auto';  // higher number means closer view; can also be 'auto' for automatic zoom/center based on map elements
+			gv_options.map_type = 'NATIONALGEOGRAPHIC';  // popular map_type choices are 'GV_STREET', 'GV_SATELLITE', 'GV_HYBRID', 'GV_TERRAIN', 'GV_OSM', 'GV_TOPO_US', 'GV_TOPO_WORLD' (http://www.gpsvisualizer.com/misc/google_map_types.html)
+			gv_options.map_opacity = 1;  // number from 0 to 1
+			gv_options.full_screen = true;  // true|false: should the map fill the entire page (or frame)?
+			gv_options.width = 600;  // width of the map, in pixels
+			gv_options.height = 400;  // height of the map, in pixels
+			
+			gv_options.map_div = 'gmap_div';  // the name of the HTML "div" tag containing the map itself; usually 'gmap_div'
+			gv_options.doubleclick_zoom = true;  // true|false: zoom in when mouse is double-clicked?
+			gv_options.doubleclick_center = true;  // true|false: re-center the map on the point that was double-clicked?
+			gv_options.scroll_zoom = true; // true|false; or 'reverse' for down=in and up=out
+			gv_options.page_scrolling = true; // true|false; does the map relenquish control of the scroll wheel when embedded in scrollable pages?
+			gv_options.autozoom_adjustment = 0;
+			gv_options.centering_options = { 'open_info_window':true, 'partial_match':true, 'center_key':'center', 'default_zoom':null } // URL-based centering (e.g., ?center=name_of_marker&zoom=14)
+			gv_options.street_view = false; // true|false: allow Google Street View on the map
+			gv_options.tilt = false; // true|false: allow Google to show 45-degree tilted aerial imagery?
+			gv_options.animated_zoom = false; // true|false: may or may not work properly
+			gv_options.disable_google_pois = false;  // true|false: if you disable clickable POIs, you also lose the labels on parks, airports, etc.
+			
+			// widgets on the map:
+			gv_options.zoom_control = 'large'; // 'large'|'small'|'none'
+			gv_options.recenter_button = true; // true|false: is there a 'click to recenter' option in the zoom control?
+			gv_options.scale_control = true; // true|false
+			gv_options.map_opacity_control = 'utilities';  // 'map'|'utilities'|'both'|false: where does the opacity control appear?
+			gv_options.map_type_control = {};  // widget to change the background map
+			  gv_options.map_type_control.placement = 'both'; // 'map'|'utilities'|'both'|false: where does the map type control appear?
+			  gv_options.map_type_control.filter = false;  // true|false: when map loads, are irrelevant maps ignored?
+			  gv_options.map_type_control.excluded = [];  // comma-separated list of quoted map IDs that will never show in the list ('included' also works)
+			gv_options.center_coordinates = true;  // true|false: show a "center coordinates" box and crosshair?
+			gv_options.measurement_tools = true;  // true|false: does it appear on the map itself?
+			gv_options.measurement_options = { visible:false, distance_color:'', area_color:'' };
+			gv_options.crosshair_hidden = true;  // true|false: hide the crosshair initially?
+			gv_options.mouse_coordinates = false;  // true|false: show a "mouse coordinates" box?
+			gv_options.utilities_menu = { 'maptype':true, 'opacity':true, 'measure':true, 'export':true };
+			gv_options.allow_export = false;  // true|false
+			
+			gv_options.infobox_options = {}; // options for a floating info box (id="gv_infobox"), which can contain anything
+			  gv_options.infobox_options.enabled = true;  // true|false: enable or disable the info box altogether
+			  gv_options.infobox_options.position = ['LEFT_TOP',52,6];  // [Google anchor name, relative x, relative y]
+			  gv_options.infobox_options.draggable = true;  // true|false: can it be moved around the screen?
+			  gv_options.infobox_options.collapsible = true;  // true|false: can it be collapsed by double-clicking its top bar?
+
+			// marker-related options:
+			gv_options.default_marker = { color:'red',icon:'blankcircle',scale:1,opacity:0.7 }; // icon can be a URL, but be sure to also include size:[w,h] and optionally anchor:[x,y]
+			gv_options.vector_markers = false; // are the icons on the map in embedded SVG format?
+			gv_options.marker_tooltips = true; // do the names of the markers show up when you mouse-over them?
+			gv_options.marker_shadows = true; // true|false: do the standard markers have "shadows" behind them?
+			gv_options.marker_link_target = '_blank'; // the name of the window or frame into which markers' URLs will load
+			gv_options.info_window_width = 300;  // in pixels, the width of the markers' pop-up info "bubbles" (can be overridden by 'window_width' in individual markers)
+			gv_options.thumbnail_width = 0;  // in pixels, the width of the markers' thumbnails (can be overridden by 'thumbnail_width' in individual markers)
+			gv_options.photo_size = [0,0];  // in pixels, the size of the photos in info windows (can be overridden by 'photo_width' or 'photo_size' in individual markers)
+			gv_options.hide_labels = false;  // true|false: hide labels when map first loads?
+			gv_options.labels_behind_markers = false; // true|false: are the labels behind other markers (true) or in front of them (false)?
+			gv_options.label_offset = [0,0];  // [x,y]: shift all markers' labels (positive numbers are right and down)
+			gv_options.label_centered = false;  // true|false: center labels with respect to their markers?  (label_left is also a valid option.)
+			gv_options.driving_directions = false;  // put a small "driving directions" form in each marker's pop-up window? (override with dd:true or dd:false in a marker's options)
+			gv_options.garmin_icon_set = 'gpsmap'; // 'gpsmap' are the small 16x16 icons; change it to '24x24' for larger icons
+			gv_options.marker_list_options = {};  // options for a dynamically-created list of markers
+			  gv_options.marker_list_options.enabled = false;  // true|false: enable or disable the marker list altogether
+			  gv_options.marker_list_options.floating = true;  // is the list a floating box inside the map itself?
+			  gv_options.marker_list_options.position = ['RIGHT_BOTTOM',6,38];  // floating list only: position within map
+			  gv_options.marker_list_options.min_width = 160; // minimum width, in pixels, of the floating list
+			  gv_options.marker_list_options.max_width = 160;  // maximum width
+			  gv_options.marker_list_options.min_height = 0;  // minimum height, in pixels, of the floating list
+			  gv_options.marker_list_options.max_height = 560;  // maximum height
+			  gv_options.marker_list_options.draggable = true;  // true|false, floating list only: can it be moved around the screen?
+			  gv_options.marker_list_options.collapsible = true;  // true|false, floating list only: can it be collapsed by double-clicking its top bar?
+			  gv_options.marker_list_options.include_tickmarks = false;  // true|false: are distance/time tickmarks included in the list?
+			  gv_options.marker_list_options.include_trackpoints = false;  // true|false: are "trackpoint" markers included in the list?
+			  gv_options.marker_list_options.dividers = false;  // true|false: will a thin line be drawn between each item in the list?
+			  gv_options.marker_list_options.desc = false;  // true|false: will the markers' descriptions be shown below their names in the list?
+			  gv_options.marker_list_options.icons = true;  // true|false: should the markers' icons appear to the left of their names in the list?
+			  gv_options.marker_list_options.thumbnails = false;  // true|false: should markers' thumbnails be shown in the list?
+			  gv_options.marker_list_options.folders_collapsed = false;  // true|false: do folders in the list start out in a collapsed state?
+			  gv_options.marker_list_options.folders_hidden = false;  // true|false: do folders in the list start out in a hidden state?
+			  gv_options.marker_list_options.collapsed_folders = []; // an array of folder names
+			  gv_options.marker_list_options.hidden_folders = []; // an array of folder names
+			  gv_options.marker_list_options.count_folder_items = false;  // true|false: list the number of items in each folder?
+			  gv_options.marker_list_options.wrap_names = true;  // true|false: should marker's names be allowed to wrap onto more than one line?
+			  gv_options.marker_list_options.unnamed = '[unnamed]';  // what 'name' should be assigned to  unnamed markers in the list?
+			  gv_options.marker_list_options.colors = false;  // true|false: should the names/descs of the points in the list be colorized the same as their markers?
+			  gv_options.marker_list_options.default_color = '';  // default HTML color code for the names/descs in the list
+			  gv_options.marker_list_options.limit = 0;  // how many markers to show in the list; 0 for no limit
+			  gv_options.marker_list_options.center = false;  // true|false: does the map center upon a marker when you click its name in the list?
+			  gv_options.marker_list_options.zoom = false;  // true|false: does the map zoom to a certain level when you click on a marker's name in the list?
+			  gv_options.marker_list_options.zoom_level = 11;  // if 'zoom' is true, what level should the map zoom to?
+			  gv_options.marker_list_options.info_window = true;  // true|false: do info windows pop up when the markers' names are clicked in the list?
+			  gv_options.marker_list_options.url_links = false;  // true|false: do the names in the list become instant links to the markers' URLs?
+			  gv_options.marker_list_options.toggle = false;  // true|false: does a marker disappear if you click on its name in the list?
+			  gv_options.marker_list_options.help_tooltips = false;  // true|false: do "tooltips" appear on marker names that tell you what happens when you click?
+			  gv_options.marker_list_options.id = 'gv_marker_list';  // id of a DIV tag that holds the list
+			  gv_options.marker_list_options.header = ''; // HTML code; be sure to put backslashes in front of any single quotes, and don't include any line breaks
+			  gv_options.marker_list_options.footer = ''; // HTML code
+			gv_options.marker_filter_options = {};  // options for removing waypoints that are out of the current view
+			  gv_options.marker_filter_options.enabled = false;  // true|false: should out-of-range markers be removed?
+			  gv_options.marker_filter_options.movement_threshold = 8;  // in pixels, how far the map has to move to trigger filtering
+			  gv_options.marker_filter_options.limit = 0;  // maximum number of markers to display on the map; 0 for no limit
+			  gv_options.marker_filter_options.update_list = true;  // true|false: should the marker list be updated with only the filtered markers?
+			  gv_options.marker_filter_options.sort_list_by_distance = false;  // true|false: should the marker list be sorted by distance from the center of the map?
+			  gv_options.marker_filter_options.min_zoom = 0;  // below this zoom level, don't show any markers at all
+			  gv_options.marker_filter_options.zoom_message = '';  // message to put in the marker list if the map is below the min_zoom threshold
+			gv_options.synthesize_fields = {}; // for example: {label:'{name}'} would cause all markers' names to become visible labels
+				
+
+			
+			// Load GPS Visualizer's Google Maps functions (this must be loaded AFTER gv_options are set):
+			if (window.location.toString().indexOf('https://') == 0) { // secure pages require secure scripts
+				document.writeln('<script src="https://gpsvisualizer.com/google_maps/functions3.js" type="text/javascript"><'+'/script>');
+			} else {
+				document.writeln('<script src="http://maps.gpsvisualizer.com/google_maps/functions3.js" type="text/javascript"><'+'/script>');
+			}
+			
+		</script>
+		<style type="text/css">
+			/* Put any custom style definitions here (e.g., .gv_marker_info_window, .gv_marker_info_window_name, .gv_marker_list_item, .gv_tooltip, .gv_label, etc.) */
+			#gmap_div .gv_marker_info_window {
+				font-size:11px !important;
+			}
+			#gmap_div .gv_label {
+				opacity:0.90; filter:alpha(opacity=90);
+				color:white; background-color:#333333; border:1px solid black; padding:1px;
+				font:9px Verdana !important;
+				font-weight:normal !important;
+			}
+			
+		</style>
+		
+		<!-- end GPSV setup script and styles; begin map-drawing script (they must be separate) -->
+		<script type="text/javascript">
+			function GV_Map() {
+			  
+				GV_Setup_Map();
+				
+				
+				
+                GV_Draw_Marker({lat:43.988,lon:-110.292,name:'WY,Discovered  Produced:',desc:'Remaining as of ,1431t',color:'#ff0000',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.977,lon:-116.358,name:'NV,Discovered 1963 Produced:364t',desc:'Remaining as of 1997,1098t',color:'#ff0000',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.206,lon:-121.045,name:'CA,Discovered 1850 Produced:196t',desc:'Remaining as of ,999t',color:'#ff0000',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.792,lon:-108.067,name:'NM,Discovered 1800 Produced:15t',desc:'Remaining as of 1997,999t',color:'#ff0000',icon:'',scale:0.1});
+GV_Draw_Marker({lat:65.75,lon:-161.667,name:'AK,Discovered 1902 Produced:14.1t',desc:'Remaining as of ,999t',color:'#ff0000',icon:'',scale:0.1});
+GV_Draw_Marker({lat:67.25,lon:-150.75,name:'AK,Discovered by 1890 Produced:10.6t',desc:'Remaining as of ,999t',color:'#ff0000',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.418,lon:-120.822,name:'CA,Discovered 1851 Produced:8.6t',desc:'Remaining as of ,999t',color:'#ff0000',icon:'',scale:0.1});
+GV_Draw_Marker({lat:42.5,lon:-108.7,name:'WY,Discovered 1842 Produced:3t',desc:'Remaining as of ,999t',color:'#f65e04',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.633,lon:-108.367,name:'NM,Discovered 1871 Produced:1.5t',desc:'Remaining as of 1997,999t',color:'#f65e04',icon:'',scale:0.1});
+GV_Draw_Marker({lat:42.317,lon:-108.833,name:'WY,Discovered 1863 Produced:0.2t',desc:'Remaining as of ,815t',color:'#f65e04',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.28,lon:-117.17,name:'NV,Discovered 1985 Produced:122t',desc:'Remaining as of 1996,561t',color:'#f65e04',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.54,lon:-112.14,name:'UT,Discovered by 1887 Produced:671t',desc:'Remaining as of 1996,325t',color:'#eeb307',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.248,lon:-116.74,name:'NV,Discovered by 1991 Produced:23t',desc:'Remaining as of 1997,429t',color:'#eeb307',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.825,lon:-116.225,name:'NV,Discovered 1935 Produced:272t',desc:'Remaining as of 1996,339t',color:'#eeb307',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.36,lon:-103.77,name:'SD,Discovered 1876 Produced:1249t',desc:'Remaining as of 1997,87t',color:'#eeb307',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.7,lon:-117.08,name:'NV,Discovered 1891 Produced:158t',desc:'Remaining as of 1997,296t',color:'#eeb307',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47,lon:-112.525,name:'MT,Discovered 1986 Produced:t',desc:'Remaining as of 1997,321t',color:'#eeb307',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.34,lon:-116.01,name:'NV,Discovered 1973 Produced:150t',desc:'Remaining as of 1996,237t',color:'#eeb307',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.54,lon:-112.14,name:'UT,Discovered 1860 Produced:35t',desc:'Remaining as of 1996,250t',color:'#eeb307',icon:'',scale:0.1});
+GV_Draw_Marker({lat:64.967,lon:-147.367,name:'AK,Discovered 1913 Produced:10t',desc:'Remaining as of 1997,221t',color:'#eeb307',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.962,lon:-116.362,name:'NV,Discovered 1977 Produced:999t',desc:'Remaining as of 1992,13t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:62.075,lon:-158.217,name:'AK,Discovered  Produced:t',desc:'Remaining as of 1998,211t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.01,lon:-116.36,name:'NV,Discovered 1989 Produced:20t',desc:'Remaining as of 1997,205t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.717,lon:-105.133,name:'CO,Discovered 1890 Produced:605t',desc:'Remaining as of 1997,85t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.417,lon:-120.867,name:'CA,Discovered 1850s Produced:999t',desc:'Remaining as of ,1t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.338,lon:-120.842,name:'CA,Discovered by 1850 Produced:999t',desc:'Remaining as of ,0.3t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.539,lon:-121.025,name:'CA,Discovered 1850 Produced:999t',desc:'Remaining as of ,t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.7,lon:-121.775,name:'CA,Discovered by 1853 Produced:999t',desc:'Remaining as of ,t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.465,lon:-117.604,name:'NV,Discovered 1907 Produced:t',desc:'Remaining as of 1996,188t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:58.308,lon:-134.345,name:'AK,Discovered 1880 Produced:109.5t',desc:'Remaining as of 1995,164t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:59.898,lon:-155.296,name:'AK,Discovered 1989 Produced:t',desc:'Remaining as of 1992,172t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.21,lon:-117.26,name:'NV,Discovered 1934 Produced:72t',desc:'Remaining as of 1997,153t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:64.45,lon:-144.883,name:'AK,Discovered 1994 Produced:t',desc:'Remaining as of 1998,140t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:64.467,lon:-144.917,name:'AK,Discovered  Produced:t',desc:'Remaining as of 1997,140t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.83,lon:-117.21,name:'NV,Discovered 1989 Produced:42t',desc:'Remaining as of 1997,130t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.217,lon:-117.258,name:'NV,Discovered 1993 Produced:t',desc:'Remaining as of 1997,136t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.806,lon:-116.247,name:'NV,Discovered 1989 Produced:t',desc:'Remaining as of 1996,131t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.356,lon:-122.081,name:'WA,Discovered by 1971 Produced:t',desc:'Remaining as of 1979,126t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.394,lon:-120.915,name:'CA,Discovered 1851 Produced:6.7t',desc:'Remaining as of ,124t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.981,lon:-121.369,name:'WA,Discovered 1889 Produced:t',desc:'Remaining as of 1983,125t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.02,lon:-112.526,name:'MT,Discovered 1912 Produced:14t',desc:'Remaining as of 1996,120t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:31.763,lon:-110.753,name:'AZ,Discovered 1873 Produced:1t',desc:'Remaining as of 1907,113t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.224,lon:-121.038,name:'CA,Discovered 1851 Produced:76t',desc:'Remaining as of 1994,92t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:58.866,lon:-135.087,name:'AK,Discovered 1895 Produced:1.6t',desc:'Remaining as of 1996,105t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.098,lon:-114.963,name:'CA,Discovered 1981 Produced:73t',desc:'Remaining as of 1996,88t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:65.75,lon:-164.83,name:'AK,Discovered 1900 Produced:46.7t',desc:'Remaining as of ,93t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.85,lon:-115.5,name:'NV,Discovered 1855 Produced:3t',desc:'Remaining as of 1990,100t',color:'#cce50b',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.933,lon:-116.321,name:'NV,Discovered 1994 Produced:t',desc:'Remaining as of 1996,99t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.53,lon:-117.12,name:'NV,Discovered 1975 Produced:78t',desc:'Remaining as of 1995,83t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.946,lon:-120.437,name:'CA,Discovered 1850 Produced:72t',desc:'Remaining as of 1986,81t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.26,lon:-115,name:'NV,Discovered 1867 Produced:72.9t',desc:'Remaining as of 1997,80t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.102,lon:-120.55,name:'CA,Discovered 1848 Produced:0.7t',desc:'Remaining as of ,92t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.906,lon:-112.014,name:'MT,Discovered 1890 Produced:48t',desc:'Remaining as of 1997,77t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.06,lon:-109.96,name:'MT,Discovered 1869 Produced:1.9t',desc:'Remaining as of 1992,83t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.912,lon:-116.32,name:'NV,Discovered 1962 Produced:118t',desc:'Remaining as of 1997,59t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.483,lon:-88.926,name:'WI,Discovered 1975 Produced:t',desc:'Remaining as of 1979,79t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:42.3,lon:-120.8,name:'OR,Discovered by 1979 Produced:t',desc:'Remaining as of 1994,78t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:64.868,lon:-147.986,name:'AK,Discovered 1911 Produced:0.6t',desc:'Remaining as of 1994,74.5t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.927,lon:-115.332,name:'ID,Discovered 1902 Produced:22t',desc:'Remaining as of 1996,63t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.344,lon:-103.842,name:'SD,Discovered 1877 Produced:49t',desc:'Remaining as of 1995,57t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.25,lon:-116.79,name:'NV,Discovered 1907 Produced:4t',desc:'Remaining as of 1995,65t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.7,lon:-118.867,name:'CA,Discovered  Produced:t',desc:'Remaining as of 1997,63t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.328,lon:-103.764,name:'SD,Discovered 1879 Produced:8t',desc:'Remaining as of 1996,61t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.422,lon:-117.719,name:'OR,Discovered by 1989 Produced:t',desc:'Remaining as of 1996,62t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.223,lon:-118.982,name:'CA,Discovered 1859 Produced:45t',desc:'Remaining as of 1988,53t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:64.5,lon:-165.5,name:'AK,Discovered 1897 Produced:151.6t',desc:'Remaining as of 1989,31t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.1,lon:-114.447,name:'AZ,Discovered 1863 Produced:63t',desc:'Remaining as of 1993,48t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.96,lon:-115.59,name:'NV,Discovered 1869 Produced:30t',desc:'Remaining as of 1997,54t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.32,lon:-119.59,name:'NV,Discovered 1858 Produced:258t',desc:'Remaining as of 1995,7t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.929,lon:-108.586,name:'MT,Discovered 1893 Produced:58t',desc:'Remaining as of 1996,45t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.339,lon:-106.132,name:'NM,Discovered 1828 Produced:11t',desc:'Remaining as of 1991,54t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:62.206,lon:-142.842,name:'AK,Discovered late 1890s Produced:t',desc:'Remaining as of 1975,55t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.932,lon:-114.829,name:'CA,Discovered  Produced:t',desc:'Remaining as of 1996,54t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.952,lon:-116.352,name:'NV,Discovered 1957 Produced:62.2t',desc:'Remaining as of 1997,41t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:48.673,lon:-118.758,name:'WA,Discovered 1896 Produced:92t',desc:'Remaining as of 1994,35t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.25,lon:-106.25,name:'CO,Discovered 1868 Produced:89t',desc:'Remaining as of 1996,35t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.33,lon:-118.05,name:'NV,Discovered 1982 Produced:52t',desc:'Remaining as of 1997,42t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.232,lon:-111.96,name:'MT,Discovered 1864 Produced:5t',desc:'Remaining as of ,50t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.523,lon:-115.988,name:'NV,Discovered 1992 Produced:t',desc:'Remaining as of 1994,50t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:64.917,lon:-147.5,name:'AK,Discovered 1878 Produced:249.5t',desc:'Remaining as of ,t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.357,lon:-117.661,name:'CA,Discovered 1895 Produced:38t',desc:'Remaining as of 1997,42t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.666,lon:-91.883,name:'MN,Discovered  Produced:t',desc:'Remaining as of 1976,49t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.519,lon:-112.946,name:'MT,Discovered 1852 Produced:9t',desc:'Remaining as of 1940,47t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.958,lon:-107.75,name:'CO,Discovered 1875 Produced:146t',desc:'Remaining as of 1996,19t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:48.956,lon:-118.983,name:'WA,Discovered 1988 Produced:t',desc:'Remaining as of 1995,48t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.24,lon:-116.714,name:'ID,Discovered 1936 Produced:t',desc:'Remaining as of 1994,47t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.34,lon:-117.21,name:'NV,Discovered 1914 Produced:88t',desc:'Remaining as of 1997,29t',color:'#78dd0e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.204,lon:-121.415,name:'CA,Discovered 1849 Produced:160t',desc:'Remaining as of 1991,14t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.45,lon:-119.27,name:'NV,Discovered 1863 Produced:0.23t',desc:'Remaining as of 1995,45t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.6,lon:-116.683,name:'NV,Discovered 1986 Produced:t',desc:'Remaining as of 1996,45t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.339,lon:-111.571,name:'MT,Discovered 1870s Produced:0.5t',desc:'Remaining as of 1988,44t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.836,lon:-122.357,name:'CA,Discovered 1979 Produced:89t',desc:'Remaining as of 1997,26t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.98,lon:-118.169,name:'CA,Discovered 1894 Produced:9t',desc:'Remaining as of 1998,42t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:58.077,lon:-134.619,name:'AK,Discovered 1975 Produced:4.6t',desc:'Remaining as of 1996,42t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.11,lon:-116.56,name:'NV,Discovered 1980 Produced:4t',desc:'Remaining as of 1995,41t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:36.89,lon:-116.68,name:'NV,Discovered 1987 Produced:2t',desc:'Remaining as of 1995,41t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:65.053,lon:-147.56,name:'AK,Discovered by 1912 Produced:t',desc:'Remaining as of 1996,41t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.92,lon:-116.33,name:'NV,Discovered by 1979 Produced:0.8t',desc:'Remaining as of 1996,39t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:63.214,lon:-149.649,name:'AK,Discovered 1909 Produced:0.05t',desc:'Remaining as of ,39t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.962,lon:-116.353,name:'NV,Discovered 1989 Produced:t',desc:'Remaining as of 1996,38t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:36.9,lon:-116.88,name:'NV,Discovered 1904 Produced:67t',desc:'Remaining as of 1996,24t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.834,lon:-107.563,name:'CO,Discovered 1870 Produced:57t',desc:'Remaining as of 1990,26t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.25,lon:-111.95,name:'MT,Discovered  Produced:t',desc:'Remaining as of ,37t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.949,lon:-121.43,name:'WA,Discovered 1871 Produced:t',desc:'Remaining as of 1983,37t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.281,lon:-115.102,name:'CA,Discovered 1907 Produced:22t',desc:'Remaining as of 1996,32t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.317,lon:-106.163,name:'NM,Discovered by 1934 Produced:t',desc:'Remaining as of 1992,36t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.068,lon:-116.425,name:'NV,Discovered 1990 Produced:t',desc:'Remaining as of 1997,36t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.02,lon:-116.42,name:'NV,Discovered 1946 Produced:4t',desc:'Remaining as of 1995,35t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.938,lon:-117.185,name:'CA,Discovered 1989 Produced:2.2t',desc:'Remaining as of 1996,35t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.62,lon:-115.97,name:'NV,Discovered 1982 Produced:t',desc:'Remaining as of 1993,35t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.156,lon:-116.483,name:'NV,Discovered by 1989 Produced:t',desc:'Remaining as of 1997,35t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.31,lon:-116.64,name:'NV,Discovered 1905 Produced:0.16t',desc:'Remaining as of 1995,34t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:62.703,lon:-155.718,name:'AK,Discovered  Produced:t',desc:'Remaining as of ,34t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.667,lon:-115.583,name:'ID,Discovered  Produced:t',desc:'Remaining as of ,34t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.86,lon:-118.69,name:'NV,Discovered 1974 Produced:29t',desc:'Remaining as of 1997,28t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.58,lon:-118.24,name:'NV,Discovered 1969? Produced:34t',desc:'Remaining as of 1997,27t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:36.717,lon:-117.9,name:'CA,Discovered 1877 Produced:1t',desc:'Remaining as of ,33t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:43.669,lon:-117.36,name:'OR,Discovered 1988 Produced:t',desc:'Remaining as of 1990,33t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:43.771,lon:-115.118,name:'ID,Discovered 1865 Produced:t',desc:'Remaining as of 1996,33t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.224,lon:-114.196,name:'ID,Discovered 1892 Produced:0.3t',desc:'Remaining as of 1995,31t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.757,lon:-107.727,name:'CO,Discovered 1891 Produced:0.1t',desc:'Remaining as of 1983,31t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.645,lon:-117.178,name:'NV,Discovered 1991 Produced:t',desc:'Remaining as of 1996,31t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.292,lon:-113.608,name:'MT,Discovered  Produced:t',desc:'Remaining as of 1996,31t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.797,lon:-112.516,name:'MT,Discovered 1866 Produced:2t',desc:'Remaining as of ,30t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.557,lon:-121.44,name:'CA,Discovered 1848 Produced:t',desc:'Remaining as of 1989,30t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:65.053,lon:-147.56,name:'AK,Discovered by 1912 Produced:t',desc:'Remaining as of 1995,29t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.9,lon:-116.3,name:'NV,Discovered 1994 Produced:t',desc:'Remaining as of 1996,29t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.226,lon:-116.664,name:'ID,Discovered 1890s Produced:t',desc:'Remaining as of 1992,29t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.333,lon:-120.75,name:'CA,Discovered 1849 Produced:4t',desc:'Remaining as of 1984,28t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.61,lon:-112.16,name:'UT,Discovered 1985 Produced:28t',desc:'Remaining as of 1996,22t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.981,lon:-121.369,name:'WA,Discovered 1889 Produced:7t',desc:'Remaining as of 1983,26t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.71,lon:-117.21,name:'NV,Discovered 1902 Produced:132t',desc:'Remaining as of ,t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.61,lon:-116.01,name:'NV,Discovered 1979 Produced:22t',desc:'Remaining as of 1996,22t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.061,lon:-120.319,name:'CA,Discovered 1849 Produced:131t',desc:'Remaining as of ,t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.578,lon:-80.543,name:'SC,Discovered 1827 Produced:11t',desc:'Remaining as of 1994,24t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.833,lon:-116.233,name:'NV,Discovered 1985 Produced:t',desc:'Remaining as of 1990,26t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.28,lon:-118.15,name:'NV,Discovered 1912 Produced:24t',desc:'Remaining as of 1997,21t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.45,lon:-113.063,name:'UT,Discovered 1872 Produced:0.1t',desc:'Remaining as of 1980,25t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:67.181,lon:-156.386,name:'AK,Discovered 1965 Produced:t',desc:'Remaining as of ,25t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:64.61,lon:-165.41,name:'AK,Discovered  Produced:t',desc:'Remaining as of ,25t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.972,lon:-112.53,name:'MT,Discovered 1886 Produced:t',desc:'Remaining as of ,25t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.42,lon:-116.81,name:'NV,Discovered 1981 Produced:0.6t',desc:'Remaining as of 1984,24t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:63.233,lon:-144.16,name:'AK,Discovered  Produced:t',desc:'Remaining as of ,24t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.145,lon:-105.186,name:'WY,Discovered 1879 Produced:t',desc:'Remaining as of 1987,24t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.29,lon:-118.89,name:'NV,Discovered 1860 Produced:57t',desc:'Remaining as of 1995,12t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.96,lon:-116.86,name:'NV,Discovered 1936 Produced:6t',desc:'Remaining as of 1988,22t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.366,lon:-116.133,name:'CA,Discovered 1912 Produced:t',desc:'Remaining as of ,23t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.684,lon:-121.175,name:'CA,Discovered 1849 Produced:112t',desc:'Remaining as of ,t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.046,lon:-121.143,name:'CA,Discovered 1850s? Produced:2t',desc:'Remaining as of 1993,22t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:43.02,lon:-116.831,name:'ID,Discovered 1889 Produced:31t',desc:'Remaining as of 1996,16t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.4,lon:-103.7,name:'SD,Discovered N/A Produced:t',desc:'Remaining as of 1989,22t',color:'#2cd511',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.03,lon:-118.42,name:'NV,Discovered 1906 Produced:22t',desc:'Remaining as of 1996,17t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.779,lon:-105.683,name:'CO,Discovered 1862 Produced:7t',desc:'Remaining as of ,20t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.75,lon:-112.12,name:'AZ,Discovered 1545 Produced:42t',desc:'Remaining as of 1981,13t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.67,lon:-119.408,name:'NV,Discovered 1864 Produced:1t',desc:'Remaining as of 1996,21t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.266,lon:-80.875,name:'SC,Discovered 1969 Produced:36t',desc:'Remaining as of 1996,14t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.459,lon:-115.996,name:'NV,Discovered 1980 Produced:t',desc:'Remaining as of 1989,21t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.509,lon:-120.838,name:'CA,Discovered 1852 Produced:5t',desc:'Remaining as of 1993,20t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:48.197,lon:-120.78,name:'WA,Discovered 1887 Produced:19t',desc:'Remaining as of 1958,17t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.184,lon:-120.854,name:'CA,Discovered 1849 Produced:9t',desc:'Remaining as of 1927,19t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.233,lon:-114.113,name:'ID,Discovered 1870 Produced:8t',desc:'Remaining as of 1997,19t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.588,lon:-120.119,name:'CA,Discovered 1848 Produced:6t',desc:'Remaining as of ,19t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:58.267,lon:-134.378,name:'AK,Discovered 1881 Produced:100t',desc:'Remaining as of ,t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.5,lon:-115.98,name:'NV,Discovered 1864 Produced:19t',desc:'Remaining as of 1964,16t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.73,lon:-117.18,name:'NV,Discovered 1930s Produced:19t',desc:'Remaining as of 1997,16t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.479,lon:-112.29,name:'AZ,Discovered 1883 Produced:8t',desc:'Remaining as of ,18t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.91,lon:-112.1,name:'UT UT,Discovered 1869 Produced:88t',desc:'Remaining as of 1996,1.6t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.98,lon:-121.358,name:'WA,Discovered 1896 Produced:t',desc:'Remaining as of 1983,19t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.02,lon:-112.53,name:'MT,Discovered 1875 Produced:80t',desc:'Remaining as of 1985,3t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.736,lon:-117.286,name:'NV,Discovered 1992 Produced:t',desc:'Remaining as of 1996,19t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.8,lon:-118.65,name:'NV,Discovered 1906 Produced:3t',desc:'Remaining as of 1994,18t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.023,lon:-120.506,name:'CA,Discovered 1850 Produced:42t',desc:'Remaining as of 1991,10t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.6,lon:-117.25,name:'NV,Discovered 1912 Produced:1.8t',desc:'Remaining as of 1996,18t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.25,lon:-114.98,name:'NV,Discovered ~1868 Produced:11t',desc:'Remaining as of 1993,16t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.713,lon:-120.945,name:'CA,Discovered 1850s Produced:90t',desc:'Remaining as of ,t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.833,lon:-104.873,name:'CO,Discovered  Produced:t',desc:'Remaining as of 1991,18t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.87,lon:-114.29,name:'AZ,Discovered 1980 Produced:14t',desc:'Remaining as of 1997,15t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.21,lon:-113.235,name:'MT,Discovered 1866 Produced:8t',desc:'Remaining as of ,16t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:62.396,lon:-157.988,name:'AK,Discovered  Produced:t',desc:'Remaining as of 1992,17.4t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:62.396,lon:-157.988,name:'AK,Discovered  Produced:t',desc:'Remaining as of 1992,17.4t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:65.5,lon:-148.167,name:'AK,Discovered 1914 Produced:15.4t',desc:'Remaining as of 1980,14t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.855,lon:-119.507,name:'NV,Discovered 1908 Produced:0.05t',desc:'Remaining as of 1995,17t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.673,lon:-122.524,name:'CA,Discovered early 1860s Produced:9t',desc:'Remaining as of 1990,15t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.07,lon:-117.23,name:'NV,Discovered 1900 Produced:58t',desc:'Remaining as of 1995,5t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.324,lon:-112.002,name:'MT,Discovered 1863 Produced:81t',desc:'Remaining as of ,t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.96,lon:-116.353,name:'NV,Discovered by 1985 Produced:t',desc:'Remaining as of 1988,16t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.026,lon:-112.36,name:'MT,Discovered by 1962 Produced:t',desc:'Remaining as of 1967,16t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.698,lon:-116.023,name:'ID,Discovered by 1917 Produced:t',desc:'Remaining as of 1917,16t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.32,lon:-112.24,name:'UT,Discovered 1870 Produced:79t',desc:'Remaining as of ,t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.313,lon:-111.675,name:'MT,Discovered late 1870s Produced:0.8t',desc:'Remaining as of ,15t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.06,lon:-112.16,name:'AZ,Discovered  Produced:0.01t',desc:'Remaining as of 1990,15t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.91,lon:-116.313,name:'NV,Discovered 1962 Produced:t',desc:'Remaining as of 1989,15t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:48.615,lon:-120.382,name:'WA,Discovered 1960s Produced:t',desc:'Remaining as of 1991,15t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.486,lon:-112.247,name:'MT,Discovered 1864 Produced:5t',desc:'Remaining as of 1988,14t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.371,lon:-112.126,name:'MT,Discovered 1975 Produced:24t',desc:'Remaining as of 1997,10t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.08,lon:-110.62,name:'MT,Discovered 1870 Produced:14t',desc:'Remaining as of 1995,12t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.42,lon:-112.29,name:'MT,Discovered 1865 Produced:3t',desc:'Remaining as of 1993,14t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:43.899,lon:-103.378,name:'SD,Discovered 1892 Produced:3t',desc:'Remaining as of 1931,14t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.333,lon:-106.125,name:'CO CO,Discovered 1860 Produced:27t',desc:'Remaining as of 1988,9t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.54,lon:-112.14,name:'UT,Discovered 1860 Produced:42t',desc:'Remaining as of 1993,6t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.335,lon:-112.904,name:'MT,Discovered 1862 Produced:2t',desc:'Remaining as of 1989,14t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:43.857,lon:-115.9,name:'ID,Discovered 1862 Produced:72t',desc:'Remaining as of ,t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.9,lon:-116.43,name:'NV,Discovered 1981 Produced:1t',desc:'Remaining as of 1990,14t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.71,lon:-110.68,name:'AZ,Discovered 1879 Produced:11t',desc:'Remaining as of 1986,12t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.458,lon:-111.488,name:'AZ,Discovered  Produced:0.2t',desc:'Remaining as of 1916,14t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.225,lon:-117.716,name:'CA,Discovered 1891 Produced:0.15t',desc:'Remaining as of 1992,14t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.78,lon:-117.95,name:'NV,Discovered by 1986 Produced:t',desc:'Remaining as of 1995,14t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:42.007,lon:-123.757,name:'OR,Discovered 1898 Produced:t',desc:'Remaining as of 1995,14t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.03,lon:-120.829,name:'CA,Discovered 1848 Produced:30t',desc:'Remaining as of 1915,8t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.79,lon:-114.765,name:'CA,Discovered 1892 Produced:19t',desc:'Remaining as of 1995,10t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.331,lon:-103.806,name:'SD,Discovered 1877 Produced:29t',desc:'Remaining as of 1996,8t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:31.43,lon:-109.91,name:'AZ,Discovered 1876 Produced:69t',desc:'Remaining as of 1975,t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.49,lon:-112.26,name:'AZ,Discovered 1880s Produced:24t',desc:'Remaining as of ,9t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.25,lon:-115.57,name:'NV,Discovered 1986 Produced:2t',desc:'Remaining as of 1995,13t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.75,lon:-117.97,name:'NV,Discovered 1983 Produced:51t',desc:'Remaining as of 1996,3t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.96,lon:-119.27,name:'NV,Discovered 1968 Produced:t',desc:'Remaining as of 1970,13t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.8,lon:-117.7,name:'NV,Discovered 1864 Produced:t',desc:'Remaining as of 1995,13t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:43.007,lon:-116.711,name:'ID,Discovered 1863 Produced:5t',desc:'Remaining as of ,12t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.926,lon:-121.404,name:'WA,Discovered 1874 Produced:t',desc:'Remaining as of 1983,13t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.978,lon:-116.618,name:'NV,Discovered 1905 Produced:t',desc:'Remaining as of 1996,13t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.283,lon:-103.65,name:'SD,Discovered 1878 Produced:1t',desc:'Remaining as of 1991,12.4t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:64.08,lon:-158,name:'AK,Discovered 1980 Produced:t',desc:'Remaining as of 1996,12.4t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.261,lon:-120.765,name:'CA,Discovered 1849 Produced:7t',desc:'Remaining as of ,11t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.08,lon:-117.8,name:'NV,Discovered ~1906 Produced:1.6t',desc:'Remaining as of 1992,12t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.483,lon:-106.042,name:'CO,Discovered 1872 Produced:1.6t',desc:'Remaining as of ,12t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.413,lon:-121.627,name:'CA,Discovered 1849 Produced:61t',desc:'Remaining as of ,t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.142,lon:-112.689,name:'AZ,Discovered 1863 Produced:6t',desc:'Remaining as of 1984,11t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.99,lon:-117.27,name:'NV,Discovered 1902 Produced:1t',desc:'Remaining as of 1982,12t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.425,lon:-115.766,name:'CA,Discovered 1905 Produced:0.5t',desc:'Remaining as of 1996,12t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.47,lon:-114.32,name:'NV,Discovered 1869 Produced:5t',desc:'Remaining as of 1985,11t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.75,lon:-116.2,name:'NV,Discovered 1984 Produced:15t',desc:'Remaining as of 1995,9t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.592,lon:-118.175,name:'NV,Discovered by 1979 Produced:t',desc:'Remaining as of ,12t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.441,lon:-91.119,name:'WI,Discovered 1968 Produced:9t',desc:'Remaining as of ,10t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.868,lon:-120.4,name:'CA,Discovered by 1866 Produced:9t',desc:'Remaining as of 1947,10t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.36,lon:-112.85,name:'AZ,Discovered by 1750 Produced:58t',desc:'Remaining as of 1984,t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.55,lon:-112.4,name:'UT,Discovered 1889 Produced:18t',desc:'Remaining as of ,8t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.887,lon:-114.81,name:'CA,Discovered 1884 Produced:2t',desc:'Remaining as of 1994,11t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.821,lon:-112.835,name:'AZ,Discovered 1863 Produced:11t',desc:'Remaining as of 1986,9t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.383,lon:-115.83,name:'CA,Discovered 1930 Produced:0.1t',desc:'Remaining as of 1990,11t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.301,lon:-106.189,name:'NM,Discovered by 1986 Produced:t',desc:'Remaining as of 1992,11t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:60.117,lon:-152.95,name:'AK,Discovered  Produced:t',desc:'Remaining as of ,11t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.94,lon:-119.051,name:'NV,Discovered 1960 Produced:t',desc:'Remaining as of ,11t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.298,lon:-90.607,name:'WI,Discovered 1986 Produced:t',desc:'Remaining as of 1994,11t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:31.8,lon:-109.81,name:'AZ,Discovered  Produced:t',desc:'Remaining as of 1990,11t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.733,lon:-105.723,name:'NM,Discovered by 1930 Produced:t',desc:'Remaining as of 1979,11t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.54,lon:-117.14,name:'NV,Discovered 1989 Produced:4t',desc:'Remaining as of 1995,10t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.367,lon:-120.779,name:'CA,Discovered 1856 Produced:54t',desc:'Remaining as of ,t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.956,lon:-123.014,name:'CA,Discovered by 1851 Produced:54t',desc:'Remaining as of ,t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:55.191,lon:-160.562,name:'AK,Discovered 1891 Produced:3.3t',desc:'Remaining as of ,10t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.474,lon:-121.086,name:'CA,Discovered by 1850 Produced:53t',desc:'Remaining as of ,t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.666,lon:-119.706,name:'CA,Discovered 1862 Produced:2.5t',desc:'Remaining as of 1987,10t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.773,lon:-117.048,name:'NV,Discovered 1910 Produced:1.3t',desc:'Remaining as of ,10t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.13,lon:-117.27,name:'NV,Discovered 1945 Produced:31t',desc:'Remaining as of 1997,4t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.62,lon:-111.414,name:'MT,Discovered 1893 Produced:0.3t',desc:'Remaining as of ,10t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.38,lon:-116.71,name:'NV,Discovered 1903 Produced:t',desc:'Remaining as of 1989,10t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.38,lon:-118.76,name:'NV,Discovered 1909 Produced:15t',desc:'Remaining as of 1990,7t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.03,lon:-116.43,name:'NV,Discovered 1981 Produced:20t',desc:'Remaining as of 1997,6t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.742,lon:-105.55,name:'CO CO,Discovered 1859 Produced:40t',desc:'Remaining as of ,2t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.284,lon:-111.961,name:'MT,Discovered  Produced:t',desc:'Remaining as of ,10t',color:'#14cc3e',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.066,lon:-120.544,name:'CA,Discovered 1850 Produced:4t',desc:'Remaining as of 1987,9t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:43.771,lon:-115.118,name:'ID,Discovered 1865 Produced:9t',desc:'Remaining as of 1996,8t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.23,lon:-114.55,name:'AZ,Discovered 1890 Produced:4t',desc:'Remaining as of 1995,9t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:62.5,lon:-158.5,name:'AK,Discovered 1908 Produced:48.6t',desc:'Remaining as of ,t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.599,lon:-111.416,name:'MT,Discovered 1864 Produced:18t',desc:'Remaining as of ,6t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.043,lon:-120.774,name:'CA,Discovered 1850 Produced:8t',desc:'Remaining as of ,8t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.395,lon:-120.8,name:'CA,Discovered ~1851 Produced:3t',desc:'Remaining as of 1995,9t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:48.043,lon:-115.551,name:'MT,Discovered 1870s Produced:0.09t',desc:'Remaining as of ,9t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:67.3,lon:-157.2,name:'AK,Discovered 1965 Produced:t',desc:'Remaining as of ,9t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.62,lon:-111.51,name:'UT,Discovered 1868 Produced:45t',desc:'Remaining as of 1980,t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.45,lon:-115.95,name:'NV,Discovered 1984 Produced:t',desc:'Remaining as of 1989,9t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.923,lon:-116.333,name:'NV,Discovered 1986 Produced:t',desc:'Remaining as of 1996,9t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.958,lon:-115.142,name:'ID,Discovered 1896 Produced:5t',desc:'Remaining as of 1995,8t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.517,lon:-117.133,name:'NV,Discovered 1909 Produced:5t',desc:'Remaining as of 1989,8t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.65,lon:-80.417,name:'SC,Discovered 1828 Produced:5t',desc:'Remaining as of 1991,8t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.281,lon:-111.949,name:'MT,Discovered  Produced:t',desc:'Remaining as of ,9t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.213,lon:-115.303,name:'CA,Discovered 1890 Produced:t',desc:'Remaining as of ,9t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.379,lon:-123.18,name:'CA,Discovered 1849 Produced:44t',desc:'Remaining as of ,t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.55,lon:-117.13,name:'NV,Discovered by 1977 Produced:8t',desc:'Remaining as of 1993,7t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.382,lon:-120.315,name:'WA,Discovered 1885 Produced:13t',desc:'Remaining as of ,6t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.428,lon:-116.847,name:'NV,Discovered 1867 Produced:2.1t',desc:'Remaining as of 1995,8t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.362,lon:-115.491,name:'CA,Discovered 1907 Produced:2t',desc:'Remaining as of 1990,8t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.35,lon:-103.9,name:'SD,Discovered 1896 Produced:2t',desc:'Remaining as of 1989,8t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.706,lon:-117.083,name:'NV,Discovered 1907 Produced:6t',desc:'Remaining as of 1993,7t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.45,lon:-111.683,name:'MT,Discovered 1867 Produced:0.3t',desc:'Remaining as of ,8t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.547,lon:-120.274,name:'CA,Discovered 1893 Produced:0.11t',desc:'Remaining as of 1995,8t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:57.664,lon:-136.097,name:'AK,Discovered 1905 Produced:24.6t',desc:'Remaining as of ,3.1t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:67.07,lon:-155.02,name:'AK,Discovered 1974 Produced:t',desc:'Remaining as of ,8t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.592,lon:-111.781,name:'MT,Discovered 1898 Produced:t',desc:'Remaining as of ,8t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.245,lon:-117.082,name:'NV,Discovered 1903 Produced:t',desc:'Remaining as of 1996,8t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.231,lon:-120.797,name:'CA,Discovered 1966 Produced:t',desc:'Remaining as of 1972,8t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.411,lon:-115.676,name:'NV,Discovered by 1989 Produced:t',desc:'Remaining as of 1989,8t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.44,lon:-117.12,name:'NV,Discovered by 1974 Produced:t',desc:'Remaining as of 1990,8t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.669,lon:-121.636,name:'WA,Discovered 1964 Produced:t',desc:'Remaining as of 1972,8t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.4,lon:-116.65,name:'NV,Discovered by 1993 Produced:t',desc:'Remaining as of 1993,8t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.98,lon:-121.379,name:'WA,Discovered 1889 Produced:t',desc:'Remaining as of 1983,8t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.875,lon:-112.817,name:'AZ,Discovered 1868 Produced:t',desc:'Remaining as of 1994,8t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.833,lon:-108.95,name:'NM,Discovered 1860 Produced:5t',desc:'Remaining as of 1991,7t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.277,lon:-111.949,name:'MT,Discovered 1984 Produced:t',desc:'Remaining as of ,8t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.078,lon:-117.457,name:'OR,Discovered 1951 Produced:t',desc:'Remaining as of 1992,8t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.923,lon:-114.582,name:'MT,Discovered 1913 Produced:0.1t',desc:'Remaining as of 1994,7.9t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.396,lon:-120.325,name:'WA,Discovered by 1952 Produced:39t',desc:'Remaining as of ,t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.439,lon:-114.736,name:'ID,Discovered by 1967 Produced:4t',desc:'Remaining as of 1996,7t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.825,lon:-115.471,name:'ID,Discovered 1870 Produced:4t',desc:'Remaining as of 1995,7t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:42.719,lon:-107.318,name:'WY,Discovered 1982 Produced:t',desc:'Remaining as of ,7.8t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.06,lon:-120.727,name:'CA,Discovered by 1850 Produced:38t',desc:'Remaining as of 1891,t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.725,lon:-120.087,name:'CA,Discovered 1848 Produced:38t',desc:'Remaining as of ,t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.828,lon:-120.262,name:'CA,Discovered 1848 Produced:38t',desc:'Remaining as of ,t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:63.217,lon:-146.7,name:'AK,Discovered  Produced:t',desc:'Remaining as of 1987,7.6t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.388,lon:-120.799,name:'CA,Discovered 1852 Produced:27t',desc:'Remaining as of 1942,2t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.983,lon:-105.583,name:'CO,Discovered 1860 Produced:1.1t',desc:'Remaining as of 1995,7t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.363,lon:-118.257,name:'NV,Discovered 1932 Produced:1t',desc:'Remaining as of 1992,7t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.167,lon:-113.8,name:'UT,Discovered 1858 Produced:0.8t',desc:'Remaining as of 1987,7t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.076,lon:-85.851,name:'AL,Discovered 1839 Produced:0.75t',desc:'Remaining as of 1978,7t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.503,lon:-80.023,name:'NC,Discovered 1882 Produced:0.5t',desc:'Remaining as of 1990,7t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:55.067,lon:-132.147,name:'AK,Discovered by 1902 Produced:0.3t',desc:'Remaining as of 1997,7t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.331,lon:-120.754,name:'CA,Discovered  Produced:0.25t',desc:'Remaining as of ,7t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.541,lon:-105.729,name:'NM,Discovered 1850 Produced:0.25t',desc:'Remaining as of 1974,7t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.8,lon:-118.2,name:'NV,Discovered by 1920 Produced:0.2t',desc:'Remaining as of 1990,7t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:48.995,lon:-118.665,name:'WA,Discovered 1897 Produced:0.04t',desc:'Remaining as of ,7t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.367,lon:-115.987,name:'NV,Discovered by 1986 Produced:t',desc:'Remaining as of 1988,7t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.76,lon:-116.17,name:'NV,Discovered by 1992 Produced:t',desc:'Remaining as of 1992,7t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.079,lon:-111.729,name:'MT,Discovered 1865 Produced:t',desc:'Remaining as of ,7t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.574,lon:-120.643,name:'CA,Discovered 1850 Produced:35t',desc:'Remaining as of ,t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.958,lon:-107.583,name:'NM,Discovered by 1952 Produced:t',desc:'Remaining as of 1995,7t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.627,lon:-116.167,name:'CA,Discovered 1899 Produced:5t',desc:'Remaining as of 1987,6t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.46,lon:-114.77,name:'NV,Discovered 1892 Produced:20t',desc:'Remaining as of 1995,3t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.663,lon:-116.059,name:'NV,Discovered 1983 Produced:t',desc:'Remaining as of 1994,7t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.466,lon:-120.843,name:'CA,Discovered 1896 Produced:34t',desc:'Remaining as of ,t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.591,lon:-111.979,name:'MT,Discovered 1864 Produced:29t',desc:'Remaining as of 1988,1t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.21,lon:-118.17,name:'NV,Discovered 1979 Produced:4t',desc:'Remaining as of 1994,6t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:31.9,lon:-109.81,name:'AZ,Discovered 1895 Produced:4t',desc:'Remaining as of 1992,6t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.18,lon:-116.49,name:'NV,Discovered 1908 Produced:8t',desc:'Remaining as of 1993,5t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.656,lon:-119.092,name:'NV,Discovered 1866 Produced:7.6t',desc:'Remaining as of 1992,5t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:65.5,lon:-144.75,name:'AK,Discovered 1893 Produced:32t',desc:'Remaining as of ,t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:48.734,lon:-118.646,name:'WA,Discovered 1990 Produced:2t',desc:'Remaining as of 1997,6t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.45,lon:-115.88,name:'NV,Discovered 1979 Produced:1.9t',desc:'Remaining as of ,6t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:64.75,lon:-163.5,name:'AK,Discovered 1898 Produced:31.1t',desc:'Remaining as of ,t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.417,lon:-108.042,name:'CO,Discovered 1873 Produced:6t',desc:'Remaining as of 1985,5t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.517,lon:-116.033,name:'ID,Discovered 1861 Produced:31t',desc:'Remaining as of ,t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.749,lon:-112.321,name:'MT,Discovered  Produced:1t',desc:'Remaining as of ,6t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.617,lon:-115.834,name:'ID,Discovered 1883 Produced:0.4t',desc:'Remaining as of 1989,6t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.53,lon:-105.75,name:'NM,Discovered 1865 Produced:0.2t',desc:'Remaining as of 1938,6t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.79,lon:-118.4,name:'NV,Discovered 1908 Produced:0.2t',desc:'Remaining as of 1986,6t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.5,lon:-80.366,name:'NC,Discovered ~1842 Produced:0.1t',desc:'Remaining as of ,6t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.444,lon:-120.83,name:'CA,Discovered before 1862 Produced:0.08t',desc:'Remaining as of 1951,6t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.458,lon:-115.844,name:'NV,Discovered by 1991 Produced:t',desc:'Remaining as of 1997,6t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.4,lon:-115.99,name:'NV,Discovered 1980 Produced:t',desc:'Remaining as of 1984,6t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.695,lon:-89.97,name:'WI,Discovered 1990 Produced:t',desc:'Remaining as of 1992,6t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.078,lon:-113.656,name:'UT,Discovered  Produced:t',desc:'Remaining as of 1994,6t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.189,lon:-120.933,name:'CA,Discovered by 1849 Produced:5t',desc:'Remaining as of 1927,5t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.363,lon:-120.785,name:'CA,Discovered 1850 Produced:29t',desc:'Remaining as of ,t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:63.236,lon:-154.758,name:'AK,Discovered 1918 Produced:3.3t',desc:'Remaining as of 1996,5t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.82,lon:-115.455,name:'ID,Discovered 1861 Produced:28t',desc:'Remaining as of ,t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:55.224,lon:-160.58,name:'AK,Discovered 1890s Produced:t',desc:'Remaining as of ,5.6t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.23,lon:-117.134,name:'NV,Discovered 1862 Produced:3t',desc:'Remaining as of 1993,5t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.446,lon:-120.741,name:'CA,Discovered by 1851 Produced:3t',desc:'Remaining as of ,5t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.827,lon:-113.343,name:'MT,Discovered 1867 Produced:4t',desc:'Remaining as of 1988,4.7t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.312,lon:-116.933,name:'ID,Discovered by 1991 Produced:t',desc:'Remaining as of 1991,5.5t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.45,lon:-118.05,name:'NV,Discovered 1906 Produced:2.35t',desc:'Remaining as of 1987,5t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:48.917,lon:-121.633,name:'WA,Discovered 1897 Produced:2t',desc:'Remaining as of 1988,5t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.087,lon:-120.588,name:'CA,Discovered ~1849 Produced:27t',desc:'Remaining as of ,t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.842,lon:-118.195,name:'OR,Discovered 1887 Produced:12t',desc:'Remaining as of 1981,3t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.661,lon:-122.429,name:'CA,Discovered  Produced:1t',desc:'Remaining as of 1984,5t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.433,lon:-118.958,name:'OR,Discovered 1862 Produced:26t',desc:'Remaining as of ,t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.2,lon:-112.85,name:'AZ,Discovered 1887 Produced:16t',desc:'Remaining as of 1992,2t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.831,lon:-118.698,name:'NV,Discovered 1863 Produced:0.8t',desc:'Remaining as of 1992,5t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.87,lon:-118.02,name:'NV,Discovered 1934 Produced:0.3t',desc:'Remaining as of 1992,5t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.038,lon:-122.428,name:'CA,Discovered by 1865 Produced:0.16t',desc:'Remaining as of 1934,5t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.681,lon:-120.932,name:'CA,Discovered 1850 Produced:0.08t',desc:'Remaining as of 1986,5t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.267,lon:-116.083,name:'NV,Discovered by 1988 Produced:t',desc:'Remaining as of 1988,5t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.458,lon:-115.844,name:'NV,Discovered by 1991 Produced:t',desc:'Remaining as of 1997,5t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.26,lon:-116.74,name:'NV,Discovered 1966 Produced:25t',desc:'Remaining as of ,t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.737,lon:-68.745,name:'ME,Discovered 1977 Produced:t',desc:'Remaining as of ,5t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.775,lon:-116.025,name:'NV,Discovered 1980s Produced:t',desc:'Remaining as of 1988,5t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.23,lon:-119.456,name:'NV,Discovered by 1989 Produced:t',desc:'Remaining as of 1989,5t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:48.009,lon:-121.504,name:'WA,Discovered 1897 Produced:t',desc:'Remaining as of 1972,5t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.017,lon:-119.26,name:'CA,Discovered 1877 Produced:5t',desc:'Remaining as of ,4t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.306,lon:-115.745,name:'ID,Discovered 1862 Produced:25t',desc:'Remaining as of ,t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.228,lon:-120.853,name:'CA,Discovered by 1987 Produced:t',desc:'Remaining as of 1996,5t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.258,lon:-116.743,name:'NV,Discovered 1910 Produced:25t',desc:'Remaining as of ,t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:48.864,lon:-118.663,name:'WA,Discovered by 1993 Produced:t',desc:'Remaining as of 1997,5t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.844,lon:-117.129,name:'CA,Discovered  Produced:t',desc:'Remaining as of 1993,5t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.92,lon:-114.46,name:'NV,Discovered 1863 Produced:24t',desc:'Remaining as of 1976,t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.294,lon:-109.459,name:'MT,Discovered 1893 Produced:24t',desc:'Remaining as of ,t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.724,lon:-122.729,name:'CA,Discovered 1875 Produced:14t',desc:'Remaining as of ,2t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.325,lon:-103.819,name:'SD,Discovered 1877 Produced:9t',desc:'Remaining as of 1919,3t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.38,lon:-117.09,name:'NV,Discovered 1981 Produced:4t',desc:'Remaining as of 1989,4t',color:'#16c47f',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.64,lon:-121.547,name:'CA,Discovered 1849 Produced:23t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.47,lon:-105.98,name:'CO,Discovered 1859 Produced:23t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:43.917,lon:-116.083,name:'ID,Discovered 1862 Produced:23t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.67,lon:-110.67,name:'AZ,Discovered 1944 Produced:23t',desc:'Remaining as of 1994,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.3,lon:-111.09,name:'AZ,Discovered 1875 Produced:22t',desc:'Remaining as of 1994,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.28,lon:-113.97,name:'AZ,Discovered 1896 Produced:7t',desc:'Remaining as of 1986,3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.382,lon:-120.786,name:'CA,Discovered 1883 Produced:1t',desc:'Remaining as of 1989,4t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.435,lon:-120.826,name:'CA,Discovered 1867 Produced:21t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.693,lon:-120.844,name:'CA,Discovered 1850s Produced:21t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.31,lon:-112.167,name:'MT,Discovered 1874 Produced:1t',desc:'Remaining as of ,4t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.167,lon:-106.244,name:'WY,Discovered 1876 Produced:0.3t',desc:'Remaining as of 1893,4t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.79,lon:-114.573,name:'AZ,Discovered 1930s Produced:0.2t',desc:'Remaining as of 1989,4t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.047,lon:-112.306,name:'AZ,Discovered  Produced:0.05t',desc:'Remaining as of ,4t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.98,lon:-123.094,name:'CA,Discovered 1896 Produced:0.03t',desc:'Remaining as of 1980s,4t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.39,lon:-105.29,name:'CO,Discovered by 1916 Produced:t',desc:'Remaining as of ,4t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.667,lon:-117.458,name:'NV,Discovered 1864 or 1865 Produced:t',desc:'Remaining as of 1994,4t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.986,lon:-121.354,name:'WA,Discovered  Produced:t',desc:'Remaining as of 1983,4t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.533,lon:-116,name:'NV,Discovered 1988 Produced:t',desc:'Remaining as of ,4t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.208,lon:-121.866,name:'CA,Discovered 1854 Produced:20t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.4,lon:-116.069,name:'NV,Discovered by 1988 Produced:t',desc:'Remaining as of 1986,4t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.6,lon:-116.11,name:'NV,Discovered 1986 Produced:t',desc:'Remaining as of 1988,4t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.96,lon:-89.362,name:'WI,Discovered 1970 Produced:t',desc:'Remaining as of 1990,4t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.863,lon:-123.371,name:'CA,Discovered 1895 Produced:5t',desc:'Remaining as of ,3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.502,lon:-120.88,name:'CA,Discovered 1854 Produced:10t',desc:'Remaining as of 1985,2t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.475,lon:-120.843,name:'CA,Discovered 1852 Produced:20t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.667,lon:-120.459,name:'CA,Discovered 1849 Produced:20t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.962,lon:-114.649,name:'CA,Discovered 1861 Produced:20t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.239,lon:-106.176,name:'NM,Discovered 1800s? Produced:t',desc:'Remaining as of 1996,4t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.943,lon:-112.756,name:'MT,Discovered early 1900s Produced:t',desc:'Remaining as of 1988,4t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.184,lon:-107.071,name:'WY,Discovered 1897 Produced:t',desc:'Remaining as of ,4t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:61.75,lon:-149.5,name:'AK,Discovered 1907 Produced:18.9t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:63.5,lon:-156.5,name:'AK,Discovered 1906 Produced:18.4t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.607,lon:-117.028,name:'NV,Discovered by 1977 Produced:3t',desc:'Remaining as of 1994,3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.76,lon:-115.52,name:'NV,Discovered 1976 Produced:18t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.926,lon:-120.847,name:'CA,Discovered 1850 Produced:10t',desc:'Remaining as of ,1.6t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.124,lon:-120.704,name:'CA,Discovered 1852 Produced:18t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:65.167,lon:-151,name:'AK,Discovered 1906 Produced:17.7t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:61,lon:-158,name:'AK,Discovered 1909 Produced:17.7t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.417,lon:-106.55,name:'CO,Discovered 1870 Produced:17t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.987,lon:-120.383,name:'CA,Discovered 1848 Produced:17t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.995,lon:-120.875,name:'CA,Discovered 1869 Produced:17t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:36.336,lon:-117.147,name:'CA,Discovered 1908 Produced:2t',desc:'Remaining as of ,3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:43.665,lon:-114.284,name:'ID,Discovered 1864 Produced:2t',desc:'Remaining as of ,3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.894,lon:-120.605,name:'CA,Discovered 1886 Produced:2t',desc:'Remaining as of 1992,3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:64.333,lon:-142,name:'AK,Discovered 1883 Produced:16.6t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.945,lon:-117.516,name:'CA,Discovered 1890s Produced:1.4t',desc:'Remaining as of 1988,3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:48.884,lon:-118.159,name:'WA,Discovered 1897 Produced:1.4t',desc:'Remaining as of ,3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.254,lon:-105.342,name:'CO,Discovered late 1500s Produced:11t',desc:'Remaining as of 1986,1t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:42.654,lon:-123.306,name:'OR,Discovered 1897 Produced:6t',desc:'Remaining as of 1993,2t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.337,lon:-118.11,name:'NV,Discovered 1875 Produced:16t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.743,lon:-112.296,name:'MT,Discovered 1876 Produced:16t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.09,lon:-109.34,name:'AZ,Discovered 1864 Produced:16t',desc:'Remaining as of 1997,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.228,lon:-120.97,name:'CA,Discovered 1860 Produced:16t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:64.617,lon:-148.85,name:'AK,Discovered 1915 Produced:0.3t',desc:'Remaining as of ,3.1t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:63.183,lon:-147.142,name:'AK,Discovered 1903 Produced:15.8t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.378,lon:-112.579,name:'MT,Discovered 1888 Produced:0.8t',desc:'Remaining as of ,3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.716,lon:-117.757,name:'NV,Discovered 1907 Produced:0.4t',desc:'Remaining as of 1974,3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.121,lon:-114.339,name:'ID,Discovered 1892 Produced:0.4t',desc:'Remaining as of 1982,3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.367,lon:-107.1,name:'CO,Discovered 1897 Produced:0.3t',desc:'Remaining as of ,3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.397,lon:-120.521,name:'CA,Discovered 1863 Produced:0.3t',desc:'Remaining as of 1987,3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.99,lon:-117.24,name:'NV,Discovered 1902 Produced:0.1t',desc:'Remaining as of 1988,3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.054,lon:-105.383,name:'CO,Discovered 1859 Produced:5t',desc:'Remaining as of ,2t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.35,lon:-106.536,name:'CO,Discovered 1861? Produced:t',desc:'Remaining as of ,3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:62.464,lon:-157.917,name:'AK,Discovered  Produced:t',desc:'Remaining as of ,3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.203,lon:-126.772,name:'CA,Discovered 1964 Produced:t',desc:'Remaining as of 1972,3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.737,lon:-114.382,name:'AZ,Discovered 1892 Produced:t',desc:'Remaining as of 1987,3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.15,lon:-118.08,name:'NV,Discovered 1864 Produced:5t',desc:'Remaining as of 1996,2t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.828,lon:-116.232,name:'NV,Discovered 1985 Produced:t',desc:'Remaining as of 1992,3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.72,lon:-122.674,name:'CA,Discovered 1850 Produced:15t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.51,lon:-120.466,name:'CA,Discovered by 1850 Produced:15t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.633,lon:-78.464,name:'VA,Discovered by 1853 Produced:t',desc:'Remaining as of ,3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.2,lon:-117.617,name:'NV,Discovered  Produced:t',desc:'Remaining as of ,3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.274,lon:-111.951,name:'MT,Discovered 1984 Produced:t',desc:'Remaining as of ,3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.643,lon:-120.293,name:'CA,Discovered 1862 Produced:t',desc:'Remaining as of ,3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:62.464,lon:-157.917,name:'AK,Discovered  Produced:t',desc:'Remaining as of ,3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:64.417,lon:-154.333,name:'AK,Discovered 1907 Produced:14.8t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.022,lon:-121.185,name:'CA,Discovered 1850 Produced:14t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:42.078,lon:-113.042,name:'ID,Discovered 1930s Produced:14t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.383,lon:-120.797,name:'CA,Discovered 1855 Produced:14t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.002,lon:-120.689,name:'CA,Discovered 1858 Produced:14t',desc:'Remaining as of 1988,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.954,lon:-112.881,name:'MT,Discovered 1932 Produced:14t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:42.5,lon:-108.7,name:'WY,Discovered 1867 Produced:9t',desc:'Remaining as of 1995,1t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.89,lon:-123.989,name:'CA,Discovered 1880s Produced:4t',desc:'Remaining as of ,2t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:64.882,lon:-147.957,name:'AK,Discovered 1929 Produced:0.4t',desc:'Remaining as of 1993,2.6t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.667,lon:-108.025,name:'CO,Discovered 1869 Produced:3t',desc:'Remaining as of 1985,2t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.71,lon:-114.84,name:'NV,Discovered ~1857 Produced:3t',desc:'Remaining as of 1993,2t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.55,lon:-115.98,name:'NV,Discovered 1976 Produced:13t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.958,lon:-118.286,name:'CA,Discovered 1934 Produced:13t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:62.188,lon:-147.272,name:'AK,Discovered  Produced:t',desc:'Remaining as of ,2.5t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.517,lon:-106.367,name:'CO,Discovered 1878 Produced:12t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.53,lon:-117.06,name:'NV,Discovered 1905 Produced:12t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.41,lon:-116.92,name:'NV,Discovered 1976 Produced:12t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.758,lon:-120.708,name:'CA,Discovered 1850 Produced:12t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.501,lon:-115.875,name:'ID,Discovered 1860 Produced:12t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.74,lon:-122.989,name:'CA,Discovered 1850 Produced:12t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.367,lon:-119.117,name:'CA,Discovered 1902 Produced:2t',desc:'Remaining as of 1988,2t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.212,lon:-81.339,name:'NC,Discovered 1820 Produced:2t',desc:'Remaining as of ,2t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.026,lon:-116.849,name:'OR,Discovered 1897 Produced:1.6t',desc:'Remaining as of 1988,2t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.167,lon:-106.244,name:'WY,Discovered by 1873 Produced:0.1t',desc:'Remaining as of 1906,2.3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.146,lon:-113.851,name:'UT,Discovered  Produced:t',desc:'Remaining as of ,2.3t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.53,lon:-87.425,name:'MI,Discovered 1881 Produced:6.3t',desc:'Remaining as of 1990,1t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.4,lon:-108.8,name:'NM,Discovered 1875 Produced:11t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:48.083,lon:-121.583,name:'WA,Discovered 1886 Produced:11t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.194,lon:-121.038,name:'CA,Discovered by 1856 Produced:11t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.84,lon:-115.41,name:'NV,Discovered 1909 Produced:11t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.32,lon:-116.22,name:'NV,Discovered 1867 Produced:6t',desc:'Remaining as of 1990,1t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.55,lon:-118.17,name:'NV,Discovered early 1960s Produced:11t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:48.699,lon:-118.569,name:'WA,Discovered 1986 Produced:11t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.571,lon:-115.563,name:'CA,Discovered 1865 Produced:11t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.711,lon:-118.407,name:'CA,Discovered 1860 Produced:11t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.942,lon:-112.751,name:'MT,Discovered 1865 Produced:11t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.882,lon:-112.631,name:'MT,Discovered 1864 Produced:11t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.025,lon:-112.529,name:'MT,Discovered 1864 Produced:11t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.266,lon:-120.778,name:'CA,Discovered by 1854 Produced:6t',desc:'Remaining as of ,1t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.302,lon:-116.916,name:'CA,Discovered 1860 Produced:11t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.664,lon:-111.956,name:'MT,Discovered ~1872 Produced:11t',desc:'Remaining as of ,t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:64.653,lon:-164.237,name:'AK,Discovered 1900 Produced:0.8t',desc:'Remaining as of ,2t',color:'#18bbb7',icon:'',scale:0.1});
+GV_Draw_Marker({lat:63.567,lon:-150.733,name:'AK,Discovered by 1922 Produced:0.2t',desc:'Remaining as of ,2.1t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:31.76,lon:-109.8,name:'AZ,Discovered late 1870s Produced:0.7t',desc:'Remaining as of ,2t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.039,lon:-114.396,name:'AZ,Discovered by 1897 Produced:0.6t',desc:'Remaining as of ,2t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.649,lon:-119.416,name:'NV,Discovered 1860 Produced:0.28t',desc:'Remaining as of 1954,2t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.657,lon:-122.694,name:'CA,Discovered  Produced:0.2t',desc:'Remaining as of 1992,2t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.982,lon:-114.527,name:'ID,Discovered 1868 Produced:0.1t',desc:'Remaining as of ,2t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.504,lon:-113.504,name:'AZ,Discovered  Produced:0.03t',desc:'Remaining as of 1994,2t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.407,lon:-108.088,name:'CO,Discovered by 1902 Produced:t',desc:'Remaining as of 1984,2t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:63.933,lon:-147.367,name:'AK,Discovered  Produced:t',desc:'Remaining as of ,2t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.262,lon:-118.179,name:'NV,Discovered ~1912 Produced:t',desc:'Remaining as of 1995,2t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.358,lon:-115.958,name:'NV,Discovered 1980s Produced:t',desc:'Remaining as of 1996,2t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.523,lon:-115.492,name:'ID,Discovered 1904 Produced:t',desc:'Remaining as of 1990,2t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:63.933,lon:-147.367,name:'AK,Discovered  Produced:t',desc:'Remaining as of ,2t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.267,lon:-114,name:'UT NV,Discovered 1906 Produced:t',desc:'Remaining as of 1985,2t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.629,lon:-88.549,name:'WI,Discovered  Produced:t',desc:'Remaining as of ,2t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.37,lon:-118.53,name:'NV,Discovered by 1989 Produced:t',desc:'Remaining as of 1989,2t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.85,lon:-122.31,name:'OR,Discovered 1976 Produced:t',desc:'Remaining as of 1990,2t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.01,lon:-117.217,name:'OR,Discovered 1880 Produced:10t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.548,lon:-112.093,name:'MT,Discovered 1864 Produced:10t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.036,lon:-77.898,name:'VA,Discovered by 1834 Produced:t',desc:'Remaining as of 1972,2t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.009,lon:-77.925,name:'VA,Discovered by 1892 Produced:t',desc:'Remaining as of 1972,2t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:43.483,lon:-114.331,name:'ID,Discovered  Produced:t',desc:'Remaining as of 1989,2t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.471,lon:-115.133,name:'NV,Discovered ~1894 Produced:t',desc:'Remaining as of 1992,2t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.291,lon:-118.464,name:'CA,Discovered by 1904 Produced:0.1t',desc:'Remaining as of 1993,1.9t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.825,lon:-113.337,name:'MT,Discovered 1865 Produced:9.5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.305,lon:-108.768,name:'NM,Discovered 1870 Produced:8t',desc:'Remaining as of 1993,0.3t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:63.543,lon:-150.947,name:'AK,Discovered 1918 Produced:t',desc:'Remaining as of ,1.8t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.265,lon:-120.987,name:'CA,Discovered  Produced:9t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.009,lon:-120.416,name:'CA,Discovered 1848 Produced:9t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.43,lon:-119.39,name:'NV,Discovered 1930s Produced:9t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.13,lon:-114.34,name:'NV,Discovered 1986 Produced:4t',desc:'Remaining as of 1997,1t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.212,lon:-120.469,name:'CA,Discovered 1868 Produced:9t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.744,lon:-118.206,name:'OR,Discovered 1862 Produced:9t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.74,lon:-105.512,name:'CO,Discovered 1859 Produced:4t',desc:'Remaining as of 1984,1t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.24,lon:-106.32,name:'CO,Discovered 1859 Produced:9t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.229,lon:-120.939,name:'CA,Discovered 1848 Produced:9t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.667,lon:-106.333,name:'CO,Discovered by 1870 Produced:9t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:42.23,lon:-122.939,name:'OR,Discovered 1853 Produced:6t',desc:'Remaining as of 1942,0.5t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.722,lon:-113.026,name:'AZ,Discovered 1942 Produced:0.6t',desc:'Remaining as of 1989,1.5t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.87,lon:-106.27,name:'CO,Discovered ~1880 Produced:t',desc:'Remaining as of ,1.6t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.27,lon:-121.128,name:'CA,Discovered 1850 Produced:8t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.466,lon:-114.917,name:'NV,Discovered 1897 Produced:8t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.79,lon:-117.54,name:'NV,Discovered 1907 Produced:t',desc:'Remaining as of 1989,1.6t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.233,lon:-71.05,name:'ME,Discovered  Produced:t',desc:'Remaining as of ,1.6t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:36.83,lon:-116.64,name:'NV,Discovered 1973 Produced:5t',desc:'Remaining as of 1996,0.6t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.905,lon:-121.124,name:'CA,Discovered 1850s? Produced:8t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.425,lon:-120.824,name:'CA,Discovered 1852 Produced:8t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.38,lon:-120.795,name:'CA,Discovered  Produced:8t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.988,lon:-120.261,name:'CA,Discovered 1858 Produced:8t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.962,lon:-120.345,name:'CA,Discovered 1851 Produced:8t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.502,lon:-119.97,name:'CA,Discovered 1852 Produced:8t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.075,lon:-116.556,name:'CA,Discovered 1870 Produced:8t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.717,lon:-111.75,name:'MT,Discovered 1864 Produced:8t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.236,lon:-114.157,name:'ID,Discovered 1866 Produced:8t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.419,lon:-120.85,name:'CA,Discovered by 1853 Produced:8t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:36.629,lon:-105.213,name:'NM,Discovered 1866 Produced:8t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:43.694,lon:-115.299,name:'ID,Discovered 1862 Produced:8t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.481,lon:-112.13,name:'MT,Discovered 1864 Produced:3t',desc:'Remaining as of 1979,1t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.789,lon:-122.568,name:'CA,Discovered 1850 Produced:7.7t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.767,lon:-108.098,name:'CO,Discovered 1880 Produced:0.7t',desc:'Remaining as of 1991,1.4t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:60.9,lon:-146.7,name:'AK,Discovered 1897 Produced:1.6t',desc:'Remaining as of ,1.2t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.086,lon:-115.639,name:'NV,Discovered 1950s? Produced:t',desc:'Remaining as of 1988,1.5t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.383,lon:-103.856,name:'SD,Discovered by 1983 Produced:5t',desc:'Remaining as of 1992,0.5t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.175,lon:-121.292,name:'CA,Discovered 1973 Produced:t',desc:'Remaining as of ,1.5t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.345,lon:-120.763,name:'CA,Discovered 1860s Produced:7.5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:65.83,lon:-155,name:'AK,Discovered by 1890s Produced:7.2t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:36.625,lon:-105.25,name:'NM,Discovered 1866 Produced:7t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.4,lon:-113.93,name:'UT,Discovered by 1914 Produced:7t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.121,lon:-120.937,name:'CA,Discovered 1851 Produced:7t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.534,lon:-111.771,name:'MT,Discovered 1864 Produced:7t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.956,lon:-80.715,name:'NC,Discovered by 1840 Produced:2t',desc:'Remaining as of 1986,1t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.43,lon:-112.33,name:'UT,Discovered 1868 Produced:6t',desc:'Remaining as of ,0.1t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.388,lon:-114.359,name:'AZ,Discovered early 1930s Produced:1.5t',desc:'Remaining as of 1987,1t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.83,lon:-115.05,name:'NV,Discovered 1981 Produced:1.3t',desc:'Remaining as of 1991,1t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.952,lon:-113.022,name:'MT,Discovered 1864 Produced:6.2t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.792,lon:-105.667,name:'NM,Discovered 1883 Produced:6t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.249,lon:-121.006,name:'CA,Discovered 1850 Produced:6t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.227,lon:-119.617,name:'NV,Discovered 1849 Produced:6t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.556,lon:-117.117,name:'NV,Discovered ~1864 Produced:6t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.84,lon:-117.59,name:'NV,Discovered 1907 Produced:6t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.16,lon:-119.45,name:'NV,Discovered 1981 Produced:6t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.794,lon:-112,name:'MT,Discovered 1896 Produced:6t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.696,lon:-112.314,name:'MT,Discovered 1867 Produced:6t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.46,lon:-120.858,name:'CA,Discovered 1850s Produced:6t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.378,lon:-121.235,name:'CA,Discovered 1850 Produced:6t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.215,lon:-121.063,name:'CA,Discovered 1850 Produced:6t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.044,lon:-120.208,name:'CA,Discovered 1853 Produced:6t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.377,lon:-103.732,name:'SD,Discovered 1875 Produced:6t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:42.115,lon:-123.563,name:'OR,Discovered 1853 Produced:6t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.739,lon:-117.928,name:'NV,Discovered 1863 Produced:6t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.221,lon:-105.09,name:'CO,Discovered 1859 Produced:6t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.723,lon:-112.346,name:'MT,Discovered by 1890 Produced:6t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.259,lon:-121.037,name:'CA,Discovered 1851 Produced:6t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.261,lon:-121.038,name:'CA,Discovered 1850 Produced:6t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:36.097,lon:-117.122,name:'CA,Discovered  Produced:t',desc:'Remaining as of ,1.2t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.346,lon:-71.133,name:'NH,Discovered 1870s Produced:t',desc:'Remaining as of ,1.2t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.477,lon:-118.294,name:'NV,Discovered by 1968 Produced:t',desc:'Remaining as of 1988,1.2t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.086,lon:-117.64,name:'NV,Discovered 1959? Produced:1t',desc:'Remaining as of 1992,1t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.167,lon:-105.458,name:'CO,Discovered 1874 Produced:3t',desc:'Remaining as of 1984,0.56t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:63.125,lon:-144.15,name:'AK,Discovered 1898 Produced:5.6t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.632,lon:-112.542,name:'MT,Discovered 1865 Produced:5.6t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:63,lon:-144.5,name:'AK,Discovered 1898 Produced:5.6t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.21,lon:-109.63,name:'AZ,Discovered 1878 Produced:0.5t',desc:'Remaining as of 1991,1t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.125,lon:-105.375,name:'CO,Discovered 1865 Produced:2.2t',desc:'Remaining as of ,0.6t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.18,lon:-118.13,name:'NV,Discovered 1905 Produced:1.6t',desc:'Remaining as of 1982,0.7t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:31.42,lon:-111.25,name:'AZ,Discovered by 1873 Produced:0.1t',desc:'Remaining as of 1993,1t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.99,lon:-105.38,name:'CO,Discovered 1875 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.767,lon:-106.75,name:'NM,Discovered 1850 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.875,lon:-106.933,name:'CO,Discovered 1883 Produced:5t',desc:'Remaining as of 1985,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.187,lon:-121.063,name:'CA,Discovered 1855 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.754,lon:-112.112,name:'AZ,Discovered 1911 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.962,lon:-120.668,name:'CA,Discovered 1904 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.45,lon:-118.79,name:'NV,Discovered 1905 Produced:5t',desc:'Remaining as of 1981,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:48.71,lon:-118.551,name:'WA,Discovered 1984 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.2,lon:-113.216,name:'MT,Discovered 1866 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.176,lon:-109.21,name:'MT,Discovered 1881 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.793,lon:-117.697,name:'OR,Discovered 1862 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.725,lon:-122.585,name:'CA,Discovered 1887 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.39,lon:-122.985,name:'CA,Discovered 1894 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.452,lon:-120.813,name:'CA,Discovered  Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.194,lon:-121.051,name:'CA,Discovered 1850 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.648,lon:-120.827,name:'CA,Discovered 1850s? Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.394,lon:-120.808,name:'CA,Discovered ~1851 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.276,lon:-120.76,name:'CA,Discovered 1850 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.073,lon:-120.56,name:'CA,Discovered by 1857 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.978,lon:-120.276,name:'CA,Discovered  Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.698,lon:-120.048,name:'CA,Discovered 1854 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.54,lon:-120.177,name:'CA,Discovered ~1868 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.75,lon:-112.333,name:'MT,Discovered 1864 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.525,lon:-117.084,name:'NV,Discovered 1905 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.71,lon:-118.408,name:'OR,Discovered 1877 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:48.768,lon:-120.742,name:'WA,Discovered 1893 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.882,lon:-112.459,name:'MT,Discovered 1884 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.762,lon:-112.341,name:'MT,Discovered 1875 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.188,lon:-111.661,name:'MT,Discovered 1866 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.7,lon:-105.725,name:'CO,Discovered 1859 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.874,lon:-82.294,name:'SC,Discovered 1835 Produced:3t',desc:'Remaining as of 1994,0.4t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.72,lon:-107.57,name:'NM,Discovered 1878 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.18,lon:-121.06,name:'CA,Discovered 1854 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.319,lon:-121.154,name:'CA,Discovered 1849 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.646,lon:-119.864,name:'CA,Discovered 1862 Produced:5t',desc:'Remaining as of ,t',color:'#1a7eb3',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.076,lon:-120.546,name:'CA,Discovered ~1850 Produced:4.9t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.703,lon:-116.123,name:'NV,Discovered 1869 Produced:3t',desc:'Remaining as of 1989,0.3t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:61.333,lon:-142.75,name:'AK,Discovered 1901 Produced:4.5t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.55,lon:-112.99,name:'UT,Discovered 1981 Produced:2t',desc:'Remaining as of 1997,0.5t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.259,lon:-123.152,name:'CA,Discovered 1860 Produced:4.5t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.92,lon:-115.55,name:'NV,Discovered 1984 Produced:0.9t',desc:'Remaining as of 1991,0.7t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:62.75,lon:-155,name:'AK,Discovered 1910 Produced:4.1t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.159,lon:-112.983,name:'MT,Discovered 1862 Produced:4.1t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.391,lon:-103.795,name:'SD,Discovered by 1902 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.257,lon:-121.026,name:'CA,Discovered  Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.209,lon:-121.055,name:'CA,Discovered 1870 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:43.009,lon:-116.743,name:'ID,Discovered 1865 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.878,lon:-118.231,name:'CA,Discovered 1894 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.324,lon:-103.378,name:'SD,Discovered 1893 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.45,lon:-115.98,name:'NV,Discovered ~1904 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.763,lon:-122.454,name:'CA,Discovered 1852 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.425,lon:-117.555,name:'OR,Discovered by 1863 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.722,lon:-122.669,name:'CA,Discovered 1852 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.464,lon:-120.834,name:'CA,Discovered  Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.941,lon:-120.932,name:'CA,Discovered 1864 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.869,lon:-120.434,name:'CA,Discovered 1849 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.695,lon:-120.216,name:'CA,Discovered ~1852 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.526,lon:-120.224,name:'CA,Discovered 1850 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.48,lon:-119.958,name:'CA,Discovered 1849 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.144,lon:-114.967,name:'MT,Discovered 1869, 1872 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.823,lon:-118.391,name:'OR,Discovered 1862 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.381,lon:-123.541,name:'CA,Discovered by 1850 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:36.959,lon:-119.81,name:'CA,Discovered 1850s? Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.275,lon:-117.752,name:'CA,Discovered 1848 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.921,lon:-107.566,name:'NM,Discovered 1877 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.847,lon:-118.413,name:'OR,Discovered 1874 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:43.417,lon:-114.45,name:'ID,Discovered 1865 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:48.13,lon:-121.546,name:'WA,Discovered 1891 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.23,lon:-112.33,name:'AZ,Discovered 1870 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.513,lon:-80.346,name:'NC,Discovered 1831 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:31.7,lon:-110.05,name:'AZ,Discovered 1877 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.67,lon:-113.58,name:'AZ,Discovered 1879 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.32,lon:-119.59,name:'NV,Discovered 1870s Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.556,lon:-114.315,name:'AZ,Discovered ~1895 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.526,lon:-121.269,name:'CA,Discovered before 1887 Produced:4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:61.917,lon:-161.5,name:'AK,Discovered 1913 Produced:3.8t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.374,lon:-120.787,name:'CA,Discovered 1851 Produced:3.8t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:62.333,lon:-151,name:'AK,Discovered 1905 Produced:3.6t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.867,lon:-108.233,name:'NM,Discovered 1860 Produced:3.6t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:62.88,lon:-156.98,name:'AK,Discovered 1907 Produced:3.5t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.133,lon:-114.55,name:'MT,Discovered 1874 Produced:3.5t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.495,lon:-122.529,name:'CA,Discovered 1850s Produced:3.5t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.338,lon:-70.2,name:'ME,Discovered 1985 Produced:t',desc:'Remaining as of 1993,0.7t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.801,lon:-122.196,name:'CA,Discovered 1862 Produced:1t',desc:'Remaining as of 1956,0.5t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:60.875,lon:-149.627,name:'AK,Discovered 1848 Produced:3.1t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.894,lon:-113.385,name:'MT,Discovered 1865 Produced:3.1t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.117,lon:-120.86,name:'CA,Discovered 1849 Produced:3.1t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.829,lon:-114.504,name:'CA,Discovered 1780 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.467,lon:-112.333,name:'UT,Discovered 1864 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.579,lon:-123.642,name:'CA,Discovered 1917 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.006,lon:-118.17,name:'CA,Discovered 1894 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.019,lon:-105.407,name:'CO,Discovered 1859 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.353,lon:-120.704,name:'CA,Discovered  Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.48,lon:-119.46,name:'NV,Discovered by 1906 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.34,lon:-118.2,name:'NV,Discovered 1866 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.068,lon:-116.721,name:'NV,Discovered 1964 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.176,lon:-109.219,name:'MT,Discovered 1881 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.144,lon:-109.226,name:'MT,Discovered 1884 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.135,lon:-120.637,name:'CA,Discovered  Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.107,lon:-120.968,name:'CA,Discovered 1866 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.581,lon:-120.841,name:'CA,Discovered by 1851 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.423,lon:-120.826,name:'CA,Discovered 1852 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.071,lon:-120.386,name:'CA,Discovered  Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.983,lon:-116.569,name:'CA,Discovered 1870 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.797,lon:-112.667,name:'MT,Discovered 1860s Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.61,lon:-111.503,name:'MT,Discovered 1865 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.502,lon:-113.262,name:'MT,Discovered 1866 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.422,lon:-112.089,name:'MT,Discovered 1865 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.833,lon:-115.667,name:'ID,Discovered 1861 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.555,lon:-113.925,name:'ID,Discovered 1877 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.227,lon:-119.617,name:'NV,Discovered 1849 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.041,lon:-114.414,name:'NV,Discovered 1877 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.934,lon:-121.272,name:'CA,Discovered  Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.459,lon:-120.508,name:'CA,Discovered by 1849 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.749,lon:-106.148,name:'NM,Discovered 1828 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.253,lon:-106.211,name:'NM,Discovered 1839 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.605,lon:-114.386,name:'AZ,Discovered 1862 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.258,lon:-115.7,name:'ID,Discovered 1866 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:43.583,lon:-115.833,name:'ID,Discovered 1889 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.042,lon:-107.667,name:'CO,Discovered 1875 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.833,lon:-107.808,name:'CO,Discovered 1877 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.239,lon:-77.739,name:'VA,Discovered 1806 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.911,lon:-120.835,name:'CA,Discovered 1860 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.611,lon:-120.904,name:'CA,Discovered 1880s? Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.699,lon:-120.71,name:'CA,Discovered by 1861 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.415,lon:-110.79,name:'AZ,Discovered 1874 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.735,lon:-120.702,name:'CA,Discovered 1888 Produced:3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.85,lon:-108.025,name:'NM,Discovered 1866 Produced:t',desc:'Remaining as of ,0.6t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:63.667,lon:-150.83,name:'AK,Discovered 1903 Produced:2.8t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:61.667,lon:-149,name:'AK,Discovered 1897 Produced:2.8t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.72,lon:-117.78,name:'NV,Discovered 1907 Produced:1t',desc:'Remaining as of 1986,0.35t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:65.5,lon:-150,name:'AK,Discovered 1882 Produced:2.7t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.625,lon:-106.583,name:'CO,Discovered 1879 Produced:2.5t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.308,lon:-116.85,name:'NV,Discovered 1985 Produced:0.4t',desc:'Remaining as of 1991,0.4t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.853,lon:-118.07,name:'OR,Discovered 1882 Produced:2.4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.05,lon:-77.875,name:'VA,Discovered 1950s Produced:t',desc:'Remaining as of 1972,0.45t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.507,lon:-118.205,name:'CA,Discovered 1877 Produced:2.2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:62.377,lon:-143.016,name:'AK,Discovered 1925 Produced:2.1t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:31.43,lon:-109.91,name:'AZ,Discovered 1909 Produced:2.1t',desc:'Remaining as of 1987,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:67.833,lon:-148,name:'AK,Discovered 1906 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.199,lon:-121.075,name:'CA,Discovered by 1852 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.673,lon:-119.864,name:'CA,Discovered 1908 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.167,lon:-117.483,name:'NV,Discovered 1868 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.075,lon:-105.393,name:'CO,Discovered 1859 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.457,lon:-112.392,name:'AZ,Discovered 1860s Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.615,lon:-120.631,name:'CA,Discovered 1883 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.14,lon:-115.55,name:'NV,Discovered 1986 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.269,lon:-76.403,name:'PA,Discovered 1732 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.282,lon:-111.953,name:'MT,Discovered 1875 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:43.594,lon:-113.571,name:'ID,Discovered 1883 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.23,lon:-120.874,name:'CA,Discovered 1861 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.994,lon:-117.408,name:'OR,Discovered 1870 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.566,lon:-117.201,name:'OR,Discovered 1871 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:42.182,lon:-122.791,name:'OR,Discovered 1886 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.844,lon:-121.157,name:'CA,Discovered 1922 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.727,lon:-120.799,name:'CA,Discovered 1852 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.941,lon:-120.222,name:'CA,Discovered by 1861 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.739,lon:-120.085,name:'CA,Discovered  Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.691,lon:-120.032,name:'CA,Discovered 1856 Produced:2t',desc:'Remaining as of 1938,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.617,lon:-115.917,name:'ID,Discovered 1879 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.7,lon:-118.417,name:'OR,Discovered  Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.542,lon:-112.147,name:'UT,Discovered 1864 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.844,lon:-121.589,name:'CA,Discovered 1849 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.772,lon:-105.263,name:'CO,Discovered 1859 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.463,lon:-119.943,name:'CA,Discovered 1848 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.499,lon:-112.33,name:'AZ,Discovered 1863 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.142,lon:-112.689,name:'AZ,Discovered 1863 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.07,lon:-115.753,name:'CA,Discovered early 1880s Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.185,lon:-111.668,name:'MT,Discovered 1866 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.62,lon:-112.505,name:'MT,Discovered 1860s Produced:2t',desc:'Remaining as of 1985,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:36.2,lon:-78.017,name:'NC,Discovered by 1840 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.354,lon:-77.729,name:'VA,Discovered by 1832 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.203,lon:-80.869,name:'NC,Discovered 1829 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.285,lon:-80.464,name:'NC,Discovered 1799 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.4,lon:-110.95,name:'AZ,Discovered 1881 Produced:2t',desc:'Remaining as of 1997,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.16,lon:-110.97,name:'AZ,Discovered 1846 Produced:2t',desc:'Remaining as of 1997,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.36,lon:-117.65,name:'CA,Discovered 1919 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.991,lon:-120.384,name:'CA,Discovered  Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:67.833,lon:-148,name:'AK,Discovered 1906 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.967,lon:-114.9,name:'NV,Discovered 1861 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.41,lon:-120.991,name:'CA,Discovered by 1860s Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.666,lon:-120.185,name:'CA,Discovered ~1860 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.396,lon:-120.751,name:'CA,Discovered 1856 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.582,lon:-120.821,name:'CA,Discovered 1851 Produced:2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:59.333,lon:-136.13,name:'AK,Discovered 1898 Produced:1.9t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.353,lon:-77.661,name:'VA,Discovered by 1861 Produced:1.8t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.33,lon:-107.71,name:'NM,Discovered 1879 Produced:0.25t',desc:'Remaining as of 1993,0.3t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.93,lon:-117.56,name:'NV,Discovered 1904 Produced:0.2t',desc:'Remaining as of 1991,0.3t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.417,lon:-106.214,name:'CO,Discovered 1878 Produced:1.6t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:61.117,lon:-146.55,name:'AK,Discovered 1906 Produced:1.6t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:65,lon:-161.33,name:'AK,Discovered 1899 Produced:1.6t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.471,lon:-115.78,name:'ID,Discovered 1889 Produced:1.6t',desc:'Remaining as of 1996,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.731,lon:-112.356,name:'MT,Discovered 1872 Produced:1.6t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.316,lon:-113.242,name:'MT,Discovered 1872 Produced:1.6t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.773,lon:-117.322,name:'CA,Discovered 1874 Produced:1.6t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.295,lon:-84.267,name:'GA,Discovered by 1840 Produced:1.5t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.286,lon:-112.29,name:'AZ,Discovered 1890 Produced:0.39t',desc:'Remaining as of 1931,0.2t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.071,lon:-105.5,name:'CO,Discovered 1861 Produced:1.3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.345,lon:-114.103,name:'AZ,Discovered  Produced:1.3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.612,lon:-117.036,name:'NV,Discovered 1860s Produced:1.3t',desc:'Remaining as of 1981,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:55.253,lon:-132.619,name:'AK,Discovered 1897 Produced:0.2t',desc:'Remaining as of ,0.2t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:63.583,lon:-151.583,name:'AK,Discovered  Produced:t',desc:'Remaining as of ,0.2t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:56.284,lon:-132.943,name:'AK,Discovered  Produced:t',desc:'Remaining as of ,0.2t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:31.458,lon:-111.235,name:'AZ,Discovered early 1870s Produced:1t',desc:'Remaining as of 1986,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.467,lon:-113.338,name:'UT,Discovered 1871 Produced:1t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:31.484,lon:-110.764,name:'AZ,Discovered 1897 Produced:1t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:56.284,lon:-132.943,name:'AK,Discovered  Produced:t',desc:'Remaining as of ,0.2t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.62,lon:-111.67,name:'UT,Discovered 1864 Produced:1t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.08,lon:-114.4,name:'NV,Discovered 1872 Produced:1t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.155,lon:-112.985,name:'MT,Discovered 1863 Produced:1t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:48.879,lon:-118.626,name:'WA,Discovered by 1986 Produced:1t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.739,lon:-122.491,name:'CA,Discovered 1890 Produced:1t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.652,lon:-122.604,name:'CA,Discovered by 1872 Produced:1t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.623,lon:-118.501,name:'CA,Discovered 1855 Produced:1t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.536,lon:-116.138,name:'ID,Discovered 1885 Produced:1t',desc:'Remaining as of 1990,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.92,lon:-114.46,name:'NV,Discovered 1863 Produced:1t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.663,lon:-78.464,name:'VA,Discovered  Produced:t',desc:'Remaining as of ,0.2t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.309,lon:-79.774,name:'NC,Discovered 1901 Produced:1t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.96,lon:-111.8,name:'AZ,Discovered 1960 Produced:1t',desc:'Remaining as of 1979,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.826,lon:-116.101,name:'CA,Discovered by 1883 Produced:1t',desc:'Remaining as of 1976?,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.34,lon:-112.24,name:'AZ,Discovered 1893 Produced:1t',desc:'Remaining as of 1955,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.366,lon:-117.645,name:'CA,Discovered 1896 Produced:1t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.228,lon:-106.074,name:'CO,Discovered 1879 Produced:1t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:59,lon:-161,name:'AK,Discovered 1926 Produced:0.9t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.98,lon:-115.48,name:'NV,Discovered 1985 Produced:0.9t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:60.348,lon:-147.65,name:'AK,Discovered 1905 Produced:t',desc:'Remaining as of ,0.17t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:55.299,lon:-132.388,name:'AK,Discovered 1899 Produced:0.04t',desc:'Remaining as of 1967,0.16t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.15,lon:-116.58,name:'NV,Discovered 1862 Produced:0.8t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.4,lon:-110.87,name:'AZ,Discovered 1872 Produced:0.8t',desc:'Remaining as of 1996,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.3,lon:-120.75,name:'CA,Discovered 1880 Produced:0.7t',desc:'Remaining as of 1930,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:45.605,lon:-112.913,name:'MT,Discovered 1873 Produced:0.6t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.477,lon:-115.965,name:'ID,Discovered 1885 Produced:0.6t',desc:'Remaining as of 1997,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.468,lon:-115.812,name:'ID,Discovered 1884 Produced:0.6t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.949,lon:-110.705,name:'MT,Discovered by 1893 Produced:0.6t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.38,lon:-112.27,name:'UT,Discovered 1865 Produced:0.5t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.032,lon:-84.366,name:'TN,Discovered 1843 Produced:0.5t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:55.633,lon:-132.558,name:'AK,Discovered 1906 Produced:0.4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:36.276,lon:-117.595,name:'CA,Discovered 1874 Produced:0.4t',desc:'Remaining as of 1976?,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.792,lon:-108.125,name:'NM,Discovered 1858 Produced:0.4t',desc:'Remaining as of 1978,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.76,lon:-109.25,name:'AZ,Discovered ~1900 Produced:0.4t',desc:'Remaining as of 1986,0t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:55.633,lon:-132.558,name:'AK,Discovered 1906 Produced:0.4t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.332,lon:-113.266,name:'MT,Discovered 1865 Produced:0.3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:36.383,lon:-81.333,name:'NC,Discovered by 1855 Produced:0.3t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.07,lon:-110.69,name:'AZ,Discovered 1902 Produced:0.3t',desc:'Remaining as of 1981,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.372,lon:-112.093,name:'MT,Discovered 1869 Produced:0.25t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.52,lon:-115.814,name:'ID,Discovered 1885 Produced:0.22t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.017,lon:-107.333,name:'CO,Discovered ~1842 Produced:0.2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.81,lon:-115.98,name:'NV,Discovered 1931 Produced:0.2t',desc:'Remaining as of 1989,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.543,lon:-115.808,name:'ID,Discovered 1889 Produced:0.2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.528,lon:-116.201,name:'ID,Discovered 1887 Produced:0.2t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:29.81,lon:-104.33,name:'TX,Discovered 1880 Produced:0.19t',desc:'Remaining as of 1985,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.54,lon:-113.23,name:'AZ,Discovered 1882 Produced:0.13t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.083,lon:-107.208,name:'NM,Discovered 1866 Produced:0.11t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.1,lon:-114.6,name:'NV,Discovered 1871 Produced:0.11t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.058,lon:-107.318,name:'CO,Discovered 1871 Produced:0.1t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.65,lon:-113.81,name:'UT,Discovered 1896 Produced:0.1t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.084,lon:-110.632,name:'MT,Discovered 1879 Produced:0.1t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.448,lon:-113.366,name:'MT,Discovered 1882 Produced:0.1t',desc:'Remaining as of 1985,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:35.478,lon:-83.803,name:'NC,Discovered between 1900 and 1926 Produced:0.1t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:61.013,lon:-146.274,name:'AK,Discovered 1901 Produced:0.08t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.519,lon:-115.836,name:'ID,Discovered 1887 Produced:0.08t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.833,lon:-108.083,name:'NM,Discovered by 1858 Produced:0.08t',desc:'Remaining as of 1994,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.08,lon:-114.68,name:'NV,Discovered 1868 Produced:0.07t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:38.412,lon:-119.232,name:'CA,Discovered 1860s Produced:0.07t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:44.283,lon:-114.41,name:'ID,Discovered 1877 Produced:0.07t',desc:'Remaining as of 1989,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.506,lon:-116.025,name:'ID,Discovered by 1920 Produced:0.07t',desc:'Remaining as of 1983,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.4,lon:-111.5,name:'AZ,Discovered ~1865 Produced:0.07t',desc:'Remaining as of 1997,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:36.54,lon:-117.793,name:'CA,Discovered by 1868 Produced:0.06t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:43.817,lon:-72.333,name:'VT,Discovered 1793 Produced:0.06t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:33.244,lon:-111.201,name:'AZ,Discovered 1876 Produced:0.06t',desc:'Remaining as of 1986,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.871,lon:-114.606,name:'NV,Discovered 1882 Produced:0.05t',desc:'Remaining as of 1982,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.08,lon:-114.88,name:'NV,Discovered 1872 Produced:0.05t',desc:'Remaining as of 1991,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.984,lon:-110.694,name:'MT,Discovered late 1800s Produced:0.05t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:32.64,lon:-108.372,name:'NM,Discovered 1871 Produced:0.05t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.22,lon:-115.48,name:'NV,Discovered 1865 Produced:0.04t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.502,lon:-116.052,name:'ID,Discovered 1884 Produced:0.04t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:31.83,lon:-110.76,name:'AZ,Discovered 1879 Produced:0.04t',desc:'Remaining as of 1980,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:41.767,lon:-114.767,name:'NV,Discovered 1870 Produced:0.04t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.51,lon:-115.85,name:'ID,Discovered 1884 Produced:0.03t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.08,lon:-114.68,name:'NV,Discovered by 1970 Produced:0.025t',desc:'Remaining as of 1991,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:40.41,lon:-118.59,name:'NV,Discovered 1859 Produced:0.02t',desc:'Remaining as of 1994,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:37.25,lon:-113.37,name:'UT,Discovered 1869 Produced:0.02t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:46.934,lon:-110.724,name:'MT,Discovered 1881 Produced:0.02t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:39.857,lon:-113.456,name:'UT,Discovered 1890 Produced:0.02t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:31.398,lon:-110.737,name:'AZ,Discovered 1860s Produced:0.02t',desc:'Remaining as of ,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:47.489,lon:-115.992,name:'ID,Discovered 1968 Produced:0.01t',desc:'Remaining as of 1997,t',color:'#1c44aa',icon:'',scale:0.1});
+GV_Draw_Marker({lat:34.58,lon:-113.17,name:'AZ,Discovered 1907 Produced:0.007t',desc:'Remaining as of 1997,t',color:'#1c44aa',icon:'',scale:0.1});
+
+
+
+				
+				GV_Finish_Map();
+					
+			  
+			}
+			GV_Map(); // execute the above code
+			// http://www.gpsvisualizer.com/map_input?bg_map=us: National Atlas&form=data&height=1200&special=data&units=us&width=1920
+		</script>
+		
+		
+		
+	</body>
+
+</html>
