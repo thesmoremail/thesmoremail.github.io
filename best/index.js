@@ -20,6 +20,7 @@ var article = [
 ,[0,'2019-01-03','asbestos_trusts','☠ Asbestos Trusts',"You breathe it, they pay",'']
 ,[0,'2019-01-03','dev','△ Development',"The pyramid of power for the best development cycles",'']
 ,[0,'2019-01-03','asbestos_map','🌎 Asbestos Map',"If You don't find it, you can't breath the stuff!",'']
+,[0,'2019-01-04','gold','🤑 Gold',"They Told you where to look, but you didn't believe them",'']
 
 ];
 
