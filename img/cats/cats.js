@@ -212,7 +212,7 @@ var cats = [
 ,['210.png','Muskox',"Elon was surpised that sMoreMail required so little lunar power from secondary battry bank."]
 ,['211.png','Jazz Hands',"If you squint, I come into - focus."]
 ,['212.png','Fester',"Warm, Snuggly, and lint-pill free, i'm the origional cuddle monster."]
-,['213.png','Predator III',"As The origional silent killer, us cats have been worshiped by the egyptions as they deserved."]
+,['213.png','Predator III',"As The origional silent killer, us cats have been worshiped by the egyptions as we deserved."]
 ,['214.png','Saidy',"That mexican-hairless in the 2nd house down is no longer my friend. I'll send her an email to remind her."]
 ,['215.png','Rugburn',"Bites, and never lets go.  Lost the scars in the last round to prove it."]
 ,['216.png','Schredder',"Just hanging around, reading some email.  Oh, and you might want to replace that screen."]

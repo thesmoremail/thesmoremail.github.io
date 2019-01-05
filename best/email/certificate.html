@@ -49,7 +49,7 @@
 .container {
   position: relative;
   text-align: center;
-  color: green;
+  color: LightSlateGray ;
 
 }
 /* Bottom left text */
@@ -92,7 +92,26 @@
 font-size: 3.2vw;
 width:75%;
 }
+
+    body .printable {
+         display:none;
+    }
+
 </style>
+
+<style type="text/css">
+      @media print {
+        body * {
+          display:none;
+        }
+
+        body .printable {
+          display:block;
+color: LightSlateGray ;
+        }
+      }
+    </style>
+
 </head>
 
 <body id="home">
@@ -175,28 +194,42 @@ You Have completed the <a href=/best/email>training material </a>and have achiev
 </div>
 
 <div class="col1_3">
-Whom should be displayed on this emblem of honor? <br/><br/>
-<em>NAME:</em> <input type="text" value="Captain Awesome (click to edit)"/>
-
+<em>NAME:</em> <input type="text" id="tb1" onchange="document.getElementById('c10').innerHTML = this.value ;document.getElementById('c11').innerHTML = this.value;" value="Captain Awesome (click to edit)"/>
+<input type='checkbox' id="cb1" checked=checked onchange="if(this.checked){document.getElementById('s1').style.visibility='visible'}else{document.getElementById('s1').style.visibility='hidden'};"  />Backdate (for plausable deniability) <span id="s1" style="color:;">as:<br/>
+<em>DATE:</em> <input type="text" id="tb2" onchange="document.getElementById('c20').innerHTML = 'Totally completed on ' + this.value; document.getElementById('c21').innerHTML = 'Totally completed on ' + this.value ;" value='12/22/2019'/>
+</span>
 </div>
 
-<div class="col1_3">
-Would you like this backdated for plausable deniablity in the event of any recent misclicks?<br/>
+<div class="col1_3" style="background-color:#3456; border-radius: 5%;text-align:center;
+  box-shadow: 0px 0px 6px 2px currentColor;">
+
+<ul class="pagination">
+          <li style="width:85%;padding-top:5%;">
+<a class="run" onclick="document.getElementById('c21').innerHTML=document.getElementById('c20').innerHTML;document.getElementById('c11').innerHTML=document.getElementById('c10').innerHTML;window.print();" href="" title="Print Certificate"  style="font-size:larger;width:100%;">&nbsp;Print Certificate&nbsp;</a>
+</li>
+</ul>
 </div>
 
 
 <hr class="inner-row">   <br>   
 <div class="container" style=" ">
-  <img src="cert.png" alt="cert" style="width:100%;">
-  <div class="centered" style="" contenteditable="true">Captain Awesome (click to edit)</div>
-<div class="bottom-center" style="" contenteditable="true">totally completed on 12/2/2018</div>
+  <img class="" src="cert.png" alt="cert" style="width:100%;">
+  <div class="centered" style="" contenteditable="true" id="c10">Captain Awesome (click to edit)</div>
+<div class="bottom-center" style="" contenteditable="true" id="c20">totally completed on 12/2/2018</div>
 </div>
+
+<script>
+//set defaults for cert
+var oneWeekAgo = new Date();
+oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+var v1 = oneWeekAgo.toLocaleDateString("en-US"); 
+document.getElementById('tb2').value = v1;
+document.getElementById('c20').innerHTML = "Totally completed on " + v1;
+
+</script>
 
 
 <span style="font-size:80%;">thanks www.postermywall.com for help in making this spectacular cert</span>
-
-
-
 
 <section class="row" id="featured">    
 <hr class="marginbottom">      
@@ -213,6 +246,12 @@ Would you like this backdated for plausable deniablity in the event of any recen
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="http://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></h6> <br/></div>
 <div class="col1_3"><h6><a href="/terms.html">Terms Of Use</a> - <a href="/sitemap.html">Site Map</a> - <a href="/login.html">Login</a></h6><br/></div>
 </footer>
+</div>
+
+<div class="container printable" style="margin-top:50px; ">
+  <img class="printable" src="cert.png" alt="cert" style="width:100%;">
+  <div class="centered printable" style="" id="c11" >Captain Awesome (click to edit)</div>
+<div class="bottom-center printable" style="" id="c21">totally completed on 12/2/2018</div>
 </div>
 
 
