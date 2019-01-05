@@ -195,7 +195,7 @@ You Have completed the <a href=/best/email>training material </a>and have achiev
 
 <div class="col1_3">
 <em>NAME:</em> <input type="text" id="tb1" onchange="document.getElementById('c10').innerHTML = this.value ;document.getElementById('c11').innerHTML = this.value;" value="Captain Awesome (click to edit)"/>
-<input type='checkbox' id="cb1" checked=checked onchange="if(this.checked){document.getElementById('s1').style.visibility='visible'}else{document.getElementById('s1').style.visibility='hidden'};"  />Backdate (for plausable deniability) <span id="s1" style="color:;">as:<br/>
+<input type='checkbox' id="cb1" checked=checked onchange="if(this.checked){document.getElementById('s1').style.visibility='visible';document.getElementById('c20').innerHTML = 'Totally completed on ' + document.getElementById('tb2').value; document.getElementById('c21').innerHTML = 'Totally completed on '+ document.getElementById('tb2').value ;}else{document.getElementById('s1').style.visibility='hidden';document.getElementById('c20').innerHTML = ''; document.getElementById('c21').innerHTML = '';};"  />Backdate (for plausable deniability) <span id="s1" style="color:;">as:<br/>
 <em>DATE:</em> <input type="text" id="tb2" onchange="document.getElementById('c20').innerHTML = 'Totally completed on ' + this.value; document.getElementById('c21').innerHTML = 'Totally completed on ' + this.value ;" value='12/22/2019'/>
 </span>
 </div>
@@ -208,6 +208,7 @@ You Have completed the <a href=/best/email>training material </a>and have achiev
 <a class="run" onclick="document.getElementById('c21').innerHTML=document.getElementById('c20').innerHTML;document.getElementById('c11').innerHTML=document.getElementById('c10').innerHTML;window.print();" href="" title="Print Certificate"  style="font-size:larger;width:100%;">&nbsp;Print Certificate&nbsp;</a>
 </li>
 </ul>
+* A printed cert auto bumps your trainer level in <a href='/best/catfight/'>cat fight</a>
 </div>
 
 
