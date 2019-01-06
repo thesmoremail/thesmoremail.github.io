@@ -229,7 +229,7 @@ document.getElementById('footer-copyright').innerHTML = '&copy; sMoreMail ' + n;
 
 function drawcats(){
 max1 = cats.length;
-ctlist = getselected(); //''; //list of cats so we don't double hit, and excludde antyhihng we have selected
+ctlist = "," + getselected(); //''; //list of cats so we don't double hit, and excludde antyhihng we have selected
 
 for (var y = 1, len = 4; y <= len; y++) {
   do { r = Math.floor(Math.random()*max1); }while (ctlist.indexOf(","+r) > -1); //only get new numbers
