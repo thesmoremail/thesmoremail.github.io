@@ -115,10 +115,11 @@
 <p>Google analytics is used to monitor popular sMoreMail content, and fine-tune your experience on sMoreMail.com.  <Br>This uses cookies.  To change your google analytics preferences, visit <a href="https://tools.google.com/dlpage/gaoptout/" target="_blank" rel="noopener"> Google's Tools: GA Opt Out</a></p>
 <!-- per https://support.google.com/adsense/answer/1348695?hl=en&ref_topic=1271507-->
 
-<p>to review current cookies (non-http-only) <a href='#' onclick="showcookies()";>click here</a>  <Br>
-<div id="cookies"></div></p>
+<p>To review current cookies and localstorage (non-http-only) <a href='#cookies' onclick="showcookies()";>click here</a>  <Br>
+<div id="cookies" style="background-color:gray"></div></p>
 
 </div>  
+<p><em>To delete cookies and localstorage (non-http-only) for sMoreMail.com including resetting progress on cat fight <a href='#cookies' onclick="DeleteAllCookiesAndLocalStorage()";>click here</a></em></p>
 </section>    
 
 <script>
@@ -127,22 +128,28 @@ var test1 = 'test' + Date();
 localStorage.setItem("test", test1);
 
 function showcookies(){
-var c = document.cookie; 
-console.log("document.cookie::" + c);
+var c = "<h1>Cookies and LocalStorage:</h1><br/>" + document.cookie + "<Br/>"; 
+//console.log("document.cookie::" + c + "<Br/");
 
-c = document.cookie.split(';').reduce((cookies, cookie) => {
-  const [ name, value ] = cookie.split('=').map(c => c.trim());
-  cookies[name] = value;
-  return cookies;
-}, {});
-console.log("cookies::"+c);
+//c = document.cookie.split(';').reduce((cookies, cookie) => {
+//  const [ name, value ] = cookie.split('=').map(c => c.trim());
+//  cookies[name] = value;
+//  return cookies;
+//}, {});
+//console.log("cookies::"+c);
 
 ii=0
 for(var i in localStorage)
 {
-    if (ii==0){console.log("LocalStorage::" + localStorage[i]);}
-ii=ii+1;
+  if (ii==0){c+= "LocalStorage::" + localStorage[i] + "<bt/>";}
+  ii=ii+1;
 }
+
+//for (i = 0; i < localStorage.length; i++)   {
+//    c += localStorage.key(i) + "=[" + localStorage[i] + "]<Br/>";
+//}
+
+document.getElementById('cookies').innerHTML  =c;
 
 }
 
