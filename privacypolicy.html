@@ -92,7 +92,7 @@
 <p>When submitting articles and sources, please ommit your contact information if you'd like to remain anonymous.  sMoreMail makes no commitment to protect identity or submissions, though makes little effort to publish such things.</p>
 
 <h3>Cookies, Ads, and Advertisements</h3>
-<p>Core functionality including "cat fight", interactive maps, and 3rd party content rely on cookies. Don't use these resources, ( or considering blocking these resources at your browser level ) if you wish to categorically decline cookies.  Some pages have ads.  These ad networks can be opted out of by visiting your google settings, and google ads publishing settings.  Including:</p>
+<p>Core functionality including "cat fight", interactive maps, and 3rd party content rely on cookies. Don't use these resources, ( or block these resources at your browser level ) if you wish to categorically decline cookies.  Some pages have ads.  These ad networks can be opted out of by visiting your google settings, and google ads publishing settings.  Including:</p>
 	
 
 <p>Google uses cookies to help serve the ads it displays on the websites of its partners (which sMoreMail.com is), such as websites displaying Google ads or participating in Google certified ad networks. When users visit a Google partner's website (including sMoreMail.com), a cookie may be dropped on that end user's browser.</p>
@@ -119,7 +119,7 @@
 <div id="cookies" style="background-color:gray"></div></p>
 
 </div>  
-<p><em>To delete cookies and localstorage (non-http-only) for sMoreMail.com including resetting progress on cat fight <a href='#cookies' onclick="DeleteAllCookiesAndLocalStorage()";>click here</a></em></p>
+<p id="deletecookies" style="visibility: hidden;color:red;"><em>To delete cookies and localstorage (non-http-only) for sMoreMail.com including resetting progress on cat fight <a href='#cookies' onclick="DeleteAllCookiesAndLocalStorage()";>click here</a></em></p>
 </section>    
 
 <script>
@@ -150,7 +150,7 @@ for(var i in localStorage)
 //}
 
 document.getElementById('cookies').innerHTML  =c;
-
+document.getElementById("deletecookies").style.visibility = "visible"; 
 }
 
 
