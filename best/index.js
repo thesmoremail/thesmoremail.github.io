@@ -22,7 +22,7 @@ var article = [
   ,[0,'2019-01-03','asbestos_map','🌎 Asbestos Map',"If You don't find it, you can't breathe the stuff!",'']
   ,[0,'2019-01-04','gold','🤑 Gold',"They Told you where to look, but you didn't believe them",'']
   ,[0,'2019-01-04','paranoidbible','😶 Paranoid\'s Bible',"Cyber Stocking and Anti-Doxing, Anonymous Tumblr authors bring you da links to check",'']
-  ,[0,'2019-01-04','asbestos_trusts2','🤮 Asbestos Trusts links',"The plot is now friable and airborne, PPE is missing",'']
+  ,[0,'2019-01-04','asbestos_trusts2','🤮 Asbestos Trusts links',"The plot is now friable and airborne. PPE is missing",'']
   
 
 ];
@@ -37,17 +37,26 @@ if (div){
 } //tableindex
 
 
-var div = document.getElementById('headindex');
-var len = 8; //max # of articles per slice
-if (div){ 
-  div.innerHTML += "<ol start='6'>";
-  for (var i = article.length-1, len ; i >= 0; i--) {
-    //console.log(article[i]);
-    div.innerHTML += '<li class="himod'+ i % 2 +'"><a href="/best/'+article[i][2]+'/" title="'+article[i][3]+'">'+article[i][3]+' - '+article[i][4]+'</a></li>';
-  len--;
-  if (len==0){i=-1;}  
-}
-  div.innerHTML += "</ol>";
+var div = document.getElementById('headindexlist');
+function drawheadindex(start1){
+var len = 9; //max # of articles per slice
+listpos = len * (start1 - 1);
+document.getElementById("headindexlist").innerHTML = "";
+  for (var i = (article.length-1)-listpos, len ; i >= 0; i--) {
+    var node=document.createElement("LI");
+    node.innerHTML = '<a href="/best/'+article[i][2]+'/" title="'+article[i][3]+'">'+article[i][3]+' - '+article[i][4] +"</a>";
+    document.getElementById("headindexlist").appendChild(node);
+    len--;
+    if (len==0){i=-1;}  
+  }
+   document.getElementById("headindexlist").setAttribute("start", listpos+1); //change numbering sequence of list
+   out = ""
+   if (start1 > 1){out +=' <a href="#!" onclick="drawheadindex(' + (start1 - 1) + ')">[ previous ]</a>'}
+   if ((article.length-1)-listpos > len){out +=' <a href="#!" onclick="drawheadindex(' + (start1 + 1) + ')">[ next ]</a>'}
+   document.getElementById("headindexnavprevnex").innerHTML = out;
+} //drawheadindex
+if (div){ //on first load, draw first pane 
+  drawheadindex(1);
 }// headindex
 
 
