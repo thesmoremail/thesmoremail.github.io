@@ -51,7 +51,7 @@ document.getElementById("headindexlist").innerHTML = "";
   }
    document.getElementById("headindexlist").setAttribute("start", listpos+1); //change numbering sequence of list
    out = ""
-   if (start1 > 1){out +=' <a href="#!" onclick="drawheadindex(' + (start1 - 1) + ')">[ previous ]</a>'}
+   if (start1 > 1){out +=' <a href="#!" onclick="drawheadindex(' + (start1 - 1) + ')">[ previous ]</a> &nbsp;&nbsp;&nbsp;'}
    if ((article.length-1)-listpos > len){out +=' <a href="#!" onclick="drawheadindex(' + (start1 + 1) + ')">[ next ]</a>'}
    document.getElementById("headindexnavprevnex").innerHTML = out;
 } //drawheadindex
