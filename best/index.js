@@ -18,7 +18,7 @@ var article = [
   ,[0,'2019-01-03','asbestos','⚠ asbestos',"The Lawsuits engulfing the other white meat.",'']
   ,[0,'2019-01-03','carinsurance','🚓 Car Insurance',"You hit it, they pay",'']
   ,[0,'2019-01-03','asbestos_trusts','☠ Asbestos Trusts',"You breathe it, they pay",'']
-  ,[0,'2019-01-03','dev','△ Development',"The pyramid of power for the best development cycles",'']
+  ,[0,'2019-01-03','dev','△ Development',"The pyramid of power for the best cycles",'']
   ,[0,'2019-01-03','asbestos_map','🌎 Asbestos Map',"If You don't find it, you can't breathe the stuff!",'']
   ,[0,'2019-01-04','gold','🤑 Gold',"They Told you where to look, but you didn't believe them",'']
   ,[0,'2019-01-04','paranoidbible','😶 Paranoid\'s Bible',"Cyber Stocking and Anti-Doxing, Anonymous Tumblr authors bring you da links to check",'']
@@ -40,14 +40,14 @@ if (div){
 var div = document.getElementById('headindex');
 var len = 8; //max # of articles per slice
 if (div){ 
-  div.innerHTML += "<ul>";
+  div.innerHTML += "<ol start='6'>";
   for (var i = article.length-1, len ; i >= 0; i--) {
     //console.log(article[i]);
     div.innerHTML += '<li class="himod'+ i % 2 +'"><a href="/best/'+article[i][2]+'/" title="'+article[i][3]+'">'+article[i][3]+' - '+article[i][4]+'</a></li>';
   len--;
   if (len==0){i=-1;}  
 }
-  div.innerHTML += "</ul>";
+  div.innerHTML += "</ol>";
 }// headindex
 
 
