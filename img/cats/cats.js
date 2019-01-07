@@ -222,6 +222,7 @@ var cats = [
 ,['220.png','Foxy Loxy',"I've got my eye on you.  It was THIS big."]
 ,['221.png','lil Smo',"I've got my stuffy to beat you with.  Back off."]
 ,['222.png','Moonshadow',"Not for battling."]
+,['223.png','La Dumpster Fir&eacute;',"Get me a mistress, mattress and slightly stained college couch.  We're bringing this party to the front lawn."]
 //muskox
 //tj, toe jam
 //fat fatty

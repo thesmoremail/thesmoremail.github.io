@@ -38,12 +38,15 @@ if (div){
 
 
 var div = document.getElementById('headindex');
+var len = 8; //max # of articles per slice
 if (div){ 
   div.innerHTML += "<ul>";
-  for (var i = 0, len = article.length; i < len; i++) {
+  for (var i = article.length-1, len ; i >= 0; i--) {
     //console.log(article[i]);
     div.innerHTML += '<li class="himod'+ i % 2 +'"><a href="/best/'+article[i][2]+'/" title="'+article[i][3]+'">'+article[i][3]+' - '+article[i][4]+'</a></li>';
-  }
+  len--;
+  if (len==0){i=-1;}  
+}
   div.innerHTML += "</ul>";
 }// headindex
 
