@@ -23,10 +23,14 @@ var article = [
   ,[0,'2019-01-04','gold','🤑 Gold',"They Told you where to look, but you didn't believe them",'']
   ,[0,'2019-01-04','paranoidbible','😶 Paranoid\'s Bible',"Cyber Stocking and Anti-Doxing, Anonymous Tumblr authors bring you da links to check",'']
   ,[0,'2019-01-04','asbestos_trusts2','🤮 Asbestos Trusts links',"The plot is now friable and airborne. PPE is missing",'']
-  ,[0,'2019-01-06','prime_intelect','🦋Book: MOPI',"The Metamorphosis of Prime Intellect",'']
+
   
 
 ];
+
+//add later
+//,[0,'2018-12-27','book-dracula','📓 Dracula Book','A classic tail of being out for blood.','']
+//,[0,'2019-01-06','prime_intelect','🦋Book: MOPI',"The Metamorphosis of Prime Intellect",'']
 
 var div = document.getElementById('tableindex');
 if (div){ 
