@@ -223,7 +223,7 @@ var cats = [
 ,['221.png','lil Smo',"I've got my stuffy to beat you with.  Back off."]
 ,['222.png','Moonshadow',"Not for battling."]
 ,['223.png','La Dumpster Fir&eacute;',"Get me a mistress, mattress and slightly stained college couch.  We're bringing this party to the front lawn."]
-,['224.png','Bark',"Gizard and limpy got stuck in my throat.  Remember to change the batteries in your mice."]
+,['224.png','Bark',"Gizzard and Limpy got stuck in my throat.  Remember to change the batteries in your mice."]
 ,['225.png','Darf',"More mail (not less) makes my tail wave. I love this place!"]
 
 //muskox
