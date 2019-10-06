@@ -225,7 +225,7 @@ var cats = [
 ,['223.png','La Dumpster Fir&eacute;',"Get me a mistress, mattress and slightly stained college couch.  We're bringing this party to the front lawn."]
 ,['224.png','Bark',"Gizzard and Limpy got stuck in my throat.  Remember to change the batteries in your mice."]
 ,['225.png','Darf',"More mail (not less) makes my tail wave. I love this place!"]
-
+,['226.png','Ben',"I'm the best cat.  Deal with it."]
 //muskox
 //tj, toe jam
 //fat fatty
