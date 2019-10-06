@@ -226,6 +226,9 @@ var cats = [
 ,['224.png','Bark',"Gizzard and Limpy got stuck in my throat.  Remember to change the batteries in your mice."]
 ,['225.png','Darf',"More mail (not less) makes my tail wave. I love this place!"]
 ,['226.png','Ben',"I'm the best cat.  Deal with it."]
+,['227.JPG','Dakota',"I'm a scaredy cat, ya know.  Everyone thinks I'm a lady, but I'm a boy!. What is wrong with them?!"]
+,['228.JPG','Danger',"We have some training to do! *CHOMP*"]
+,['229.JPG','Spotty',"I love treats from my owners."]
 //muskox
 //tj, toe jam
 //fat fatty
