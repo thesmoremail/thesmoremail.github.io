@@ -24,10 +24,10 @@ var article = [
   ,[0,'2019-01-04','paranoidbible','😶 Paranoid\'s Bible',"Cyber Stocking and Anti-Doxing, Anonymous Tumblr authors bring you da links to check",'']
   ,[0,'2019-01-04','asbestos_trusts2','🤮 Asbestos Trusts links',"The plot is now friable and airborne. PPE is missing",'']
   ,[0,'2019-01-10','signature','✍️ Signature',"Passive objective with non dominant signatures",'']
-  ,[0,'2019-01-06','prime_intelect','🦋Book: MOPI',"The Metamorphosis of Prime Intellect",'']
-  ,[0,'2019-03-24','robots','🤖 Robots',"Love, Death and Robots.  Take 1.",'']
-  ,[0,'2019-03-26','robots2','🤖 Robots',"Love, Death and Robots.  Take 2.",'']
-  ,[0,'2019-03-26','robots3','🤖 Robots',"Love, Death and Robots.  Take 3.",'']
+  //,[0,'2019-01-06','prime_intelect','🦋Book: MOPI',"The Metamorphosis of Prime Intellect",'']
+  //,[0,'2019-03-24','robots','🤖 Robots',"Love, Death and Robots.  Take 1.",'']
+  //,[0,'2019-03-26','robots2','🤖 Robots',"Love, Death and Robots.  Take 2.",'']
+  //,[0,'2019-03-26','robots3','🤖 Robots',"Love, Death and Robots.  Take 3.",'']
 ];
 
 //add later
